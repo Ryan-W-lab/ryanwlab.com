@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07090d">
+<meta name="description" content="LOCAL LLM GATE：以极客之姿理解并部署你自己的开源大模型。概念 × 硬件 × 模型图谱 × 部署 × 避坑 全链路。">
+<title>LOCAL·LLM·GATE · 本地部署大模型极客手册</title>
+<link rel="canonical" href="https://ryanwlab.com/">
+<link rel="alternate" hreflang="zh-CN" href="https://ryanwlab.com/">
+<link rel="alternate" hreflang="en" href="https://ryanwlab.com/en/">
+<link rel="alternate" hreflang="x-default" href="https://ryanwlab.com/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ryan W Lab">
+<meta property="og:title" content="LOCAL·LLM·GATE · 本地部署大模型极客手册">
+<meta property="og:description" content="LOCAL LLM GATE：以极客之姿理解并部署你自己的开源大模型。概念 × 硬件 × 模型图谱 × 部署 × 避坑 全链路。">
+<meta property="og:url" content="https://ryanwlab.com/">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:locale:alternate" content="en_US">
+<meta property="og:image" content="https://ryanwlab.com/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LOCAL LLM GATE — 本地部署开源大模型全链路手册">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LOCAL·LLM·GATE · 本地部署大模型极客手册">
+<meta name="twitter:description" content="LOCAL LLM GATE：以极客之姿理解并部署你自己的开源大模型。概念 × 硬件 × 模型图谱 × 部署 × 避坑 全链路。">
+<meta name="twitter:image" content="https://ryanwlab.com/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LOCAL LLM GATE — 本地部署开源大模型全链路手册">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+<!-- 开机 veil -->
+<div id="veil" aria-hidden="true">
+  <div class="ld"><span class="cmd">&gt;</span> LOCAL_LLM_GATE // booting</div>
+  <div class="bootlog" id="bootlog"></div>
+</div>
+
+<div class="progress"></div>
+
+<header class="gnav">
+  <div class="gnav-inner">
+    <a href="#top" class="logo"><span class="prompt">user@gate</span>:~# ./local-llm<span class="cursor" style="width:7px"></span></a>
+    <nav class="links" id="topNav" aria-label="主导航">
+      <a href="#top" data-ref="home">⌂</a>
+      <span class="tsep">§</span>
+      <a href="#what"   data-go="what">01 认识</a>
+      <a href="#why"    data-go="why">02 为何本地</a>
+      <a href="#hw"     data-go="hw">03 硬件</a>
+      <a href="#models" data-go="models" class="hot">04 模型图谱</a>
+      <a href="#deploy" data-go="deploy">05 部署</a>
+      <a href="#quant"  data-go="quant">06 量化</a>
+      <a href="#pits"   data-go="pits">07 避坑</a>
+      <a href="#res"    data-go="res">08 生态</a>
+      <button type="button" id="guruJump" data-go="guru">⟠ 深水四技 §09–12</button>
+    </nav>
+    <span class="hnav-hint" title="入深水或看历史，点右栏小地图">§13 玩家通鉴 ▸ 目录</span>
+  </div>
+</header>
+
+<!-- 右侧章节小地图 TOC -->
+<nav class="sidenav" id="sidenav" aria-label="章节目录">
+  <div class="sn-head"><span class="sn-title">SECTIONS</span><span class="sn-capbig">第几章·一目了然</span></div>
+  <div class="sn-scroll">
+      <a class="tocL" href="#top"    data-go="top"><span class="tocNum">§00</span><span class="tocName">序 · 开始</span></a>
+    <span class="sn-cap">▸ 主线 · §01–08</span>
+    <a class="tocL" href="#what"       data-go="what"><span class="tocNum">§01</span><span class="tocName">概念·是什么</span></a>
+    <a class="tocL" href="#why"        data-go="why"><span class="tocNum">§02</span><span class="tocName">为何本地化</span></a>
+    <a class="tocL" href="#hw"         data-go="hw"><span class="tocNum">§03</span><span class="tocName">硬件门槛</span></a>
+    <a class="tocL" href="#models"     data-go="models"><span class="tocNum">§04</span><span class="tocName">模型图谱</span></a>
+    <a class="tocL" href="#deploy"     data-go="deploy"><span class="tocNum">§05</span><span class="tocName">部署实战</span></a>
+    <a class="tocL" href="#quant"      data-go="quant"><span class="tocNum">§06</span><span class="tocName">量化深水区</span></a>
+    <a class="tocL" href="#pits"       data-go="pits"><span class="tocNum">§07</span><span class="tocName">避坑指南</span></a>
+    <a class="tocL" href="#res"        data-go="res"><span class="tocNum">§08</span><span class="tocName">调优·生态</span></a>
+      <details class="sn-group" id="snDeep">
+        <summary class="sn-groupCap"><span class="chev">▸</span> GURU · 深水四技 <span class="lvl pro">§09–12</span></summary>
+        <div class="sn-sub">
+    <a class="tocL" href="#moe"        data-go="moe"><span class="tocNum tocNum-pro">§09</span><span class="tocName">MoE 架构</span></a>
+    <a class="tocL" href="#kv"         data-go="kv"><span class="tocNum tocNum-pro">§10</span><span class="tocName">KV·上下文</span></a>
+    <a class="tocL" href="#sampling"   data-go="sampling"><span class="tocNum tocNum-pro">§11</span><span class="tocName">采样手艺人</span></a>
+    <a class="tocL" href="#structured" data-go="structured"><span class="tocNum tocNum-pro">§12</span><span class="tocName">结构化·工具</span></a>
+      </div>
+    </details>
+
+    <span class="sn-cap sn-cap-pro" style="border-left:2px solid var(--green);padding-left:6px">▸ 番外 · §13 玩家通鉴</span>
+    <a class="tocL" href="#players" data-go="players"><span class="tocNum tocNum-pro">§13</span><span class="tocName">厂商图谱 ✕ 大事年表</span></a>
+
+    <span class="sn-cap">▸ 实战进阶 · §14–15</span>
+    <a class="tocL" href="#rag"    data-go="rag"><span class="tocNum">§14</span><span class="tocName">RAG·本地知识库</span></a>
+    <a class="tocL" href="#fintune" data-go="fintune"><span class="tocNum">§15</span><span class="tocName">LoRA 微调</span></a>
+    <a class="tocL" href="#homebrew" data-go="homebrew"><span class="tocNum tocNum-pro">§16</span><span class="tocName">2026 折腾主场</span></a>
+    <span class="sn-cap-pro">▸ 查漏 · Glossary</span>
+    <a class="tocL" href="#glossary" data-go="glossary"><span class="tocNum tocNum-pro">φ</span><span class="tocName">极客词表 · 术语字典</span></a>
+  </div>
+  <div class="sn-foot"><a href="#top" class="sn-up">▲ back to top</a></div>
+</nav>
+<button class="sn-toggle" id="sn-toggle" aria-label="切换章节目录">☰ 章节</button>
+
+<main id="top">
+  <!-- ======= HERO ======= -->
+  <section class="hero">
+    <div class="inner">
+      <div class="hero-boot">
+        <div class="o">&gt; local-llm --version</div>
+        <div class="ok">&nbsp;&nbsp;Local LLM Gate v2025.REV · homebrew for geeks</div>
+        <div class="o">&gt; sudo ./init_curiosity &amp;&amp; exec gw</div>
+        <h1 class="bigname">
+          <span class="neon1">LOCAL </span><span class="neon3">LLM </span><span class="neon2">GATE</span>
+        </h1>
+        <p class="tagline">不联网，不设墙 —— 让 <span class="hl">万亿参数在你的铁盒里呼吸</span>。
+        一份写给极客的「本地部署开源大模型」从认知到实操的全链路通关手册。</p>
+        <div class="type-line"><span class="pfx">$&gt;</span> <span id="tw"></span><span class="cursor"></span></div>
+        <div class="hero-stats" data-count-block>
+          <div class="stat"><div class="v"><span data-count="40">0</span>+</div><div class="k">命令/公式 · 直接可抄</div></div>
+          <div class="stat"><div class="v"><span data-count="8">0</span>GB</div><div class="k">量化后入门显存即可进场</div></div>
+          <div class="stat"><div class="v" style="color:var(--cyan)"><span data-count="12">0</span>款</div><div class="k">开源强模型武器库精选</div></div>
+          <div class="stat"><div class="v" style="color:var(--green)"><span data-count="100">0</span>%</div><div class="k">数据主权 · by you for you</div></div>
+        </div>
+        <div class="cta">
+          <a class="btn btn-primary" href="#models">▽ 直达模型武器库</a>
+          <a class="btn btn-ghost" href="#deploy">▶ 一条命令开跑</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">▼ SCROLL TO BOOT ▼</div>
+  </section>
+  <!-- ======= 01 什么是大模型 ======= -->
+  <section class="block" id="what">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§01 // CONCEPT</span>
+        <h2 class="title">什么是「大语言模型」</h2>
+        <div class="line"></div>
+        <p class="lead">一句话：大模型是一台被千亿级文本「喂」出来的概率机器，
+        学会的不是记课文，而是词语之间的<span class="hl">规律与共现结构</span>。它不是数据库，而是「压缩了世界的统计大脑」。</p>
+      </div>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3"><span class="cmd">&gt;_</span>它到底是什么</div>
+          <div class="p">输入一长串 Token（被切成小块的文本），经深度神经网络逐层变换，
+          预测「下一个最可能出现的 Token」。把它当成一种<span class="n">基于注意力机制</span>的超强自回归模型即可。
+          <br><br>关键零件：<code>Token 化</code> → <code>Embedding(嵌入)</code> → 若干层
+          <code>Transformer 块(含自注意力/前馈)</code> → 输出概率分布。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3"><span class="cmd">!</span>不是什么</div>
+          <div class="p">前端不可见的知识库缓存、Web API 对接器、也不是联网搜索引擎。
+          它<b>不保证事实</b>，却极其擅长「在语言空间里求概率极值」——所以会一本正经地「幻觉」。</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3"><span class="cmd">#</span>一次前向「推理」旅途（ASCII 透视）</div>
+          <pre style="background:#0a101b;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;line-height:1.9;color:#a9d9f5;font-size:.82rem;margin:10px 0 0;">
+  "你好世界" ──▸ [ Tokenizer ] ─▸ [1024,  98]──┐
+              (切成词元)                        ▼
+  每个Token ——▸ [ h²/⁹ 投成 向量 ] · 位置编码
+              ▼
+   ┌────────────  Transformer × N 层 ───────────┐
+   │   · 多头自注意力：谁和谁有关？(Q/K/V)      │
+   │      └─ 长程依赖的真凶，也是显存大户 KV │
+   │   · 残差 + LayerNorm + RoPE 旋转位置       │
+   │   · 前馈网络 FFN：参数最多的"记忆仓库"     │
+   └──────────────┬─────────┬──────────────────┘
+                  ▼         ▼
+            Logits → Softmax ──▸ 下一个Token分布概率
+                  │
+          argmax / top-p 采样 ──▸ "的世界你好×"
+          （这就是你会看到的文字）</pre>
+          <p class="p" style="margin-top:10px;color:var(--txt-mut)">
+          显存两大开销：①<code>权重</code>（烤炉）②运行时动态增长的 <code>KV-Cache</code>（随对话变长的临时上下文缓存）。
+          理解了这两块，后面所有「显存量化」逻辑就不攻自破。</p>
+        </div>
+      </div>
+
+      <div class="grid cards2" style="margin-top:18px">
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">硬核术语快查</div>
+          <div class="p">
+          <div class="numline"><span class="n">param/参数</span>可学习的权重数，7B=约70亿</div>
+          <div class="numline"><span class="n">token</span>词元，中文约 0.7~1.5 汉字/个</div>
+          <div class="numline"><span class="n">上下文 ctx</span>能同时「记住」的 token 上限</div>
+          <div class="numline"><span class="n">logits/logprobs</span>未归一化的得分/对数概率</div>
+          <div class="numline"><span class="n">temperature</span>采样散度，越高越随机</div>
+          <div class="numline"><span class="n">top-p/核采样</span>从累计概率 p 内随机抽样</div>
+          <div class="numline"><span class="n">KV Cache</span>注意力缓存，随上下文线性吃显存</div>
+          </div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
+          <div class="h3">为什么「参数多 ≠ 更好」</div>
+          <div class="p">能力 = 数据质量 + 架构 + 训练策略 + <b>推理优化</b>。如今很多「小又强」模型（如 8B 级）
+          通过在更优数据与 MoE/蒸馏上下苦工，在单用户任务上已逼近旧旗舰。
+          对本地党是<b>天大的好消息</b>：不必再迷信 70B+B。</div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ======= 02 为什么本地部署 ======= -->
+  <section class="block" id="why">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§02 // WHY LOCAL</span>
+        <h2 class="title">为什么要把模型「请回自己家」</h2>
+        <div class="line"></div>
+        <p class="lead">把每一次 Prompt 都外包给云端，本质上是在向第三方<code>裸奔你的思考</code>。
+        本地部署换回的，是<span class="hl">主权、隐私、可控与一条不牵线的离线自由</span>。</p>
+      </div>
+      <div class="grid cards2">
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
+          <div class="h3"><span class="cmd">✓</span>数据主权 &amp; 隐私</div>
+          <div class="p">代码、病历、合同、私人日记……永远不过你的网卡。没有「你的对话被拿去炼模型」的隐忧，
+          也没有企业版与监管合规的灰色地带。终极安全感来自<b>不可外传</b>。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3"><span class="cmd">✓</span>离线 &amp; 零延迟 &amp; 无限量</div>
+          <div class="p">断网照跑、飞机高铁照聊。Token 不再按量计费——<b>算力即你有，跑多少都免费</b>。
+          没有速率限制(RPM)，可放开做批量摘要、抓取、代码评审等脏活累活。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3"><span class="cmd">✓</span>可锻打 · 自由的支配权</div>
+          <div class="p">可继续微调(Fine-tune)、可换量化策略、可加私有知识库、可调 `top_p/temperature` 到底。
+          一条指令随你替换模型，不被厂商「关版本 / 改行为 / 偷偷限流」绑架。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3"><span class="cmd">✓</span>成本曲线陡降</div>
+          <div class="p">长期重度使用下，一张甜品卡(几百到几千元级)的电费，往往远低于一年 API 订阅。
+          数据搬进本地，边际成本趋近零。#离线基建发烧友属性点满。</div>
+        </div>
+      </div>
+
+      <div class="tbl-scroll" style="margin-top:22px">
+        <table class="tbl">
+          <thead><tr><th>维度</th><th>云 API</th><th class="g">本地自部署</th></tr></thead>
+          <tbody>
+            <tr><td>隐私</td><td class="a">数据出域 / 条款不确定</td><td class="g">完全可控 · 不出设备</td></tr>
+            <tr><td>可用性</td><td>依赖网络与账号</td><td class="g">断网可用</td></tr>
+            <tr><td>成本模型</td><td>按 token 计费 · 高峰可能排队</td><td class="g">硬件一次投入 · 后续≈电费</td></tr>
+            <tr><td>定制/微调</td><td>受限</td><td class="g">全自由</td></tr>
+            <tr><td>模型上限</td><td class="g">云端最大、最全、最前沿</td><td>受本地 VRAM/内存限制</td></tr>
+            <tr><td>维护</td><td class="g">零维护（别人干）</td><td>要自己配环境、升级、对抗幻觉</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout warn"><span class="head">诚实声明：本地 ≠ 天下无敌</span>
+        本地受限于硬件，在「最强模型天花板」「海量评测极限」「极复杂 Agent」上通常仍弱于旗舰云 API。
+        聪明的极客做法是<b>混合路线</b>：敏感/重度/高频任务走本地，罕见疑难与震撼任务再临时求助云端。</div>
+    </div>
+  </section>
+  <!-- ======= 03 硬件门槛 ======= -->
+  <section class="block" id="hw">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§03 // HARDWARE</span>
+        <h2 class="title">硬件：显存决定你能养多大的「脑子」</h2>
+        <div class="line"></div>
+        <p class="lead">本地部署最大的物理定律是 <span class="hl">VRAM（显存）</span>。
+        别急着买卡，先用一条公式把你的需求算明白——再谈别的。</p>
+      </div>
+
+      <div class="card" style="grid-column:1/-1">
+        <div class="h3"><span class="cmd">$</span>显存通行公式（估算派）</div>
+        <pre class="frame" style="background:#0a101b;border:1px solid var(--line);border-radius:10px;padding:18px 20px;overflow-x:auto;color:#b7efe0;line-height:1.9;font-size:.9rem;margin:8px 0;">
+可装下？  ──  WH ≈ 参数量(B) × 每权重量化比特 ÷ 8   [+ 2~4GB 运行时/KV 缓冲]
+
+范例：Qwen3-14B 跑 Q4_K（≈每个权重 ~0.61 字节）
+  → 权重基准 ≈ 14 × 0.61 ≈ 8.5 GB   + 系统/KV ≈ 1~3 GB
+  → 至少需要 ~12GB 显存的显卡才能舒服拖动（上下文越长，KV 越多，需求上浮）</pre>
+        <p class="p" style="color:var(--txt-mut);margin-top:10px">关键结论：<b>吃显存的是「参数量 × 精度」，而不是「模型多聪明」</b>。
+        让你舒舒服服跑 8B 推理的门槛，眼下已经低到 6–10GB 显存（或纯 CPU + 大内存也行，就是慢）。</p>
+      </div>
+
+      <div class="tbl-scroll" style="margin-top:22px">
+        <table class="tbl">
+          <thead><tr><th>你的显存（大致）</th><th>甜点区模型（Q4 量化后）</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td>&lt; 6GB（核显/旧卡）</td><td><b>1B–4B</b>：Qwen3-1.7B/4B、Llama3.2-3B、Phi-4-mini、Gemma-2B</td><td>纯 CPU 也行，图一乐 / 端侧</td></tr>
+            <tr><td class="g">8–12GB（2060/3060/RX6xxx）</td><td class="g"><b>7B–8B</b>，Qwen3-8B、DeepSeek-R1-7B/8B、qwen coder 7B</td><td class="g">入门甜点。很能打了</td></tr>
+            <tr><td class="g">16–24GB（4060Ti-16/4070Ti/4080/4090）</td><td class="g"><b>14B–34B</b>：Qwen3-14B/32B、R1-14B/32B、Gemma3-27B</td><td class="g">一卡横着走，香</td></tr>
+            <tr><td class="a">24–48GB（7900XTX 双卡/4080 双卡）</td><td class="a"><b>Qwen3-30B 系 / R1-32B 大 ctx / MoE 235B 或 70B Q5</b></td><td class="a">工作站分水岭；启 Agent/RAG</td></tr>
+            <tr><td class="r">≥ 2×24GB 或多卡大显存</td><td class="r"><b>70B 级 Q4 或 MoE-Large</b>（R1-70B、LLaMA3.3-70B、Qwen3-235B 邻居）</td><td class="r">多卡拼接加速，进入玩票/小服务器领地</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout g"><span class="head">CPU-only 也能玩</span>
+        没有像样显卡？只要内存 > 模型大小 + 一些余量即可跑（大量 SDRAM 便宜且能大）。但吞吐逊于 GPU，生成偏慢。
+        <code>llama.cpp</code> / <code>Ollama</code> 都支持纯 CPU；想加速再开启 AVX2 / Apple 的 Metal / AMD 的 Vulkan 等。</div>
+    </div>
+  </section>
+  <!-- ======= 04 模型武器库 ======= -->
+  <section class="block" id="models">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§04 // ARMORY</span>
+        <h2 class="title">模型武器库：近一年可本地部署的开源强模型</h2>
+        <div class="line"></div>
+        <p class="lead">只挑「<span class="hl">个人 PC / 小型工作站</span> 跑得动、且血统开放、口碑能打」的。
+        显存均按量化后估算；追求精度请直接看官方仓库与许可。</p>
+      </div>
+
+      <div class="filterrow" role="group" aria-label="按用途筛选模型">
+        <button class="fbtn on" data-filter="all">★ 全部</button>
+        <button class="fbtn" data-filter="full">全能</button>
+        <button class="fbtn" data-filter="chat">对话/通用</button>
+        <button class="fbtn" data-filter="reason">深度推理</button>
+        <button class="fbtn" data-filter="code">代码/智能体</button>
+        <button class="fbtn" data-filter="vision">视觉/多模态</button>
+        <button class="fbtn" data-filter="edge">轻量/端侧</button>
+        <span class="badge b-green" id="mstat" style="margin-left:auto">…加载中</span>
+      </div>
+
+      <div class="mcards" id="mwall" aria-live="polite">
+        <noscript><p class="lead">请启用 JavaScript 以渲染模型卡。</p></noscript>
+      </div>
+
+      <div class="callout warn"><span class="head">免责声明（重要）</span>
+        上方「显存门槛」为 <b>量化后粗略估算</b>，会因量化方法、上下文长度、KV-Cache 优化与引擎不同而浮动。
+        许可名称/标签以模型发布时的官方措辞为准；部分模型社区别名与官方口径存在差异。</div>
+
+      <div class="callout g"><span class="head">如果你第一次部署的建议（看这里）</span>
+        中文/通用首推 <b>Qwen3-8B</b>；要一点思考秀选 <b>DeepSeek-R1-7B/8B</b>；
+        只跑代码 <b>Qwen2.5-Coder-7B</b> 或 <b>R1-14B(distill)</b>；机器很小又想体验 <b>Qwen3-1.7B 或 Llama3.2-3B</b>。
+        先小后大，先用 Ollama 把流程跑通，再谈极致。</div>
+    </div>
+  </section>
+  <!-- ======= 05 部署实战 ======= -->
+  <section class="block" id="deploy">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§05 // DEPLOY</span>
+        <h2 class="title">部署实战：把模型真正「装进」机器里</h2>
+        <div class="line"></div>
+        <p class="lead">新人一律推荐 <span class="hl">Ollama</span>（一条命令极简）或
+        <span class="hl">LM Studio</span>（图形化拖拽）；追求性能与定制再上 <code>llama.cpp / vLLM</code>。
+        下面四套，由易到难，都讲透。</p>
+      </div>
+
+      <div class="grid cards2">
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
+          <div class="h3">① Ollama —— 极客入门首选</div>
+          <div class="p">把 llama.cpp 的复杂度揉成一句话。跨平台，自动量化/下载，自带 OpenAI 兼容端点，支持模型切换与 Modelfile 微调参数。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">② LM Studio —— 桌面 GUI 甜点</div>
+          <div class="p">可视化下载/试跑/对比模型，适合 Windows / macOS，鼠标点点即可起一个本地 Chat + Local Server。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">③ llama.cpp —— 底层控场之王</div>
+          <div class="p">原生 GGUF 的 C/C++ 运行时，逐 token 零依赖、CPU 也飞快；GGUF 单文件便于迁移与免 Docker 离线拷贝。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3">④ vLLM —— 吞吐/服务化（进阶）</div>
+          <div class="p">主打 PagedAttention 高并发吐词与 OpenAI 兼容批量推理，适合小服务器/生产把本地能力打包成 API。</div>
+        </div>
+      </div>
+
+      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">主链路 · Ollama（Win / macOS / Linux）</h3>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>zsh ~ Win PowerShell 同构 · install &amp; run</span><span class="copy">⧉ 复制</span></div>
+        <pre><span class="cm"># 1) 安装：https://ollama.com/download （win/mac 下载即用）或 Linux：</span>
+<span class="p">$</span> <span class="c">curl -fsSL https://ollama.com/install.sh | sh</span>
+
+<span class="cm"># 2) 拉取并跑一个模型（自动量化下载）| 例如中文超好用的 7B 全家桶</span>
+<span class="p">$</span> <span class="c">ollama run qwen3:8b</span>
+<span class="o">&gt;&gt;&gt; 你好，这里是 100% 本地。😎</span>
+
+<span class="cm"># 3) 换一个「会思考」的：DeepSeek-R1 蒸馏系</span>
+<span class="p">$</span> <span class="c">ollama run deepseek-r1:8b</span>
+
+<span class="cm"># 4) 查看本地模型 / 退出 / 设置并发与上下文</span>
+<span class="p">$</span> <span class="c">ollama list           # 已装清单</span>
+<span class="p">$</span> <span class="c">/bye                 # 会话内退出</span>
+<span class="p">$</span> <span class="c">env OLLAMA_CONTEXT_LENGTH=32768 ollama run qwen3:8b</span></pre>
+      </div>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>任意 OpenAI 客户端一键接本地（Ollama 端口 11434）</span><span class="copy">⧉ 复制</span></div>
+        <pre><span class="cm"># 验证服务起没起：</span>
+<span class="p">$</span> <span class="c">curl http://localhost:11434/api/tags</span>
+<span class="o">{"models":[{... "name":"qwen3:8b" ...}]}</span>
+
+<span class="cm"># 抛一条最简请求：</span>
+<span class="p">$</span> <span class="c">curl http://localhost:11434/v1/chat/completions -H "Content-Type: application/json" -d '{</span>
+  "model": "qwen3:8b",
+  "messages": [{ "role": "user", "content": "讲个只有极客懂的冷启动段子" }]
+<span class="c">}'</span>
+
+<span class="cm"># 于是：把 .env 里的 OPENAI_BASE_URL 指向本机即可让几乎所有客户端倒向本地
+# 例（Python/OpenAI SDK）：OpenAI(base_url="http://127.0.0.1:11434/v1", api_key="ollama")</span></pre>
+      </div>
+
+      <div class="grid cards2" style="margin:26px 0 4px">
+        <div class="callout g" style="margin:0"><span class="head">② LM Studio（Windows / macOS 图形化）</span>
+          官网下载安装 → Models 页搜 <code>qwen3 8b</code> 或 <code>deepseek r1</code> →
+          挑一个 GGUF 标签（喜欢 Q4_K_M）→ Download → 点 Chat / 右上角 <span class="hl">Local Server</span>
+          即得 `http://localhost:1234` 的 OpenAI 兼容端点。全程鼠标，适合给女朋友/非技术队友演示。</div>
+        <div class="callout g" style="margin:0"><span class="head">拉指定量化档（GGUF 标签）</span>
+          Ollama：<code>ollama pull qwen3:8b-q4_K_M</code>；想更省更慢可 <code>-q3</code>，更准 <code>-q8</code>。
+          HuggingFace 上很多发行商直接给 <code>Qwen_Q3/…_K_M.gguf</code> 单文件，下好一句
+          <code>ollama create name -f ./Modelfile</code> 即可注册成本地模型。
+        </div>
+      </div>
+      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">③ llama.cpp —— GGUF 单文件 + CPU 也能跑</h3>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>bash · llama-server（自带 OpenAI 兼容端点）</span><span class="copy">⧉ 复制</span></div>
+        <pre><span class="cm"># 0) 编译/或从 GitHub Releases 拿现成二进制（ggml-…-bin）</span>
+<span class="p">$</span> <span class="c">git clone --depth 1 https://github.com/ggml-org/llama.cpp &amp;&amp; cd llama.cpp</span>
+<span class="p">$</span> <span class="c">cmake -B build -DGGML_NATIVE=ON &amp;&amp; cmake --build build --config Release -j</span>
+
+<span class="cm"># 1) 拿到一个 .gguf（比如从 HF 下载）</span>
+<span class="c">wget https://…/models/…/qwen3_8b_q4_k_m.gguf</span>
+
+<span class="cm"># 2) 纯 CPU / -ngl 可指定显存层数；-c 上下文；-t 线程；--jinja 用原生模板</span>
+<span class="p">$</span> <span class="c">./build/bin/llama-server -m ./qwen3_8b_q4_k_m.gguf \
+   --port 8080 -c 8192 -t 8 --jinja</span>
+<span class="o">[..] server is listening on http://0.0.0.0:8080</span>
+
+<span class="cm"># 3) 结构化 LLM 应用通常走这里的 /v1/chat/completions 或 /completion</span>
+<span class="p">$</span> <span class="c">curl http://localhost:8080/v1/chat/completions -H "Content-Type: application/json" -d \
+  '{"model":"qwen3","messages":[{"role":"user","content":"hi"}]}' </span>
+
+<span class="cm"># 技巧：OLLAMA_… 省事；llama-server 优势是可控内核参数量与流式 / 输出 JSON schema(guided)</span></pre>
+      </div>
+
+      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">④ vLLM —— 当你想要「生产线级吞吐」</h3>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>bash · pip/uv 直装 + OpenAI 兼容 service</span><span class="copy">⧉ 复制</span></div>
+        <pre><span class="cm"># 需要一只 NVIDIA / 好 CPU 环境，Python3.10+；Windows 建议 WSL2 或 Docker</span>
+<span class="p">$</span> <span class="c">pip install vllm</span>
+
+<span class="cm"># 拉起例如 Qwen 或 LLama 等 HF 权重：</span>
+<span class="p">$</span> <span class="c">python -m vllm.entrypoints.openai.api_server \
+   --model Qwen/Qwen3-8B \
+   --gpu-memory-utilization 0.9 \
+   --max-model-len 16384 \
+   --port 8000</span>
+<span class="o">INFO: Started server process … http://0.0.0.0:8000</span>
+
+<span class="cm"># 然后它就是一个 OpenAI API —— curl 测一发</span>
+<span class="p">$</span> <span class="c">curl http://localhost:8000/v1/chat/completions -H "Content-Type: application/json" \
+  -d '{"model":"Qwen/Qwen3-8B","messages":[{"role":"user","content":"写两句 hello world 讲讲"}]}'</span>
+
+<span class="cm"># 进阶组合拳： batch(packing) 超长 ctx / 前缀缓存 / speculative decoding / tensor-parallel=2 多卡</span></pre>
+      </div>
+      <div class="tbl-scroll" style="margin-top:26px">
+        <table class="tbl">
+          <thead><tr><th>引擎</th><th>上手</th><th>强项</th><th>适合谁</th><th>平台注意</th></tr></thead>
+          <tbody>
+            <tr><td class="g"><b>Ollama</b></td><td>★极低</td><td>命令端极简 · 自动量化 · 生态广</td><td>新手 / 80% 场景默认解</td><td class="g">Win/mac/Linux 原生</td></tr>
+            <tr><td class="g"><b>LM Studio</b></td><td>★GUI</td><td>可视化试模型 · 端点一键起</td><td>桌面党 / 演示</td><td class="g">Win/macOS</td></tr>
+            <tr><td><b>llama.cpp</b></td><td>★★★</td><td>GGUF 底层控制 · CPU 兼容最佳</td><td>深度定制 / 老机器</td><td class="a">Win 需 Git/CMake</td></tr>
+            <tr><td><b>vLLM</b></td><td>★★★★</td><td>高吞吐批量 · OpenAI 服务化</td><td>生产 / 多人小服务</td><td class="a">建议 CUDA / WSL2</td></tr>
+            <tr><td class="a"><b>Docker(jetson 等)</b></td><td>★★</td><td>环境隔离 · GPU passthrough</td><td>换机免折腾 / 试玩镜像</td><td class="a">Win 走 WSL2 backend</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout"><span class="head">Apple Silicon / macOS 用户专线</span>
+        内存共享即「显存」！M 系 16GB 起步 + <code>Metal</code>，跑 8B 又快又省电。
+        Ollama/llama.cpp 均已原生支持；别听信「Mac 不能跑 AI」的过时笑话。选模型记得看 `Metal / GGML` 优化。</div>
+      <div class="callout warn"><span class="head">Windows 三件坑（先说为敬）</span>
+        ① 驱动得用 CUDA 驱动；② 路径别带中文别带空格；③ 首次 <code>ollama show</code> 或运行极慢多半是没走 GPU——
+        确认 <code>ollama ps</code> 里的 PROCESSOR 是 GPU。逐项排了再往下。</div>
+    </div>
+  </section>
+  <!-- ======= 06 量化深水区 ======= -->
+  <section class="block" id="quant">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§06 // QUANTIZATION</span>
+        <h2 class="title">量化深水区：如何「压缩」你的钢铁之心</h2>
+        <div class="line"></div>
+        <p class="lead">同样一个模型，Q8 与 Q3 的差距不在文件个头，而在<span class="hl">「每一句会不会走样」的边缘</span>。
+        搞清楚原理，你就能在 <b>体积 × 速度 × 手感</b> 之间站稳自己的支点。</p>
+      </div>
+
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">量化在做什么</div>
+          <div class="p">把连续的 FP16/BF16 权重「对齐」到少比特表示（Q4=4bit/权重）。神经网络对此异常宽容：
+          单权重损失一点点精度，乘以百万个参数后彼此抵消多于累积，整体语义几乎不变。
+          于是我们能用 <b>一半甚至 1/4 的显存</b> 塞下模型，换来更高速度。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">代价在哪里</div>
+          <div class="p">比特越低，长程依赖、数学多步、JSON/代码补全的「精确尾巴」越容易被咬掉。
+          Q2/Q1 属于「能跑但开始胡言」；敏感任务宁愿回 Q6/F16 甚至换更大基座，也别硬抠省显存。</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">GGUF 常见档位速查（llama.cpp / Ollama / LM Studio 通用）</div>
+          <div class="p">
+          <div class="numline"><span class="n">F16 / BF16</span>≈2B每权重 · 最接近原版 · 最吃显存</div>
+          <div class="numline"><span class="n">Q8_0</span>≈1.06B · 几乎无损 · 略肥</div>
+          <div class="numline"><span class="n">Q6_K</span>≈0.82B · 高质量下线，我愿称之为「甜点安全线」</div>
+          <div class="numline"><span class="n">Q5_K_M</span>≈0.72B · 很常见的性价比 <b>推荐</b></div>
+          <div class="numline"><span class="n">Q4_K_M</span>≈0.61B ·「大众情人」，体积/手感最均衡 <b>新手默认选它</b></div>
+          <div class="numline"><span class="n">Q3_K_S/M</span>≈0.47B · 开始露馅 · 大模型才勉强用</div>
+          <div class="numline"><span class="n">Q2_K</span>≈0.33B · 显存极限才玩 · 语义风险高</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout g"><span class="head">给不折腾党的三条「够用原则」</span>
+        ①能用 <code>Q4_K_M</code> 或 <code>Q5_K_M</code> 就跑这些，别为 2% 手感赌脸；②吃紧就降上下文而非降比特——KV 瘦身(如 KV-quant)
+        常比砍权重更划算；③代码/长推理要求高时，宁可用 L+KV-quant 或升一档容量，也别 Q3。</div>
+      <div class="callout"><span class="head">进阶名词（认识即可，用时可查）</span>
+        AWQ / GPTQ（更稳的分组量化）、AQLM、KV Cache 量化、XMX(imatrix)校准、感知量化(QAT)。
+        CPU/Apple 走 GGUF 体系最顺；N 卡生产者吞吐党常选 AWQ/GPTQ + vLLM 原生化体验。</div>
+    </div>
+  </section>
+  <!-- ======= 07 避坑指南 ======= -->
+  <section class="block" id="pits">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§07 // WAR STORIES</span>
+        <h2 class="title">避坑指南：我替你踩过的坑，就别再踩了</h2>
+        <div class="line"></div>
+        <p class="lead">症状 → 成因 → 解法。按「看起来像是哪类问题」点开对应的洞。</p>
+      </div>
+
+      <details class="acc" open>
+        <summary><span class="ico">■</span>装了却“飞快的胡说” / 乱码火星文<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>成因</b>：量化太低（Q2/Q1）或上下文被人为压缩；也可能默认温度过高。</p>
+          <p><b>解法</b>：改用 <code>q4_K_M/q5_K_M</code>；把 <code>num_ctx</code>(OLLAMA_CONTEXT_LENGTH)设到 8192+；把 <code>temperature</code> 降到 0.6~0.8；代码任务 <code>top_p</code> 0.9 附近。还乱？换它的原版 F16 试一次定位是“量化伤”还是“数据本就弱”。</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">■</span>GPU 明明在，却很慢 / Ollama 一直吃 CPU<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>成因</b>：没真正落到显卡、驱动或模型层没被识别为可 GPU。</p>
+          <p><b>解法</b>：看 <code>ollama ps</code> 的 <code>PROCESSOR</code> 是否显示 GPU；Win 装对应 CUDA 驱动、并用支持的后端；llama.cpp 检查 <code>-ngl</code> 层数与日志里的 <code>offload</code>。别被“已启动”糊弄，眼见为实。</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">■</span>文件很大：下载一半 / 显存老不够<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>成因</b>：你在下载原版 FP16 而不是量化；或上下文被顶到极限把 KV 吃爆。</p>
+          <p><b>解法</b>：找 <code>…-GGUF</code> 仓库挑 <code>Q4_K_M</code>；用 <code>-c 4096</code> 起步、再一点点加；实在不够再考虑 KV-Cache 量化或 <code>--flash-attn</code>。想一步到位就选匹配显存档次的模型尺寸。</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">■</span>客户端连不上本地 / 端口被占 / CORS 报错<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>成因</b>：服务没监听 0.0.0.0；或走的还是别家代理；浏览器跨域挡了。</p>
+          <p><b>解法</b>：确认端点 <code>curl http://localhost:11434/v1/models</code> 有应答；Web UI 用官方码头或加入 <code>CORS</code> 开关；换浏览器直连 <code>127.0.0.1</code> 排查。断掉 clash/system proxy 再试一次，多半立刻就好。</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">■</span>OOM 崩溃 / 电脑卡到“幻灯片” / 疯狂 swap<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>成因</b>：权重 + KV + 运行时总量超了物理显存，系统退而用内存/磁盘抖动。</p>
+          <p><b>解法</b>：降一档模型或比特；压 <code>-c</code> 上下文；开 <code>flash attention</code> &amp; KV 量化；关掉并行 browser/AI 抢显存的进程。仍崩就证明此模型不适合这台机器 —— 换小不丢人。</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">■</span>多语言：小模型只会讲英文 / 中文答不准<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>成因</b>：训练语料英文偏重，小参数量中文覆盖不足。</p>
+          <p><b>解法</b>：中文场景优先 <b>Qwen / GLM / InternLM / DeepSeek</b> 家族与中文强化版；提醒自己在模型名带 <code>chat/…zh</code>；小模型不要期待“满血中文学术级”，该换 8B→14B 时别省电。</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">■</span>下载卡成蜗牛 / 国内访问 HF 不稳定<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>成因</b>：huggingface.co 国内直连慢。</p>
+          <p><b>解法</b>：用镜像 <code>HF_ENDPOINT=https://hf-mirror.com</code>；Ollama 走其自带且国内可用的分发；必要时 <code>hf download</code> 带 <code>hf_transfer</code> 多线程；先只拉需要的 quantization 文件而非整份快照。</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">■</span>多人共用老是挤爆 / vLLM 一会儿 OOM 一会儿空转<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>成因</b>：没做并发与批量化，所有请求独占 KV 与显存。</p>
+          <p><b>解法</b>：服务层加 <code>Continuous batching</code>(Ollama/OpenWebUI 有队列)、限制 <code>max model len</code>，
+          摊给 <code>tensor-parallel</code>(多卡) 或 <code>data-parallel</code>(多实例)；别把 128k 上下文全放给每人。</p>
+        </div>
+      </details>
+
+      <div class="callout"><span class="head">无法归类？给你一个万能三连</span>
+        <code>1&gt; 日志先行</code> —— 服务端 stdout 一定有线索；
+        <code>2&gt; 最小复现</code> —— 去掉 RAG/代理/插件，单裸模型 <code>curl</code> 试；
+        <code>3&gt; 版本对表</code> —— Ollama/llama.cpp 是滚动发布，先 <code>ollama update</code>。别一上来重抠代码。</div>
+    </div>
+  </section>
+  <!-- ======= 08 调优与生态 ======= -->
+  <section class="block" id="res">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§08 // TUNE &amp; ECOSYSTEM</span>
+        <h2 class="title">调优与生态：从“能跑”到“好用”</h2>
+        <div class="line"></div>
+        <p class="lead">部署只是第一步。让吞吐、上下文、工具链与自己握手，才是持续工程的开始。</p>
+      </div>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">吞吐优先</div>
+          <div class="p">要大<b>每秒 token</b>：开 flash-attn、加 batch、CPU 党多线程+AVX2、llama.cpp 用 Metal/CUDA 后端；
+          KV Cache 关 OOM 尾巴。先 <code>bench</code>，再动手。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">上下文运用</div>
+          <div class="p">别把整本书塞进对话。做 <b>RAG 检索只取相关段</b>、系统提示精简留白；必要时 <code>kv cache reuse / 前缀缓存</code> 提升长对话跟手度。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">工具链 &amp; Agent</div>
+          <div class="p">让模型<code>function-calling</code>：给工具 JS/JSON schema，<code>guided decode/grammar</code> 保证输出合法；
+          靠 <b>OpenWebUI / LobeChat / Continue(IDE)</b> 等开源前端承接交互，瞬间体验翻倍。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3">固话与迭代</div>
+          <div class="p">选对基底后把它“炼熟”：<code>LoRA 微调</code>学你的领域、<code>DPO/RMM</code>塑人格、量化前先存 FP16 一份做对照。版本化你的 Modelfile，踩坑可回滚。</div>
+        </div>
+      </div>
+
+      <div class="tbl-scroll" style="margin-top:24px">
+        <table class="tbl">
+          <thead><tr><th>你想达成的目标</th><th>推荐第一步</th></tr></thead>
+          <tbody>
+            <tr><td>本地 Chat UI 全家桶</td><td><b>OpenWebUI</b>（容器化+多人+联网搜索插件）</td></tr>
+            <tr><td>IDE 里 AI 编程补全</td><td><b>Continue / Tabby</b> 指到 <code>localhost</code> 的 OpenAI 端点</td></tr>
+            <tr><td>把 AI 接进自己的 Python</td><td>OpenAI SDK 换 <code>base_url</code> / 直接 <code>ollama-python</code></td></tr>
+            <tr><td>落地到老机器/无 GPU</td><td>llama.cpp + Q4 档 + batching</td></tr>
+            <tr><td>小服务器/生产高吞吐</td><td>vLLM + AWQ + 前缀缓存 + tensor-parallel</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="h3">藏书阁 · 值得收藏的入口</div>
+        <div class="p" style="line-height:2">
+          <span class="badge b-green">官方</span> Ollama(github.com/ollama/ollama) · llama.cpp(github.com/ggml-org/llama.cpp) · vLLM( github.com/vllm-project/vllm )
+          · LM Studio(lmstudio.ai) · OpenWebUI( github.com/open-webui/open-webui )<br>
+          <span class="badge b-cyan">社区/数据</span> HuggingFace(huggingface.co) · Ollama 模型库(ollama.com/library) · Open LLM 榜单(HF Space) · 各模型的官方仓库许可页<br>
+          <span class="badge b-amber">工具/哨兵</span> Local Remote (本地对比) · 显存计算器 · GGUF-KoboldCpp · CT2-Transformers
+        </div>
+      </div>
+      <div class="callout warn"><span class="head">安全提醒（想当长期劳动者的自觉）</span>
+        允许联网 / Agent 工具的本地 AI 也是<code>权限跳跃点</code>。别让它裸跑 root；容器跑、最小权限、
+        独立 token、内容沙箱审查；别把私密 key 轻易交给模型生成的代码。玩得野，但要关好后门。</div>
+    </div>
+  </section>
+
+  <!-- ======= §09 MoE 深层 ======= -->
+  <section class="block" id="moe">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§09 // BEYOND · MoE</span>
+        <h2 class="title">MoE 稀疏架构：大又如何「小而省」</h2>
+        <div class="line"></div>
+        <span class="lvl pro" style="margin-top:14px">▸ 进阶 · 看懂即可</span>
+        <p class="lead" style="margin-top:10px">DeepSeek-671B、Qwen3-235B / 32B-A3B、GPT-OSS-120B…… 2025 年最会「装」的模型，几乎全是 MoE。
+        先破一个迷思：<span class="hl">「70B」并不可怕</span>——真正进门看的是<b>激活参数</b>。</p>
+      </div>
+
+      <h3 class="lvl-sub">什么是「专家混合」Mixture-of-Experts <span class="lvl core">CORE</span></h3>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">稠密 vs 稀疏：两条路</div>
+          <div class="p">普通模型每个 token 都「唤醒」全部参数 → <b>稠密(dense)</b>。
+          MoE 把 FFN 层切成很多<b>专家(experts)</b>，由路由器(Router/Gating)按 token「只叫醒 top-k 个专家」→ <b>稀疏(sparse)</b>。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">关键二量：总 vs 激活</div>
+          <div class="p">例 <code>Qwen3-32B-A3B</code>：总参数 32B、激活只有 3B。
+          它的<b>存储</b>仍要按 32B 塞进显存，但<b>每个 token 的计算</b>只走 3B → 推理快一个量级，还经常打得过稠密 14B。</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">为什么 MoE 是「本地党的福音」</div>
+          <div class="p">「总参数越大越聪明」依旧成立——但聪明的代价从<b>「算力」</b>转到了<b>「存储/带宽」</b>。
+          你的单卡哪怕只能慢慢喂权重（带宽受限），仍可能以稀疏激活体验到接近「旗舰智商」的生成。
+          <b>瓶颈公式：</b>每 token 需读取的路由权重 = (专家数+共享专家) 的更新路径 —— 简记「吃存储、省计算」。</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">本地要重点看的 MoE 细节 <span class="lvl guru">guru</span></h3>
+      <div class="insights"><span class="h">读懂这三种数，你就算入行了</span><ul>
+        <li><b>Experts + Top-K</b>：如 <code>128 专家、top-2</code> ——每个 token 被 2 个专家处理，路由器输出稀疏概率。</li>
+        <li><b>Shared/共享专家</b>：部分激活始终在场，兜底通用能力（Qwen3-235B 那类带共享专家的吃显存会略高）。</li>
+        <li><b>总参 / 激活参</b>标在模型名：<code>DeepSeek-V3 系 = 671B-A37B</code>、<code>Qwen3-32B-A3B</code>、<code>Qwen3-235B-A22B</code> —— <code>-A</code> 后面就是“每 token 真用的激活量”。</li>
+      </ul></div>
+      <div class="callout warn"><span class="head">本地部署 MoE 的暗坑（一定先读）</span>
+        MoE 文件偏大 → <b>磁盘要足够</b>；显存吃「总参数（量化后）+ 路由开销」而非仅激活参。<br>
+        纯 CPU 玩家若能接受带宽瓶颈，MoE 反而是「少钱买智商」的惊喜路线；GPU 玩家看 <code>-ngl</code> 能否把路由层也装入显存。</div>
+      <div class="callout g"><span class="head">「读完能解决什么」</span>
+        ① 不再被 235B 吓退，知道它量化后为何仍可能塞进双卡/大内存机；② 选型时把「激活参」当第一眼指标；③ 部署 MoE 时预判「磁盘+带宽才是拦路虎」。</div>
+    </div>
+  </section>
+  <!-- ======= §10 KV-Cache ======= -->
+  <section class="block" id="kv">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§10 // BEYOND · MEMORY</span>
+        <h2 class="title">KV-Cache 与上下文经济学</h2>
+        <div class="line"></div>
+        <span class="lvl pro" style="margin-top:14px">▸ 进阶 · 本地显存第一大隐形杀手</span>
+        <p class="lead" style="margin-top:10px">为什么 8k 上下文跑得好好的，一开 128k 就 <span class="hl">OOM</span>？
+        因为每多一个 token，不只是「多存一句话」，而是模型要记住每一层的交互——<b>这笔账，是 KV-Cache 在算</b>。</p>
+      </div>
+
+      <h3 class="lvl-sub">一笔注定增长的显存 <span class="lvl core">CORE</span></h3>
+      <div class="grid cards2">
+        <div class="card" style="grid-column:1/-1"><span class="accent"></span>
+          <div class="h3">KV-Cache 到底存了什么</div>
+          <div class="p">推理时每个 token 在每层注意力里都产出 Key/Value 向量；生成新 token 要用<b>所有历史 K/V</b>做匹配。
+          为不重算历史，引擎把它们缓存成 <code>KV-Cache</code>。<br><br>
+          <b>一条很唬人的近似式：</b><br>
+          <code>KV内存 ≈ 层数 × KV 头数 × 头维度 × 上下文长度 × 每元素字节 × 2(K+V)</code><br>
+          简化记忆：<b>大体「随上下文 token 数线性增长」，且要与权重并存于显存</b>。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">8k → 128k 真会 ×16？</div>
+          <div class="p">权重占显存是常数；但 KV 增长≈随 <code>seq_len</code> 线性 → 上下文提高 16 倍，KV 占显存也约 ×16
+          （分页/量化的进程可再打折）。对 8B 级一般权重大几 GB，长上下文常直接把模型踢出显存。这是 90% 长文 OOM 的真相。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">四把「砍价刀」，分别砍哪块</div>
+          <div class="p"><b>FlashAttention</b>：不解内存墙但从 O(n²)→O(n)，让长文不那么大开销地流动计算；
+          <b>KV-Cache 量化(如 Q8/Q4 kv)</b>：直接把缓存按更低位存，最直观瘦身；
+          <b>前缀缓存 / kv-reuse</b>：相同系统提示/模板复用缓存不重算；
+          <b>GQA/MQA</b>：架构层让 KV 头更少→先天瘦（Qwen/Llama-3 已内置）。</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">长上下文还有第三个坑：速度 <span class="lvl guru">guru</span></h3>
+      <div class="insights"><span class="h">上下文越长不只内存，推理每步还在变慢</span><ul>
+        <li>Decode 每步都要把整段历史 key/value 拿出来算注意力 → token 越多，单步越慢（长文末段会明显变卡）。</li>
+        <li><b>RoPE 外推 / 插值</b>：Neo 时代用旋转位置嵌入，把 4k 训练长度的模型“挤出”到 32k/128k——代价是超长段注意力衰减需工程救。</li>
+        <li><b>长文做题不是“全记住”</b>：RAG 或滑动窗口(summarization+retrieval) 往往比硬塞 128k 又快又准又便宜。</li>
+      </ul></div>
+      <div class="callout g"><span class="head">照做的三条（先别急着开大上下文）</span>
+        ① 默认 <code>8k / 16k</code>，真需要长资料再 <b>分段检索</b>；② 开 <code>flash-attn</code>，再用 KV 量化抠显存；③ llama.cpp / Ollama 都留 `-c` 显式设上下文，默认值常常骗你。</div>
+      <div class="callout"><span class="head">读完能解决</span>
+        看懂任意模型“最大上下文”背后的显存与速度代价；知道长文该用“结构方舱”（RAG/检索）而非“硬塞”；调 `context` 不再靠撞运气。</div>
+    </div>
+  </section>
+  <!-- ======= §11 采样 ======= -->
+  <section class="block" id="sampling">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§11 // BEYOND · DECODE</span>
+        <h2 class="title">采样手艺人：模型究竟怎么「选词」</h2>
+        <div class="line"></div>
+        <span class="lvl pro" style="margin-top:14px">▸ 进阶 · 一句话决定像不像 AI</span>
+        <p class="lead" style="margin-top:10px">同样的模型，有人调到文采飞扬、有人调到冷血数据库——差别全在<span class="hl">那几个采样参数</span>。
+        temperature 只是冰山一角。给程序用的「稳定输出」跟给文案的「有灵感」从不是同一套参数。</p>
+      </div>
+
+      <h3 class="lvl-sub">先排个优先级 <span class="lvl core">CORE</span></h3>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">top_p（核采样）</div>
+          <div class="p">只在累计概率约覆盖 <code>p</code> 的那堆候选里抽：CPU 上按总概率堆叠，砍掉“跑偏的尾巴”。
+          兼顾质量又留变化，日常调它最顺手。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">top_k</div>
+          <div class="p">只保留概率最高的前 k 个候选再抽 —— 更“当头一刀”。太大会放浪、太小会死板；
+          配合 top_p 约束常能压住写一半开始飘的问题。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">temperature</div>
+          <div class="p">缩放 logits 的“温差”：低→更稳（趋于 argmax），高→更随机地探索。注意它只影响<b>概率对比</b>，
+          单独高 temp 往往不是“更有创意”，而会字数暴走。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3">min_p &amp; repeat</div>
+          <div class="p"><b>min_p</b>：低于“最优候选的某比例”的候选直接扔掉（防低概率碎词）；
+          <b>repeat_penalty / frequency</b>：给已经说过的话小罚分，压复读。它们常常比猛降 temp 更管用。</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">一份「能直接抄」的任务→配方 <span class="lvl guru">guru</span></h3>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>目标</th><th>temperature</th><th>top_p</th><th>top_k</th><th>其他建议</th></tr></thead>
+          <tbody>
+            <tr><td>稳定JSON/代码/函数调用</td><td class="a">0.0–0.2</td><td>0.9–1.0（主导似 argmax）</td><td>高或关</td><td>强烈建议配 guided/JSON-schema，见 §12</td></tr>
+            <tr><td>通用对话/翻译/总结</td><td class="g">0.7</td><td class="g">0.9</td><td>默认</td><td>min_p≈0.05 防碎词</td></tr>
+            <tr><td>创意文案/诗/头脑风暴</td><td>0.9–1.1</td><td>0.95–1.0</td><td>高</td><td>repeat↑ 同句循环别太狠</td></tr>
+            <tr><td>事实问答/检索增强(RAG)</td><td class="a">0.2–0.3</td><td>0.9</td><td>默认</td><td>配 top-k、别开过重启发文段</td></tr>
+            <tr><td>长回答防“尾巴反复”</td><td>0.6</td><td>0.92</td><td>48</td><td>加 small repeat_penalty 1.05–1.1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>在 Ollama 里把参数写进一条消息（一次会话内）</span><span class="copy">⧉ 复制</span></div>
+        <pre><span class="p">$</span> <span class="c">ollama run qwen3:8b --num-ctx 8192 --temperature 0 --num-predict 1024</span>
+<span class="o">使用 --temperature 0 得到尽量稳定的输出。
+也可在 API 里直接传：
+{ model, messages:[…],  "options": { "temperature":0.2, "top_p":0.9, "repeat_penalty":1.1 } }
+ 若换了模型/任务，把配方当起点当刻度，别当真理。</span></pre>
+      </div>
+      <div class="callout g"><span class="head">为什么你会看到“越改越差”</span>
+        ① 先检查<b>上下文是否太小</b>（前文被截）——不是采样的锅；
+        ② 别一次动太多旋钮，抓主要矛盾（先 top_k/top_p，再 temp）；
+        ③ “稳定”不等于 temp=0（argmax 会错过概率略低的正确词），给结构化任务建议 JSON-schema 而非硬凑温度。</div>
+      <div class="callout"><span class="head">读完能解决</span>
+        不再对着 temperature 一门心思猛拧；能给 JSON/对话/创意/RAG 各配一组说得出口的参数；能解释“为什么模型复读/变傻/爱跑偏”。</div>
+    </div>
+  </section>
+  <!-- ======= §12 结构化&工具 ======= -->
+  <section class="block" id="structured">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§12 // BEYOND · INTEROP</span>
+        <h2 class="title">结构化输出与工具：让模型「说人话按程序脾气」</h2>
+        <div class="line"></div>
+        <span class="lvl guru" style="margin-top:14px">▸ 硬核 · 本地应用联调必备</span>
+        <p class="lead" style="margin-top:10px">聊天框只是起点。当你让模型去填表、调 API、写数据库，你需要它<b>乖乖吐合法 JSON</b>，
+        甚至<b>主动请求调用某个工具</b>——这就是结构化输出 + Function-Calling 的地盘。</p>
+      </div>
+
+      <h3 class="lvl-sub">让生成「按规矩来」：guided decoding <span class="lvl pro">PRO</span></h3>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">思路：把语法塞进每个 token</div>
+          <div class="p">与其让模型先自由生成再祈祷它合法，不如<b>限制每一步只能输出「符合语法的下一个字符」</b>。
+          llama.cpp 的 <code>--grammar</code> / <code>--json-schema</code>、vLLM 的 <code>guided_json/grammar</code> 就在做这件事 → 输出<b>结构零非法率</b>。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">JSON Schema 是最省事的方言</div>
+          <div class="p">写一份 <code>JSON Schema</code>（字段/类型/必填），让引擎“翻译”成逐 token 约束。
+          结果就是 <b>稳稳的合法 JSON，还能顺带限定字段名与类型</b> —— 比甩两句“please output valid JSON”可靠一万倍。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">Function Calling：模型要“动手”</div>
+          <div class="p"><b>tools</b> 参数里声明你暴露的函数（名称+描述+入参 schema）；
+          模型输出一个 `tool_calls` 请求 → 你本地执行 → 把结果塞回 → 模型继续。这是本地 Agent/自动化全套遥控杆。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3">FIM 补全（代码党兴奋点）</div>
+          <div class="p">Fill-in-the-Middle：不光续写后面，而是给你“前文+后文”把<b>中间空填上</b> —— 现代 IDE 自动补全的底层逻辑。
+          需要模型支持 FIM 模板；llama.cpp 对这类任务体质非常适合。</div>
+        </div>
+      </div>
+
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>三种落地姿势（按需取用）</span><span class="copy">⧉ 复制</span></div>
+        <pre><span class="cm"># A) llama-server 用 JSON-Schema（注意转义）</span>
+<span class="p">$</span> <span class="c">./build/bin/llama-server -m model.gguf -c 8192 \
+   --json-schema '{"type":"object","properties":{"name":{"type":"string"},"scores":{"type":"array","items":{"type":"integer"}}},"required":["name"]}'</span>
+<span class="o">输出即合法 JSON（由引擎在抽词层面背书）。</span>
+
+<span class="cm"># B) 任意 OpenAI 兼容端点：OpenAI 客户端传 response_format</span>
+<span class="c">curl http://127.0.0.1:11434/v1/chat/completions -H "Content-Type: application/json" -d \
+  '{"model":"qwen3:8b","messages":[{"role":"user","content":"把 MySQL 格式化为 JSON"}],
+    "response_format":{"type":"json_object"},"options":{"temperature":0}}'</span>
+
+<span class="cm"># C) llama.cpp gguf / ollama(kimi类不原生) tool 声明：用 tools 数组即可让服务端发 tool_calls</span>
+<span class="cm"># 概念：模型不“执行”，只“决定要调 + 填好参数”，真正执行永远在你这边（安全第一）。</span></pre>
+      </div>
+
+      <div class="callout warn"><span class="head">安全红线（最重要的一条）</span>
+        Function-Calling 给了 AI 一把“钥匙”。只暴露<b>白名单且可审计的工具</b>；文件写、联网、shell 一律加权限 gate；
+        别让你的 Agent “自由落体”地调用一切它想调的东西 —— 用的人还是你，背锅的也是你。</div>
+      <div class="callout g"><span class="head">读完能解决</span>
+        ① 让本地模型稳定吐 JSON/调 schema，程序对接零拆弹；② 用 tools 做出“会动手干活的本地 Agent”；
+        ③ 理解 guided decoding 与采样参数的“父子关系” —— schema 定“能说什么”，采样定“在能说里挑哪句”。</div>
+    </div>
+  </section>
+  <!-- ======= §13 玩家通鉴 & 编年 ======= -->
+  <section class="block" id="players">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§13 // WHO'S WHO · THE STORY</span>
+        <h2 class="title">玩家通鉴：把大模型领上牌桌的那些人</h2>
+        <div class="line"></div>
+        <span class="lvl guru" style="margin-top:14px">▸ 番外卷 · 当背景板读懂人</span>
+        <p class="lead" style="margin-top:10px">本地部署选模型时，真正要盯的是<b>出品方与开源 stance</b>。
+        这一节把「国内外主流水厂 + 开源编年大事」摊成一幅地图，帮你在牌桌上认人、认线、认下一手牌。</p>
+      </div>
+
+      <h3 class="lvl-sub">一张表认全大部分玩家 <span class="lvl core">CORE</span></h3>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>阵营</th><th>厂商/团队</th><th>代表模型</th><th>开源 stance</th><th>本地友好度</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="4" class="g"><b>海外</b></td><td><b>Meta</b></td><td>Llama 2/3/3.2/4</td><td class="g">主力开源</td><td class="g">★★★★★</td></tr>
+            <tr><td><b>Google DeepMind</b></td><td>Gemini 系列 + Gemma 开源</td><td class="a">Gemini 闭源 / Gemma 开源</td><td class="g">★★★☆☆</td></tr>
+            <tr><td><b>OpenAI</b></td><td>GPT / o 系列 / gpt-oss(权重)</td><td class="a">闭源为主，开放 gpt-oss</td><td>★★☆☆☆</td></tr>
+            <tr><td><b>Mistral AI</b> / Anthropic / xAI</td><td>Mistral 系 · Claude · Grok</td><td class="a">Mistral 开源多 / 后两者闭源</td><td>★★★☆☆</td></tr>
+            <tr><td rowspan="5" class="g"><b>国内</b></td><td><b>DeepSeek（深度求索）</b></td><td>R1 / V3(671B-A37B)</td><td class="g">开源先锋，MIT</td><td class="g">★★★★★</td></tr>
+            <tr><td><b>阿里 · 通义(Qwen)</b></td><td>Qwen2.5/3/3-Coder… 全档位</td><td class="g">全规模高热度开源</td><td class="g">★★★★★</td></tr>
+            <tr><td><b>智谱 Z.ai</b></td><td>ChatGLM / GLM-4-9B ※GLM5 等</td><td class="g">重要开源（部分商业）</td><td class="g">★★★★☆</td></tr>
+            <tr><td><b>上海AI Lab</b></td><td>InternLM 系列</td><td class="g">开源全链</td><td class="g">★★★★☆</td></tr>
+            <tr><td><b>月之暗面Kimi / MiniMax / 百度 / 字节</b></td><td>Kimi · MiniMax · 文心 · 豆包…</td><td class="r">以闭源 API 为主 / 少量开放</td><td class="r">★☆☆☆☆</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="lvl-sub">发展大事 Timeline：这 8 年怎么卷到今天的 <span class="lvl pro">PRO</span></h3>
+      <div class="tl">
+        <div class="tl-item"><span class="tl-year">2017</span><div class="tl-main"><b>《Attention Is All You Need》</b>提出 Transformer，
+          自注意力取代 RNN 成为主干 —— 今天所有通用大模型的地基。</div></div>
+        <div class="tl-item"><span class="tl-year">2018</span><div class="tl-main"><b>GPT-1 开启生成式预训练</b>（先“海量学”，再下游微调）路线。</div></div>
+        <div class="tl-item"><span class="tl-year">2020</span><div class="tl-main">GPT-3 用 1750 亿参数证明了 <b>“再大一点就能 few-shot 通用”</b> scale law。</div></div>
+        <div class="tl-item"><span class="tl-year">2022.11</span><div class="tl-main"><b>ChatGPT 面世</b>，对话式 AI 点燃全人类关注，也点燃了“谁会开源/谁抓紧闭源”的战争。</div></div>
+        <div class="tl-item"><span class="tl-year">2023</span><div class="tl-main"><b>开源元年</b>：Meta Llama 家族亮相带动社区自部署；国内通义、GLM、InternLM、MiniMax 等密集追赶、开源节奏加快。</div></div>
+        <div class="tl-item"><span class="tl-year">2024</span><div class="tl-main"><b>效率与稀疏技术起飞</b>：Mixtral、DeepSeek-MoE 等把“MoE/开源”搬上桌；Qwen/Llama-3/Gemma/Phi 各路强者层出不穷，单卡跑 7–35B 成为可能。</div></div>
+        <div class="tl-item"><span class="tl-year">2025.01</span><div class="tl-main"><b>DeepSeek-R1 开源推理模型</b>对标 o1 思路，大幅拉低深度推理门槛；稍后 DeepSeek-V3/R1 系霸榜——本地党终于能用上“会思考 + 开源 + 重量合理”的组合。</div></div>
+        <div class="tl-item"><span class="tl-year">2025 至今</span><div class="tl-main"><b>Agent · 长文 · 开源霸权拉锯</b>：Qwen3 / Llama / GPT-OSS / Gemma3 等继续以更小体量逼近旗舰；
+          而 OpenAI、Anthropic 旗舰仍多走闭源。对本地：红利期肉眼可见 —— 关注 DeepSeek、Qwen、Meta、智谱这类“给权重”的玩家即可。</div></div>
+      </div>
+
+      <h3 class="lvl-sub">细说大厂 · 试稿（海外篇开篇：OpenAI） <span class="lvl guru">现场样张</span></h3>
+      <p style="color:var(--txt-mut);font-size:.86rem;margin:0 0 14px">
+        说明：这一版先把「一段篇目怎么写」给你过目 —— 来龙 → 关键节点 → 中立点评（优点/局限都摆，附公开出处，不吹不黑）→ 现役入口。
+        觉得这个调性和颗粒度对，我再用同一套把它扩成「海外 7 家 + 国内全厂」的完整折叠组。</p>
+
+      <details class="acc" open>
+        <summary><span class="ico">●</span>OpenAI（美国 · 闭源 API + 开放权重两步走）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：2015 年，马斯克、奥特曼、Sutskever、Brockman 等在加州以「非营利、关心全人类、开源友好」姿态共同创立，
+          初衷是对冲「逐利的巨头把 AGI 锁进少数公司」。取名 OpenAI 却因安全顾虑对早期权重刻意限制发布（GPT-2 当年“因太危险先不完全公开”的作法，是它后来争议的注脚之一）。</p>
+          <p><b>关键节点</b>：2019 引入微软上百亿美元支持转为「封顶盈利」架构；2020 GPT-3 引爆“大不一定笨”的规模律；
+          2022 年末、ChatGPT 把对话交互带进大众视野，也被认为是 2023 至今“大模型黄金时代”的闸门；
+          2023/11 董事会突然罢免 CEO 奥特曼又四天内请他回归，是它与“AI 安全派”路线冲突的公开一幕；
+          随后几年它以 GPT-4 / o 系推理 / 各类旗舰走「闭源高性能 + 付费 API」主线，同时 2024–25 推出能本地部署、开放权重的 <code>gpt-oss-20b/120b</code>（MIT/Apache–社区可跑），也被许多人解读为“被开源族逼着回应”。</p>
+          <p><b>中立点评</b>：优势 —— 长期是“工程整合 + 产品化 + 生态”的行标式选择，其系统提示/工具链/评测常常是事实上的对照基准；局限/被批 —— 透明度、数据来源与版权、内容审核边界、军事应用与安全护栏争议多次见报；同时它仍以闭源加锁为变现核心，开放权重尚数“补位”。是非都有公开来源可查（下方出处），慎勿单方情绪。</p>
+          <p class="cm">现役（2026-09 视角）：GPT 系 / o 系旗舰仍走 API；本地能实际部署的是 open-weight 的 <code>gpt-oss-20b · gpt-oss-120b（MoE，20B 级量化适合工作站）</code>。
+          出处与渠道：OpenAI 官网 openai.com；Hugging Face 仓库 `openai/gpt-oss*`（可拉取权重与卡页）；Ollama `gpt-oss`：20b / 120b。</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">●</span>Anthropic（美国 · Claude · 闭源 + 安全叙事）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：2021 年由前 OpenAI 高管 Amodei 兄妹等核心成员成立，方向从一开始就有鲜明立场——把 AI 的<b>可解释与对齐（Alignment）</b>置于优先级。团队用「宪法式 AI（Constitutional AI）」，用一套价值观再约束 AI 自我训练，这是它与主流“刷榜为主”厂牌最大的差异点。</p>
+          <p><b>关键节点</b>：以 Claude 系列迭代（Sunset 的 Obus/Sonnet/Haiku 档次命名沿用至今）。它较早重视超长上下文与“代码/科研工作流”，被不少开发者当主力；到 2025–26，Claude 也不断进入代码 Agent 与一些政军领域的高频使用，随之而来的「安全护栏 vs 授权边界」争论多次登上公开报道（白宫/国防部口径的存在两面，正反都有新闻源）。</p>
+          <p><b>中立点评</b>：优势 —— 对齐叙事 + 代码/长文档实测口碑好，产品语言天然接近开发者；受限 —— 全系闭源（无本地权重），依赖 API/订阅变现，且“安全极限到底守多紧、执行对不对”一直是它招黑与招赞的同一刀。</p>
+          <p class="cm">现役（2026-09 视角）：API / App 按 Claude 系列订阅使用；<b>无法本地自部署</b>（这是它与开源族的根本分界，选型时先想清）。渠道：anthropic.com / api.anthropic.com Gemini 亦同需看是否给了开源体。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="ico">●</span>Google · DeepMind（Gemini 闭源旗舰 + Gemma 开源体）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：Google 的人工智能研究长期分“学术顶会派（Google Brain）”与“深度强化学习怪才 DeepMind”；2023 年二者合并成 Google DeepMind，又为大模型产品线披上 Gemini。同年以一局 AlphaGo(2016) 先把公众胆量拉满、又靠着 Transformer 论文的团队基因，堪称大模型时代的“原股东”。</p>
+          <p><b>关键节点</b>：Gemini 系列以多模态与“全线产品再造（Workspace/搜索/Agent 工具如深度研究）”铺开，2024–2026 迭代到多代、长期占据评测头部；同时发布开源 Gemma 家族（给了可本地运行的小型与中型权重），是对“技术开放但没有全开放旗舰”路线的一个折衷注脚。</p>
+          <p><b>中立点评</b>：优势 —— 深度平台整合、多模态底子厚、算力与 To Big-Client 生态；局限 —— Gemini 旗舰闭源、服务多在它自家生态，成第三方开发者“可调但不可控”，开源给到的量级远未到旗舰（Gemma 主打在端侧/中小档）。</p>
+          <p class="cm">现役（2026-09 视角）：旗舰走 Gemini API；<b>本地可跑的是 Gemma 系（如 4B/12B/27B 等档）</b>及其编码/多模态衍生。渠道：deepmind.google / aistudio.google.com / Ollama「gemma」。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="ico">●</span>Meta（美国 · Llama · 开源生态重镇）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：Meta（前 Facebook）本不是第一眼的“模型厂”，却在 2023 年靠 Llama 一战成了<b>开源大模型的引擎</b>。它长期以来想攒的是“社区 + 生态 + AI 基建话语权”——通过放权重换取开发者长期粘性与行业标准位置，这是它与“卖 API”派截然相反的打法。</p>
+          <p><b>关键节点</b>：Llama(研究用)→ Llama 2(2023 对商用放宽) → Llama 3/3.x(2024–25 多尺寸、堆生态)→ 到 2026 的后续迭代仍延续“开放但自家 Meta AI 闭源体并行”的混合姿态；可以说“最懂怎么把开源做成流量入口”的非 Google 即 Meta。</p>
+          <p><b>中立点评</b>：优势 —— 授权相对宽松、社区/推理栈（llama.cpp/Ollama 对它支持最早最全），是本地党的天然默认；局限/争议 —— 许可条款逐版收紧（商用与月活门槛版本互拼），早期“开放≠可随意商用/署名”的边界反复被社区拉锯；中文能力往往不如 Qwen/GLM 这类以中文原生训练。</p>
+          <p class="cm">现役（2026-09 视角）：本地主力走 Llama 系列各尺寸量化；渠道：llama.com / Ollama「llama*」；需留意每代实际许可。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="ico">●</span>xAI（Grok · 背靠 X 生态起步）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：马斯克 2023 年创立 xAI，主力产品 Grok 一出生就与 X（原 Twitter）账号生态深度绑定、边训练边借社交数据与流量起量；主张是“探索宇宙本质”，落地却更常以“少设限的风格 + 大数据量 + 竞技算力”的旗帜出现。</p>
+          <p><b>关键节点</b>：Grok 初代以“毒舌/快速接入 X”刷脸，后续转入正经大模型军备（含推理与多模态主线），也曾在公开报道里因“嘴替式输出翻车 + 并入某 $200M 军事合同”双双占据头条 —— 两头都是它的舆论画像。到 2026 仍是商业闭源为主要基调，本地少有官方权重。</p>
+          <p><b>中立点评</b>：优势 —— 有 X 生态数据/分发与算力大投入，风格差异化还接地气；局限 —— 成熟度与多模态/长文档仍不如头部，且“口无遮拦”在商用合规上既是卖点也是雷，本地基本不可自托管是它和很多企业客户的硬约束。</p>
+          <p class="cm">现役（2026-09 视角）：以 X / API 内使用为主；<b>暂无官方开源本地权重是常态，部署前请按官方页判断</b>。渠道：x.ai</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="ico">●</span>Mistral AI（法国 · 欧洲开源旗手）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：2023 年成立于巴黎，创始团队多人出身 Google DeepMind 与 Meta，是“欧洲要自己做大模型主权”这一诉求的代言人：既发可研究的社区权重，也做商用云 API（数据中心在欧盟合规利好），双轨并行很典型。</p>
+          <p><b>关键节点</b>：从一颗 7B 起家、到 Mistral 7B/8x7B 与 Mixtral MoE 高分上榜/惊艳“小模型也能 MoE”，再到深度使用本地化的小型与中型开源档；编程向 Codestral、助手 Le Chat 也都贴开发人群。它是比 Meta 更“极客亲开源”的非美国代表之一。</p>
+          <p><b>中立点评</b>：优势 —— 开源与许可相对干净、欧美数据中心合规、受本地与法务都买账；局限 —— 体量/生态仍无法与美系头部拼旗舰，中文、工具链与多模态覆盖也不如主战场全。</p>
+          <p class="cm">现役（2026-09 视角）：开源文档看 mistral.ai/blog 与见 Ollama「mistral」；云走 Le Chat API，托管地偏欧。部署难度：7B 起步，单卡友好。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="ico">●</span>Microsoft（Phi·小而强 双轨：既卖 OpenAI 也自研开权重）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：微软用“投 OpenAI + 把 AI 铺进 Azure/Office 全家桶”占据全栈身位，同时又在边缘端另起灶做 <b>Phi 族“小模型”</b>（给落不了大卡的场景当甜点），是“巨人里最贴开源小模型的稀有者”。</p>
+          <p><b>关键节点</b>：实际落点集中在 Phi-3 / Phi-4 系列（2024–） 以小参数量在低算力本地甚至 NPU/CPU 上可用，主打“够用、快、省”；背后仍是与 OpenAI 的独家合作与自研两手抓，既保障云旗舰也守住 edge。</p>
+          <p><b>中立点评</b>：优势 —— 双生态弹药与分发、小模型工程功底明显；局限 —— Phi 偏“字面质量实验”，复杂推理/长文档/中文相对 Qwen/Gemma 有差距，语言与许可也要各自核对；它并不会把“主干旗舰”开源。</p>
+          <p class="cm">现役（2026-09 视角）：本地部署走 Phi 体积档 + Azure 收费旗舰，互不矛盾；渠道：azure.microsoft.com / huggingface 微软官仓 / Ollama「phi」。自研旗舰尺度小于别家是常态，匹配时看需求上限。</p>
+        </div>
+      </details>
+
+      <h4 class="lvl-sub" style="font-size:1.05rem">国产篇（同模板代表 · 主开源者先到，其余随后补齐）</h4>
+
+      <details class="acc">
+        <summary><span class="ico">●</span>DeepSeek（深度求索 · 高效开源 + 聪明省钱派）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：源于背靠量化交易资金的深度求索，被业界当作“开源里的性价比/效率党”：先以 V/R 系列把“分算力/酷炫成本拿高分”演成主流打法，2025 年初 R1 的开放式推理 + V3 的 MoE 架构让“国产也开权重、还能打榜”刷屏。</p>
+          <p><b>关键节点</b>：DeepSeek-R1(2025 开源推理线)与 V3(2024末 MoE 671B-A37B)→ V3.1 系“思考/直答混合”→ 到 <b>2026-09 的 V4 预览(如 V4-Flash：MoE、总参 284B / 激活 13B、面向 1M token 上下文)</b>，继续证明“稀疏激活 × 长上下文”能把大容量做进高效的本地/边缘化部署。</p>
+          <p><b>中立点评</b>：优势 —— MIT（大部分权重）式的开源自由度 + 中文通用/长文/推理口碑 + 把研究产物大方放出的姿态得到开发者认可；局限 —— 训练/首发资源紧张、国际合规与个别模态积累不深，部分“爆款波次”服务偶有排队，商用前请以官方文档口径复核许可以及稳定性。</p>
+          <p class="cm">现役（2026-09 视角）：R1/V3-* 系列各档量化<b>可单机/工作站直跑</b>；V4 系预览如需跑，优先看官方权重与量化副本（本地需较大内存/显存）。渠道：deepseek.com / github.com/deepseek-ai / HF 官方 repo（注意版本日戳）。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="ico">●</span>阿里 · 通义（Qwen · 中文开源“全尺寸之王”）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：出自阿里云研究线，Qwen 家族以“从小到大几乎每个档位都给开源权重 + 多语言 + 原生中文强”刷出极高使用率，是本地党在华语区最常见到的默认选项之一。</p>
+          <p><b>关键节点</b>：从 Qwen(1.5/2.5，0.x~72B 全覆盖) → Qwen-Coder（编码专用多尺寸）→ Qwen3(0.6B–235B、含 MoE，加入 thinking 档与工具)→ <b>2026 继续到 Qwen3.5/3.8(3.8-27B 等 + 更小/多模态与“flash‑next”前瞻档)</b>；节奏之密基本是当季“部署量最快上新”的开源线之一。</p>
+          <p><b>中立点评</b>：优势 —— 档位全、许可宽敞（多为 Apache-2.0 或其官方宽松条款）、工具调用与中文 Agent 生态成熟，兼容栈最广（Ollama/LMC 老熟脸）；局限 —— 数据/审查按境内交付策略处理（部分海外/要实权部署场景要先核），旗舰往往闭源“更强”版本不完全开放，自部署需要在能力与许可间自己核对。</p>
+          <p class="cm">现役（2026-09 视角）：本地优先看 Qwen 官方各尺寸量化（1–27B 适合主流居家/工作站，36B+MoE 给更大机器）；渠道：qwenlm.github.io / github.com/QwenLM / Ollama「qwen*」；许可与审查口径以其发布公告为准。</p>
+        </div>
+      </details>
+
+      <details class="acc">
+        <summary><span class="ico">●</span>智谱 Z.ai / GLM（中文原生态 · 开源核心 + 商业加强）<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>来龙</b>：脱胎清华系研究积累（智谱/GLM 一路有学术长期线），主打“以中文与代码 Agent 见长的自然形态”。一路从 ChatGLM → GLM 系，2025 年后开始按“开源核心 + 更强的商用版”双轨发行。</p>
+          <p><b>关键节点</b>：GLM-4.x 时代已有中文 Agent/多模态布局，<b>到 2026 的 GLM-5.3 家族（含 GLM-5.3-Flash：总约 320B / 激活约 18B 的多模态、1M token 上下文、已开源权重）</b>进一步把“长程代码/工具 Agent + 视觉进编码环”做成卖点；许可给到社区（权重或 MIT 见其仓）让它成为本地可尝试的新面孔。</p>
+          <p><b>中立点评</b>：优势 —— 中文原生强、Agent 与工具调用被开发群口碑、Flash 档以“激活小、吞吐高”贴近个人工作站；局限 —— 部分最强档做“商用闭源或授权制”、长尾生态与国际插件仍比不过 Qwen/Llama，落地同样需看清许可与审查条款。</p>
+          <p class="cm">现役（2026-09 视角）：本地可在官方 repo/HF「zai-org/GLM-*」拿到新权重，小档也能借量化在中等配置上试；渠道：z.ai / github.com/zai-org / huggingface。</p>
+        </div>
+      </details>
+
+      <div class="callout g"><span class="head">给本地党的一句话省流</span>
+        想永远站在先进又免费的池子里，眼睛盯紧：<b>DeepSeek（性能/推理）· 阿里 Qwen（全尺寸/中文/代码）
+        · Meta Llama（生态）· 智谱 GLM & InternLM（中文 Agent）</b>——它们每一次发布，都值得你回本地刷新一次。</div>
+      <div class="callout warn"><span class="head">别忘给“史书”标注保质期</span>
+        模型发布日期 / 参数量 / 开源许可常快速迭代；上面为以「2026-09 视角」综合梳理，动手前请以发布方官方仓库与日期页为准。历史在加速，本章也会老去。</div>
+    </div>
+  </section>
+  <!-- ======= §14 RAG ======= -->
+  <section class="block" id="rag">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§14 // PRACTICE · RAG</span>
+        <h2 class="title">RAG：给你的本地模型插上「自家文库」</h2>
+        <div class="line"></div>
+        <span class="lvl pro" style="margin-top:14px">▸ 实战进阶 · 把私有资料喂给本地 AI</span>
+        <p class="lead" style="margin-top:10px">模型再强也被训练期「钉死」在旧知识里。RAG（检索增强生成）让你<span class="hl">不用重训</span>，
+        就把论文、公司 wiki、个人笔记、代码仓库变成它的「外接书架」——提问时先检索相关章节，再把答案缝进上下文。</p>
+      </div>
+
+      <h3 class="lvl-sub">一个 RAG 的完整流水线 <span class="lvl core">CORE</span></h3>
+      <pre style="background:#0a101b;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;line-height:1.8;color:#b7efe0;font-size:.82rem;margin:6px 0 18px;">
+  文档库(温文/Notion/PDF/代码)
+      │  ① 加载 + 解析
+      ▼
+  切块(chunk)  ── ② 分块策略(重叠/按结构)
+      │
+      ▼
+  Embedding 向量化(本地小模型如 bge-m3)  ── ③ 存进向量库(Chroma/FAISS/…)
+      │
+      ▼  新的提问
+  【查询】：把问题也向量化 → top-k 相似度检索 → (可选)重排 rerank
+      │
+      ▼
+  组装 Prompt(json 置顶检索片段 + 原问题)  ── ④ 连同上下文交给推理引擎
+      │
+      ▼
+  输出带引用的回答</pre>
+
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">为什么这么做能“治”一部分幻觉</div>
+          <div class="p">把可靠的原文直接放进上下文，模型只需<b>转述/整合</b>而非<b>凭空回忆</b>。
+          配合“若找不到就明说不知道”的系统指令，相比裸模型，事实性显著上升——但注意它并不能根治幻觉（见下）。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">本地有得用的三块拼图</div>
+          <div class="p"><b>向量库</b>：Chroma（好用）/ FAISS（快）/ pgvector（跟 Postgres 一起）；
+          <b>Embedding 模型</b>：<code>bge-m3 / nomic-embed / all-MiniLM</code>——中文优先 bge 系；<br>
+          <b>台词</b>：与 llama.cpp / Ollama / vLLM 的 OpenAI 兼容端点对接即可（见 §05）。</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">切块跟检索，才是真正的“法术”</div>
+          <div class="p">① 别硬按固定字数硬切：优先<b>按标题/章节/语义</b>切片并带重叠；② 检索粒度别太小：常配
+          <b>parent/child</b>（搜到小句、喂回大块），能大幅提升连贯；③ 别满足于 top-1：取 top-3~5 再让模型综合，
+          必要时加<b>rerank</b>把最贴的顶上去；④ 提问与文档语言不一致时，英文 embedding 对中文并不理想，中文库用中文 embedding。</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">一段能跑的最小 RAG（Python） <span class="lvl pro">PRO</span></h3>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>venv · pip install chromadb sentence-transformers</span><span class="copy">⧉ 复制</span></div>
+        <pre>import chromadb, sentence_transformers as st
+<span class="cm"># 本地 embedding（无需调用云端）</span>
+embed = st.SentenceTransformer("BAAI/bge-m3")
+
+docs = ["把论文/笔记/帮规逐条贴这里，例如：",
+        "显存估算 ≈ 参数量B × 每权重字节 + KV 缓冲。",
+        "第二条真实资料……"]
+ids  = [f"id-{i}" for i in range(len(docs))]
+emb  = embed.encode(docs).tolist()          <span class="cm"># 手动算好向量</span>
+
+db   = chromadb.Client()
+col  = db.create_collection("notes")
+col.add(ids=ids, documents=docs, embeddings=emb)
+
+<span class="cm"># 检索：把问题也向量化</span>
+q_emb = embed.encode(["本地部署要多大显存才够 Qwen3-8B ?"]).tolist()
+"#（若下面的两行复制后多出反斜杠，等价正确写法是："
+"hit = col.query(query_embeddings=q_emb, n_results=2)['documents'][0] 然后自己 print）"
+hit   = col.query(query_embeddings=q_emb, n_results=2)[\"documents\"][0]
+print(">> 命中片段:\\n", \"\\n---\\n\".join(hit)[:200])
+
+<span class="cm"># 拼进系统提示，交给本地 LLM（Ollama）就行（见 §05 的 OpenAI 兼容端点）</span></pre>
+      </div>
+
+      <div class="callout warn"><span class="head">最重要的一句大实话</span>
+        RAG <b>不能保证不幻觉</b>——检索可能漏了、切块太碎、或模型仍脑补。要设“找不到就答不知道”，
+        保留<b>来源引用</b>和事后核验；只把 RAG 当“提准率放大器”，而不是“绝对真值保证人”。</div>
+      <div class="callout g"><span class="head">读完能带走</span>
+        ① 一条“文档→向量→检索→拼接生成”的可落地流水线；② 知道切块/embedding/rerank 才是调优重点；
+        ③ 能直接用本地 embedding 把隐私文献接进本地模型，全程不出网。</div>
+    </div>
+  </section>
+  <!-- ======= §15 LoRA 微调 ======= -->
+  <section class="block" id="fintune">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§15 // PRACTICE · FINE‑TUNE</span>
+        <h2 class="title">LoRA 微调：给开源模型补上「你的领域心智」</h2>
+        <div class="line"></div>
+        <span class="lvl guru" style="margin-top:14px">▸ 实战进阶 · 想真香要整</span>
+        <p class="lead" style="margin-top:10px">RAG 管「查到」，微调管「<b>学会你的语气 / 领域约定 / 私有 schema</b>」。
+        全量重训几百万成本？不必——<span class="hl">LoRA</span> 只学一组极小的「差量适配器」，就能在 1 张显卡上让模型“私化”。</p>
+      </div>
+
+      <h3 class="lvl-sub">LoRA 到底是什么 <span class="lvl core">CORE</span></h3>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">不动大山，只凿细纹</div>
+          <div class="p">冻结原模型全部权重，只在每层中插入极小的<b>低秩(rank)</b>增量矩阵到注意力上；
+          训练只更新这几千到几百万个参数。同效果下，显存/时间比全量少一个数量级，还能随时卸掉“回到原版”。</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">QLoRA？就是量化版的它</div>
+          <div class="p">先用 4bit(如 NF4) 把大模型压进显存 → 在上面跑 LoRA。这样 16–24GB 卡就有机会微调 7–14B，
+          是个人工作室的默认姿势（配合 <code>unsloth / peft</code> 很方便）。</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">什么时候该调、什么时候别调</div>
+          <div class="p">适合：学习<b>输出结构/风格/私有措辞/少量专术→更好遵循你那套 prompt</b>。
+          不适合：指望它“教我新知识”——新知识请走 RAG；也别拿它修 LLM 肚里没学过的世界事实（会幻觉得更妙）。
+          两手一起用往往最香：RAG 喂料 + LoRA 塑型。</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">一串“最小可联想”的超小脚本（QLoRA · PEFT） <span class="lvl pro">PRO</span></h3>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>pip install transformers peft accelerate bitsandbytes datasets</span><span class="copy">⧉ 复制</span></div>
+        <pre><span class="cm"># 数据先行：准备 JSONL，每行 { instruction, input?, output }（几十到几千条即可起步）</span>
+<span class="cm"># {"instruction":"按公司格式拟一封回信","input":"客户催货","output":"尊敬的客户…"}</span>
+from datasets import load_dataset
+data = load_dataset("json", data_files="my_train.jsonl")["train"]
+
+<span class="cm"># 在 4bit 基座上做 QLoRA</span>
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+import peft, torch
+bnb = BitsAndBytesConfig(load_in_4bit=True,
+     bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16)
+base = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-7B-Instruct",
+     quantization_config=bnb, device_map="auto")
+
+<span class="cm"># 挂 LoRA：rank 8~16 通常起步就够（kbit 训练前记得先 prepare_model_for_kbit_training）</span>
+model = peft.get_peft_model(base, peft.LoraConfig(
+     r=16, lora_alpha=32, target_modules=["q_proj","k_proj","v_proj","o_proj"], lora_dropout=0.05))
+
+<span class="cm"># 训练循环略（用 transformers.Trainer 配 data_collator）；3 epochs 即可过度拟合，盯验证不掉即可停。</span>
+<span class="cm"># 训练完合并导出：model.save_pretrained("adapter")→ 用 merge 回原权重 → GGUF 量化 → ollama 直跑（见 §05）</span></pre>
+      </div>
+      <div class="callout g"><span class="head">实操给三条省学费的</span>
+        ① 数据质量 &gt; 数量：宁可 300 条精心整理，别 3000 条含错样本；
+        ② 3 epoch 起、验证集分开，只看训练集 loss 会自我麻醉；<br>
+        ③ 兼容 Ollama 的做法是 <code>pip install unsloth / 使用 llama.cpp 的 gguf-merge</code> 做 量化导出，本地直跑无痛回滚。</div>
+      <div class="callout warn"><span class="head">许可红线 & 别忘常识</span>
+        微调前查基底模型许可（Llama/Qwen/GLM 各不相同，部分不可商用、部分要求署名）；AI 生成数据要人工复核，避免污染递归。别指望微调“补上不知道的知识”。</div>
+    </div>
+  </section>
+  <!-- ======= §16 2026 折腾主场 ======= -->
+  <section class="block" id="homebrew">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">§16 // HOMEBREW · 2026</span>
+        <h2 class="title">2026 折腾主场：近一年多社区最想上手的那批模型</h2>
+        <div class="line"></div>
+        <span class="lvl guru" style="margin-top:14px">▸ 视角 2026-09 · 真命令 · 显存分层</span>
+        <p class="lead" style="margin-top:10px">不再只报名字。每一款都写清：<span class="hl">为什么值得折腾 → 本地到底怎么跑（含大模型的民间攻坚法）→ 一条能复制的命令 → 坑在哪</span>。
+        分级：甜品卡可跑 / 工作站优选 / 民间攻坚·大内存。</p>
+      </div>
+
+      <div class="filterrow">
+        <span class="badge b-green" id="hbstat">…加载中</span>
+        <span class="badge b-cyan">口径 2026-09</span>
+        <span class="badge b-amber">命令以 Ollama / HF 常见路径为准</span>
+      </div>
+
+      <div class="mcards" id="hbwall" aria-live="polite">
+        <noscript><p class="lead">请启用 JavaScript 以渲染折腾清单。</p></noscript>
+      </div>
+
+      <div class="callout warn"><span class="head">诚实边界</span>
+        清单里的“显存门槛”为量化后粗估，随上下文、KV 优化与引擎浮动；大模型（如 V4 / GLM-5.3 档）若官方只给云或权重放得晚，
+        本地属于<b>大内存/多卡民间攻坚</b>范畴，不是“人人一卡能跑”。以官方仓库与许可页为最终依据。</div>
+    </div>
+  </section>
+
+  <!-- ======= Glossary 词表 ======= -->
+  <section class="block" id="glossary">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">φ // GLOSSARY</span>
+        <h2 class="title">极客词表：一句秒懂 · 随查随走</h2>
+        <div class="line"></div>
+        <span class="lvl core" style="margin-top:14px">▸ 字典 · 读到哪儿忘到哪儿就回这页</span>
+        <p class="lead" style="margin-top:10px">全书黑话在这里一次性对表。遇到陌生缩写，翻回来瞄一眼即可。</p>
+      </div>
+      <dl class="gloss">
+        <div class="gs"><dt>Token</dt><dd>文本最小编码单元；中文约 0.7~1.5 字/个。一切长度的底层货币。</dd></div>
+        <div class="gs"><dt>上下文 / Context</dt><dd>模型一次能同时“放在心上”的 token 数上限（含 prompt + 已生成）。</dd></div>
+        <div class="gs"><dt>参数 Parameter</dt><dd>可学习权重数；7B≈70 亿。显存按它 × 每权重字节算。</dd></div>
+        <div class="gs"><dt>激活参 / Active</dt><dd>MoE 里每 token 真正用到的参数；决定这种“总大激活小”模型推理多轻。</dd></div>
+        <div class="gs"><dt>Logits</dt><dd>输出前一层未经归一化的得分，越大越像被选中。</dd></div>
+        <div class="gs"><dt>采样 Sampling</dt><dd>在概率分布里按规则挑下一个 token 的策略集合。</dd></div>
+        <div class="gs"><dt>temperature</dt><dd>缩放 logits 的“温差”；<1 更稳、>1 更随性（会暴走）。</dd></div>
+        <div class="gs"><dt>top_p（核采样）</dt><dd>只看累计概率约覆盖 p 的候选子集再抽，去尾保质量。</dd></div>
+        <div class="gs"><dt>top_k</dt><dd>只从前 k 个最可能 token 里抽，更“强硬”地砍尾巴。</dd></div>
+        <div class="gs"><dt>min_p</dt><dd>低于最优候选某个比例的 token 直接扔，防碎词。</dd></div>
+        <div class="gs"><dt>repeat 惩罚</dt><dd>对已输出的内容小额罚分，压制复读/车轱辘话。</dd></div>
+        <div class="gs"><dt>KV-Cache</dt><dd>每层保存的历史 K/V 注意力缓存；随上下文线性吃显存。</dd></div>
+        <div class="gs"><dt>Flash-Attention</dt><dd>IO 优化的注意力实现，长上下文省显存还提速。</dd></div>
+        <div class="gs"><dt>量化 Quant</dt><dd>把 FP16 权重对齐到更低位（Q4/Q8…），以极小幅精度损失换体积+速度。</dd></div>
+        <div class="gs"><dt>GGUF</dt><dd>llama.cpp 系单文件模型格式（内含量化 schema 与模板），本地党的“.dmg”。</dd></div>
+        <div class="gs"><dt>MoE</dt><dd>稀疏专家混合：总参大、每 token 只唤 top-k 专家，吃存储省算力。</dd></div>
+        <div class="gs"><dt>Router / Top-k</dt><dd>MoE 里决定“这个 token 交给哪几个专家”的小路由器。</dd></div>
+        <div class="gs"><dt>RoPE</dt><dd>旋转位置编码，给自注意力注入顺序感；长文常靠它外推/插值。</dd></div>
+        <div class="gs"><dt>Embedding / 向量化</dt><dd>把文本映射成向量以度量语义相近程度；检索的根基。</dd></div>
+        <div class="gs"><dt>RAG（检索增强生成）</dt><dd>先检索私有资料再交给模型生成，比硬塞 128k 又省又准。</dd></div>
+        <div class="gs"><dt>向量库 VectorDB</dt><dd>给 embedding 向量做相似检索的高效存储（Chroma/FAISS/pgvector）。</dd></div>
+        <div class="gs"><dt>LoRA / QLoRA</dt><dd>微调时只学极小的低秩差量；QLoRA=再叠 4bit 压缩，让个人卡也能调大模型。</dd></div>
+        <div class="gs"><dt>全参/微调 vs PEFT</dt><dd>前者改全部权重、吃显存多；后者只改 LoRA 那点参数，快且可随时卸载。</dd></div>
+        <div class="gs"><dt>Chat Template</dt><dd>用什么分隔符把 system/user/assistant 拼成模型要的输入形态；Jinja 模板。</dd></div>
+        <div class="gs"><dt>Guided Decoding</dt><dd>逐步只让模型吐符合语法/JSON-schema 的 token，结构零非法率。</dd></div>
+        <div class="gs"><dt>Tools / Function Call</dt><dd>模型“决定”调用你声明的工具并填参，由你执行——Agent 的握手。</dd></div>
+        <div class="gs"><dt>FIM 补全</dt><dd>Fill-in-the-Middle：给前文+后文补中间；IDE 自动补全的底层。</dd></div>
+        <div class="gs"><dt>Prefill / Decode</dt><dd>读取整个 prompt（并行快）→ 逐 token 自回归（慢）两阶段，TTFT/tps 由此来。</dd></div>
+        <div class="gs"><dt>语境后处理器</dt><dd>CUDA(N)/ROCm(A卡)/MPS(Apple) 分别为各家 “能用这模型的开关”。</dd></div>
+        <div class="gs"><dt>Ollama / llama.cpp / vLLM</dt><dd>三大本地运行架子：极简｜底层GGUF｜高吞吐服务化，见 §05。</dd></div>
+      </dl>
+      <div class="callout"><span class="head">这张表会随章节增长而扩</span>
+        想让哪个词更细、再补新词条，都好加——把书签留在本站就对了。</div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="fwrap">
+    <pre class="ascii">
+   _                     ____  _      ____   _____      _   __
+  | |    ___   __ _  ___|  _ \| | __ | __ ) / _ \ \    / \  \ \   ██╗  ██╗   ██╗
+  | |   / _ \ / _` |/ _ \ |_) | |/ / |  _ \| | | \ \  / /\ \  \ \  ██║  ██║   ██║
+  | |__| (_) | (_| |  __/  __ <|   <  | |_) | |_| |\ \/ /  \ \  \ \ ╚═╝  ╚═╝   ╚═╝
+  |_____\___/ \__, |\___|_| \_\_|\_\ |____/ \___/  \__/    \_\   \_\      LOCAL LLM GATE
+              |___/
+    </pre>
+    <div style="color:var(--txt-mut);font-size:.82rem;line-height:1.9;margin:10px 0 18px">
+      <span class="cmd">#</span> 理解本无价 · 本地才是家。<br>
+      本站为一站式科普手册，不构成掏钱建议 —— 模型与许可信息会随时间变动，请以训练/发布方仓库为准。
+    </div>
+    <div class="foot-rows">
+      <div>© <span id="year">2026</span> LOCAL LLM GATE · 献给啃 Git 到底的极客</div>
+      <div><span class="backtotop" id="backtotop">▲ BACK TO TOP</span></div>
+    </div>
+  </div>
+</footer>
+<noscript><style>#veil{display:none!important}</style></noscript>
+<script src="assets/js/main.js"></script>
+<script src="assets/js/homebrew.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+

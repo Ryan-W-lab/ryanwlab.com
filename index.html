@@ -63,8 +63,39 @@
       <button type="button" id="guruJump" data-go="guru">⟠ 深水四技 §09–12</button>
     </nav>
     <span class="hnav-hint" title="入深水或看历史，点右栏小地图">§13 玩家通鉴 ▸ 目录</span>
+    <button type="button" class="nav-toggle" id="navToggle"
+            aria-label="展开章节导航" aria-expanded="false" aria-controls="navDrawer">☰ 章节</button>
   </div>
 </header>
+
+<!-- 移动端章节抽屉（≤900px 由汉堡按钮唤出） -->
+<div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="章节导航">
+  <div class="nd-panel">
+    <div class="nd-head">
+      <span class="nd-title">SECTIONS · §01–08</span>
+      <button type="button" class="nd-close" id="navDrawerClose" aria-label="关闭章节导航">✕ CLOSE</button>
+    </div>
+    <nav class="nd-list" aria-label="章节导航列表">
+      <a class="nd-main" href="#what"   data-go="what"><span class="nd-num">§01</span><span class="nd-name">认识 · 是什么</span></a>
+      <a class="nd-main" href="#why"    data-go="why"><span class="nd-num">§02</span><span class="nd-name">为何本地化</span></a>
+      <a class="nd-main" href="#hw"     data-go="hw"><span class="nd-num">§03</span><span class="nd-name">硬件门槛</span></a>
+      <a class="nd-main nd-hot" href="#models" data-go="models"><span class="nd-num">§04</span><span class="nd-name">模型图谱</span></a>
+      <a class="nd-main" href="#deploy" data-go="deploy"><span class="nd-num">§05</span><span class="nd-name">部署实战</span></a>
+      <a class="nd-main" href="#quant"  data-go="quant"><span class="nd-num">§06</span><span class="nd-name">量化深水区</span></a>
+      <a class="nd-main" href="#pits"   data-go="pits"><span class="nd-num">§07</span><span class="nd-name">避坑指南</span></a>
+      <a class="nd-main" href="#res"    data-go="res"><span class="nd-num">§08</span><span class="nd-name">调优 · 生态</span></a>
+      <a href="#moe"        data-go="moe"><span class="nd-num">§09</span><span class="nd-name">MoE 架构</span></a>
+      <a href="#kv"         data-go="kv"><span class="nd-num">§10</span><span class="nd-name">KV · 上下文</span></a>
+      <a href="#sampling"   data-go="sampling"><span class="nd-num">§11</span><span class="nd-name">采样手艺人</span></a>
+      <a href="#structured" data-go="structured"><span class="nd-num">§12</span><span class="nd-name">结构化 · 工具</span></a>
+      <a href="#players"    data-go="players"><span class="nd-num">§13</span><span class="nd-name">玩家通鉴</span></a>
+      <a href="#rag"        data-go="rag"><span class="nd-num">§14</span><span class="nd-name">RAG · 本地知识库</span></a>
+      <a href="#fintune"    data-go="fintune"><span class="nd-num">§15</span><span class="nd-name">LoRA 微调</span></a>
+      <a href="#homebrew"   data-go="homebrew"><span class="nd-num">§16</span><span class="nd-name">2026 折腾主场</span></a>
+      <a href="#glossary"   data-go="glossary"><span class="nd-num">φ</span><span class="nd-name">极客词表 · 术语字典</span></a>
+    </nav>
+  </div>
+</div>
 
 <!-- 右侧章节小地图 TOC -->
 <nav class="sidenav" id="sidenav" aria-label="章节目录">

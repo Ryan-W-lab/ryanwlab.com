@@ -47,6 +47,7 @@
   const tocSc = $("#sidenav") ? $("#sidenav .sn-scroll") : null;
   const tocLinks = $$("#sidenav .tocL");
   const topLinks = $$("#topNav a[data-go]");
+  const drawerLinks = $$("#navDrawer .nd-list a");
   const deepIds = ["moe", "kv", "sampling", "structured"];
   const snDeep = $("#snDeep");
   const guruBtn = $("#guruJump");
@@ -61,6 +62,7 @@
       }
     });
     topLinks.forEach((a) => a.classList.toggle("on", a.dataset.go === id));
+    drawerLinks.forEach((a) => a.classList.toggle("on", a.dataset.go === id));
     if (guruBtn) guruBtn.classList.toggle("on", inD || id === "players");
     if (inD) openSnDeep(true);
     history.replaceState(null, "", id === "top" ? location.pathname : "#" + id);
@@ -87,6 +89,63 @@
     if (sn && !sn.classList.contains("open") && !window.matchMedia("(min-width:1710px)").matches) sn.classList.add("open");
     if (m) { m.scrollIntoView({ behavior: "smooth", block: "start" }); setActive("moe"); }
   });
+
+  /* ---------- 移动端章节抽屉（≤900px 汉堡菜单） ----------
+     两步可达：① 点 ☰ 章节  ② 点章节链接
+     支持 Esc 关闭、点击遮罩关闭、焦点圈定（Tab 循环）、打开时锁定页面滚动
+  ------------------------------------------------ */
+  const navToggle = $("#navToggle"), navDrawer = $("#navDrawer");
+  if (navToggle && navDrawer) {
+    const panel = $(".nd-panel", navDrawer);
+    const closeBtn = $("#navDrawerClose");
+    let lastFocus = null;
+
+    function drawerOpen() { return navDrawer.classList.contains("open"); }
+
+    function openDrawer() {
+      lastFocus = document.activeElement;
+      navDrawer.classList.add("open");
+      navToggle.setAttribute("aria-expanded", "true");
+      document.body.style.overflow = "hidden";
+      const first = closeBtn || (panel && panel.querySelector("a,button"));
+      if (first) first.focus();
+    }
+    function closeDrawer() {
+      navDrawer.classList.remove("open");
+      navToggle.setAttribute("aria-expanded", "false");
+      document.body.style.overflow = "";
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+
+    navToggle.addEventListener("click", () => {
+      drawerOpen() ? closeDrawer() : openDrawer();
+    });
+    if (closeBtn) closeBtn.addEventListener("click", closeDrawer);
+
+    /* 点击遮罩（面板外）或点击任一章节链接后关闭 */
+    navDrawer.addEventListener("click", (e) => {
+      if (e.target === navDrawer || !e.target.closest(".nd-panel")) { closeDrawer(); return; }
+      const a = e.target.closest(".nd-list a");
+      if (a) closeDrawer();
+    });
+
+    /* Esc 关闭 + Tab 焦点圈定（模态对话框行为） */
+    navDrawer.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") { e.preventDefault(); closeDrawer(); return; }
+      if (e.key !== "Tab" || !panel) return;
+      const focusables = Array.from(panel.querySelectorAll('a[href],button:not([disabled])'))
+        .filter((el) => el.offsetParent !== null);
+      if (!focusables.length) return;
+      const first = focusables[0], last = focusables[focusables.length - 1];
+      if (e.shiftKey && document.activeElement === first) { e.preventDefault(); last.focus(); }
+      else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
+    });
+
+    /* 视口回到 >900px 时强制收起，避免抽屉残留 */
+    const mq = window.matchMedia("(min-width:901px)");
+    const onWide = (ev) => { if (ev.matches && drawerOpen()) closeDrawer(); };
+    mq.addEventListener ? mq.addEventListener("change", onWide) : mq.addListener(onWide);
+  }
 
   /* ---------- Reveal 滚动进入 ---------- */
   $$(".reveal-seed").forEach((el) => {

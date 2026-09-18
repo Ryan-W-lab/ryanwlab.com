@@ -1059,10 +1059,8 @@ You can also pass them straight through the API:
         <div class="tl-item"><span class="tl-year">2025 to now</span><div class="tl-main"><b>Agents &middot; long context &middot; tug-of-war over open weights</b>: Qwen3 / Llama / GPT-OSS / Gemma3 keep approaching flagships at smaller size,
           while the OpenAI and Anthropic flagships stay mostly closed. For local users the dividend is visible: just watch the players who <i>give away weights</i> &mdash; DeepSeek, Qwen, Meta, Zhipu.</div></div>
       </div>
-    </div>
-  </section>
 
-  <h3 class="lvl-sub" style="font-size:1.05rem">The deep dive &middot; how to write one entry</h3>
+      <h3 class="lvl-sub" style="font-size:1.05rem">The deep dive &middot; how to write one entry</h3>
   <p style="color:var(--txt-mut);font-size:.86rem;margin:0 0 14px">
     Format: origins &rarr; key milestones &rarr; neutral verdict (strengths and limits side by side, public sources, no hype and no cheap shots) &rarr; what is live today.
     Read the tone and grain size, then expand the ones you care about.</p>
@@ -1198,6 +1196,8 @@ You can also pass them straight through the API:
   <div class="callout warn"><span class="head">Remember to date-stamp the &ldquo;history book&rdquo;</span>
     Release dates, parameter counts and open-source licences iterate fast; the above is a synthesis from a &ldquo;2026-09 perspective&rdquo;.
     Check the publisher&rsquo;s official repository and date pages before acting. History is accelerating, and this chapter will age too.</div>
+    </div>
+  </section>
 
   <!-- ======= 14 RAG ======= -->
   <section class="block" id="rag">
@@ -1372,13 +1372,88 @@ model = peft.get_peft_model(base, peft.LoraConfig(
       </div>
 
       <div class="filterrow">
-        <span class="badge b-green" id="hbstat">…loading</span>
+        <span class="badge b-green">6 models &middot; updated 2026-09</span>
         <span class="badge b-cyan">snapshot 2026-09</span>
         <span class="badge b-amber">commands follow common Ollama / HF paths</span>
       </div>
 
-      <div class="mcards" id="hbwall" aria-live="polite">
-        <noscript><p class="lead">Please enable JavaScript to render the homebrew list.</p></noscript>
+      <div class="grid cards2">
+        <article class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">DeepSeek-V4-Flash <span class="badge b-amber">grassroots / big RAM</span></div>
+          <div class="p"><b>DeepSeek</b> &middot; MoE sparse (284B total / 13B active) &middot; 1M context &middot; three thinking tiers<br><br>
+          One of the hottest long-context reasoners in the 2026 open-source scene: with only 13B active, the &ldquo;affordable to compute&rdquo; cost is far below its total size,
+          and the official technical report plus open weights drew heavy tinkering discussion.<br><br>
+          <b>How to run locally:</b> official/mirror builds are mostly <code>:cloud</code> form (Ollama can pull the cloud tier directly, no local compute);
+          grassroots route &mdash; the community makes low-bit GGUF single files (someone hit ~33 tok/s on an Apple Silicon 128GB machine);
+          bottom line &mdash; &ldquo;truly local&rdquo; means a big-RAM workstation or top-spec Apple, while a normal 16GB card should start with <code>:cloud</code> or switch to an R1 distill.</div>
+          <div class="term"><div class="bar"><span class="dots"><span></span><span></span><span></span></span><span class="hb-cmd-label">shell</span><span class="copy" data-copy="ollama run deepseek-v4-flash:cloud">&#10697; Copy</span></div>
+          <pre>ollama run deepseek-v4-flash:cloud</pre></div>
+          <div class="hb-cav"><b>Note &middot; </b>V4 is a preview series; licence and release cadence follow the official repo/HF page. Community low-bit quants vary in quality &mdash; validate on long-document tasks first.</div>
+        </article>
+
+        <article class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">Qwen3.8-27B <span class="badge b-cyan">workstation pick</span></div>
+          <div class="p"><b>Alibaba &middot; Qwen</b> &middot; 27B dense &middot; vision + tools + thinking<br><br>
+          The 2026 &ldquo;all-round middleweight&rdquo; from Qwen: 27B, full multimodal and tool calling, strong on coding, research and long tasks,
+          with plenty of community quants &mdash; a heavily discussed tier for 24GB cards.<br><br>
+          <b>How to run locally:</b> 24GB card &mdash; community Q4 recipes (about 100K context) run directly;
+          16GB card &mdash; drop to Q3/Q4 and squeeze context (8K&ndash;32K) to get started;
+          pure CPU / small RAM &mdash; not recommended; use a smaller tier in the same family or a low-activation Qwen3.5 MoE.</div>
+          <div class="term"><div class="bar"><span class="dots"><span></span><span></span><span></span></span><span class="hb-cmd-label">shell</span><span class="copy" data-copy="ollama run qwen3.8:27b-q4_K_M --num-ctx 32768">&#10697; Copy</span></div>
+          <pre>ollama run qwen3.8:27b-q4_K_M --num-ctx 32768</pre></div>
+          <div class="hb-cav"><b>Note &middot; </b>Whether vision/tool ability is fully supported depends on your engine version &mdash; run text first, then enable multimodal.</div>
+        </article>
+
+        <article class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">Qwen3.5-35B-A3B <span class="badge b-cyan">workstation pick</span></div>
+          <div class="p"><b>Alibaba &middot; Qwen</b> &middot; MoE (35B total / 3B active) &middot; multimodal family<br><br>
+          The archetype of &ldquo;big total, only 3B woken per token&rdquo;: VRAM is budgeted by the 35B quant, yet compute is close to a small model &mdash;
+          the value route to something like &ldquo;big-model intelligence&rdquo; on a personal workstation.<br><br>
+          <b>How to run locally:</b> about 20&ndash;24GB VRAM &mdash; Q4 quant runs comfortably;
+          with enough RAM, llama.cpp can park some layers in memory, trading speed for capacity;
+          low activation means fast decode, so long conversations rarely turn into a slideshow.</div>
+          <div class="term"><div class="bar"><span class="dots"><span></span><span></span><span></span></span><span class="hb-cmd-label">shell</span><span class="copy" data-copy="ollama run qwen3.5:35b-a3b">&#10697; Copy</span></div>
+          <pre>ollama run qwen3.5:35b-a3b</pre></div>
+          <div class="hb-cav"><b>Note &middot; </b>MoE is more sensitive to storage and bandwidth; reserve disk by the quantized size, not by active parameters.</div>
+        </article>
+
+        <article class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">GLM-5.3-Flash <span class="badge b-cyan">workstation pick</span></div>
+          <div class="p"><b>Zhipu Z.ai</b> &middot; multimodal (about 320B total / 18B active) &middot; 1M context &middot; weights open<br><br>
+          One of Z.ai&rsquo;s flagships for 2026: only 18B active yet it pushes code and agent benchmarks very high, and the weights are open
+          (its repo notes MIT). Strong reputation for Chinese-language work &mdash; a new face worth trying locally.<br><br>
+          <b>How to run locally:</b> officially it is mainly cloud inference (Ollama <code>:cloud</code>); going local means looking for official or community weights and quants;
+          a small/mid quant on a big-RAM machine is the grassroots route, while an ordinary card should try its style in the cloud before investing.</div>
+          <div class="term"><div class="bar"><span class="dots"><span></span><span></span><span></span></span><span class="hb-cmd-label">shell</span><span class="copy" data-copy="ollama run glm-5.3-flash:cloud">&#10697; Copy</span></div>
+          <pre>ollama run glm-5.3-flash:cloud</pre></div>
+          <div class="hb-cav"><b>Note &middot; </b>Licence labels such as MIT follow the official release page; &ldquo;Flash&rdquo; does not mean small &mdash; check the actual footprint of the quantized total.</div>
+        </article>
+
+        <article class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">gpt-oss &middot; 20B / 120B <span class="badge b-cyan">workstation pick</span></div>
+          <div class="p"><b>OpenAI</b> &middot; open weights &middot; reasoning / agent oriented &middot; MoE (120B tier)<br><br>
+          A rare open-weight move from OpenAI: the 20B tier runs on a personal card, the 120B tier gives a stronger agent/reasoning experience,
+          and community discussion is intense (&ldquo;the giant finally gave weights&rdquo;).<br><br>
+          <b>How to run locally:</b> 20B tier &mdash; about 11&ndash;16GB VRAM (Q4), friendly to mainstream sweet-spot cards;
+          120B tier &mdash; needs big VRAM or multi-GPU/big RAM, workstation class;
+          Ollama already indexes <code>gpt-oss</code>, the easiest pull.</div>
+          <div class="term"><div class="bar"><span class="dots"><span></span><span></span><span></span></span><span class="hb-cmd-label">shell</span><span class="copy" data-copy="ollama run gpt-oss:20b">&#10697; Copy</span></div>
+          <pre>ollama run gpt-oss:20b</pre></div>
+          <div class="hb-cav"><b>Note &middot; </b>Open weights &ne; unrestricted &mdash; read the licence first; on reasoning models the &ldquo;thinking tier&rdquo; noticeably lengthens output time.</div>
+        </article>
+
+        <article class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
+          <div class="h3">Gemma 4 (12B / 27B / edge) <span class="badge b-green">runs on a sweet-spot card</span></div>
+          <div class="p"><b>Google DeepMind</b> &middot; open family &middot; multimodal &middot; reasoning and agent optimised<br><br>
+          Google&rsquo;s open card: every tier emphasises &ldquo;as capable as possible at that size&rdquo;, the small tiers squeeze into an ordinary laptop,
+          and it is a safe choice for getting started. Fast version churn, a perennial library favourite.<br><br>
+          <b>How to run locally:</b> edge/small tiers &mdash; run even on CPU or little VRAM;
+          12B/27B &mdash; sweet-spot card through workstation class, friendly thresholds after quantization;
+          fully indexed in Ollama, shortest commands.</div>
+          <div class="term"><div class="bar"><span class="dots"><span></span><span></span><span></span></span><span class="hb-cmd-label">shell</span><span class="copy" data-copy="ollama run gemma4:12b">&#10697; Copy</span></div>
+          <pre>ollama run gemma4:12b</pre></div>
+          <div class="hb-cav"><b>Note &middot; </b>Tier naming and available tags follow the Ollama/Gemma official pages; multimodal needs engine support.</div>
+        </article>
       </div>
 
       <div class="callout warn"><span class="head">Honest boundaries</span>
@@ -1465,6 +1540,7 @@ model = peft.get_peft_model(base, peft.LoraConfig(
    1) year stamp
    2) reveal-on-scroll: adds .is-in to each child of .reveal-seed so the
       sections (which start at opacity:0 in style.css) actually become visible.
+   3) copy buttons in the command blocks (data-copy).
    If IntersectionObserver is unavailable, everything is revealed immediately. */
 (function () {
   "use strict";
@@ -1502,6 +1578,28 @@ model = peft.get_peft_model(base, peft.LoraConfig(
     /* Safety net: if a section never intersects (short viewport, print,
        anchor jump), force it visible after a short delay. */
     setTimeout(function () { if (!seed.querySelector(".is-in")) revealAll(seed); }, 1200);
+  });
+
+  /* ---------- copy buttons (used by the §16 command blocks) ---------- */
+  document.addEventListener("click", function (e) {
+    var btn = e.target && e.target.closest ? e.target.closest(".copy") : null;
+    if (!btn) return;
+    var txt = btn.getAttribute("data-copy") || "";
+    if (!txt) return;
+    var done = function () {
+      var old = btn.textContent;
+      btn.textContent = "\u2713 copied";
+      setTimeout(function () { btn.textContent = old; }, 1400);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(done, done);
+    } else {
+      var ta = document.createElement("textarea");
+      ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0";
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand("copy"); } catch (err) {}
+      document.body.removeChild(ta); done();
+    }
   });
 })();
 </script>

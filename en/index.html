@@ -60,6 +60,7 @@
       <a href="#quant"  data-go="quant">06 Quantization</a>
       <a href="#pits"   data-go="pits">07 War stories</a>
       <a href="#res"    data-go="res">08 Tuning</a>
+      <button type="button" id="guruJump" data-go="guru">&#10230; Deep dives &sect;09–12</button>
     </nav>
     <span class="lang-switch" role="group" aria-label="Language">
       <a href="/" hreflang="zh-CN" lang="zh-CN">中文</a>
@@ -86,6 +87,15 @@
       <a class="nd-main" href="#quant"  data-go="quant"><span class="nd-num">&sect;06</span><span class="nd-name">Quantization</span></a>
       <a class="nd-main" href="#pits"   data-go="pits"><span class="nd-num">&sect;07</span><span class="nd-name">War stories</span></a>
       <a class="nd-main" href="#res"    data-go="res"><span class="nd-num">&sect;08</span><span class="nd-name">Tuning &amp; ecosystem</span></a>
+      <a href="#moe"        data-go="moe"><span class="nd-num">&sect;09</span><span class="nd-name">MoE architecture</span></a>
+      <a href="#kv"         data-go="kv"><span class="nd-num">&sect;10</span><span class="nd-name">KV cache &amp; context</span></a>
+      <a href="#sampling"   data-go="sampling"><span class="nd-num">&sect;11</span><span class="nd-name">Sampling craft</span></a>
+      <a href="#structured" data-go="structured"><span class="nd-num">&sect;12</span><span class="nd-name">Structured &amp; tools</span></a>
+      <a href="#players"    data-go="players"><span class="nd-num">&sect;13</span><span class="nd-name">Who's who</span></a>
+      <a href="#rag"        data-go="rag"><span class="nd-num">&sect;14</span><span class="nd-name">RAG &middot; local knowledge</span></a>
+      <a href="#fintune"    data-go="fintune"><span class="nd-num">&sect;15</span><span class="nd-name">LoRA fine-tuning</span></a>
+      <a href="#homebrew"   data-go="homebrew"><span class="nd-num">&sect;16</span><span class="nd-name">2026 homebrew</span></a>
+      <a href="#glossary"   data-go="glossary"><span class="nd-num">&phi;</span><span class="nd-name">Glossary</span></a>
     </nav>
   </div>
 </div>
@@ -744,7 +754,687 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
     </div>
   </section>
 
-  <!-- ======= FOOTER ======= -->
+  <!-- ======= 09 MoE ======= -->
+  <section class="block" id="moe">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;09 // BEYOND &middot; MoE</span>
+        <h2 class="title">Sparse MoE: how big can also mean lean</h2>
+        <div class="line"></div>
+        <span class="lvl pro" style="margin-top:14px">&#9656; Advanced &middot; read to understand</span>
+        <p class="lead" style="margin-top:10px">DeepSeek-671B, Qwen3-235B / 32B-A3B, GPT-OSS-120B &hellip; the models that strutted
+        hardest in 2025 are almost all MoE. First, kill a myth: <span class="hl">&ldquo;70B&rdquo; is not that scary</span> &mdash;
+        what actually matters at the door is <b>active parameters</b>.</p>
+      </div>
+
+      <h3 class="lvl-sub">What Mixture-of-Experts means <span class="lvl core">CORE</span></h3>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">Dense vs sparse: two roads</div>
+          <div class="p">An ordinary model &ldquo;wakes&rdquo; all of its parameters for every token &rarr; <b>dense</b>.
+          MoE slices the FFN layers into many <b>experts</b>, and a router (gating) &ldquo;wakes only the top-k experts&rdquo;
+          per token &rarr; <b>sparse</b>.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">Two numbers that matter: total vs active</div>
+          <div class="p">Take <code>Qwen3-32B-A3B</code>: 32B total parameters, only 3B active.
+          Its <b>storage</b> still has to fit 32B into VRAM, but <b>per-token compute</b> only walks 3B &rarr;
+          an order of magnitude faster at inference, and it often beats a dense 14B.</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">Why MoE is &ldquo;good news for the local crowd&rdquo;</div>
+          <div class="p">&ldquo;More total parameters = smarter&rdquo; still holds &mdash; but the price of smartness
+          shifts from <b>compute</b> to <b>storage / bandwidth</b>.
+          Even if a single card can only feed weights slowly (bandwidth-bound), sparse activation can still give you
+          generations approaching &ldquo;flagship intelligence&rdquo;.
+          <b>Bottleneck rule of thumb:</b> the routed weights each token must read = the update path of (experts + shared experts)
+          &mdash; shorthand: <i>eats storage, saves compute</i>.</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">The MoE details that matter locally <span class="lvl guru">guru</span></h3>
+      <div class="insights"><span class="h">Read these three numbers and you are in the club</span><ul>
+        <li><b>Experts + Top-K</b>: e.g. <code>128 experts, top-2</code> &mdash; each token is handled by 2 experts, and the router emits sparse probabilities.</li>
+        <li><b>Shared experts</b>: some activations are always present, providing a floor for general ability (families with shared experts such as Qwen3-235B use slightly more VRAM).</li>
+        <li><b>Total / active params</b> are in the model name: <code>DeepSeek-V3 family = 671B-A37B</code>, <code>Qwen3-32B-A3B</code>, <code>Qwen3-235B-A22B</code> &mdash; whatever follows <code>-A</code> is the active amount actually used per token.</li>
+      </ul></div>
+      <div class="callout warn"><span class="head">Hidden pits of running MoE locally (read first)</span>
+        MoE files are bulky &rarr; <b>you need enough disk</b>; VRAM is consumed by &ldquo;total params (after quantization) + routing overhead&rdquo;,
+        not just the active params.<br>
+        Pure-CPU folks who can tolerate a bandwidth bottleneck may find MoE a delightful &ldquo;buy intelligence cheap&rdquo; route;
+        GPU folks should check whether <code>-ngl</code> can pull the router layers into VRAM too.</div>
+      <div class="callout g"><span class="head">What this section solves</span>
+        &#9312; Stop being scared off by 235B &mdash; you now know why it can still fit dual cards or a big-RAM box after quantization;
+        &#9313; make &ldquo;active params&rdquo; your first-glance metric when choosing;
+        &#9314; expect <b>disk + bandwidth to be the real blockers</b> when deploying MoE.</div>
+    </div>
+  </section>
+
+  <!-- ======= 10 KV CACHE ======= -->
+  <section class="block" id="kv">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;10 // BEYOND &middot; MEMORY</span>
+        <h2 class="title">KV cache and the economics of context</h2>
+        <div class="line"></div>
+        <span class="lvl pro" style="margin-top:14px">&#9656; Advanced &middot; the #1 hidden VRAM killer locally</span>
+        <p class="lead" style="margin-top:10px">Why does 8k context run fine, then <span class="hl">OOM</span> the moment you open 128k?
+        Because every extra token is not merely &ldquo;one more sentence stored&rdquo; &mdash; the model must remember
+        interactions across every layer. <b>That bill is paid by the KV cache.</b></p>
+      </div>
+
+      <h3 class="lvl-sub">A VRAM bill that is bound to grow <span class="lvl core">CORE</span></h3>
+      <div class="grid cards2">
+        <div class="card" style="grid-column:1/-1"><span class="accent"></span>
+          <div class="h3">What the KV cache actually stores</div>
+          <div class="p">During inference each token produces Key/Value vectors in every attention layer; generating a new token
+          requires matching against <b>all historical K/V</b>.
+          Rather than recomputing history, the engine caches them as the <code>KV cache</code>.<br><br>
+          <b>A rather intimidating approximation:</b><br>
+          <code>KV memory &asymp; layers &times; KV heads &times; head dim &times; context length &times; bytes per element &times; 2 (K+V)</code><br>
+          Simplified: <b>it grows roughly linearly with context tokens, and it must coexist with the weights in VRAM</b>.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">Does 8k &rarr; 128k really mean &times;16?</div>
+          <div class="p">Weights occupy a constant amount of VRAM; KV grows roughly linearly with <code>seq_len</code> &rarr;
+          multiplying context by 16 multiplies KV VRAM by about 16 as well
+          (paging/quantization can discount that further). For an 8B-class model the weights are only a few GB,
+          so long context is often exactly what kicks the model out of VRAM. That is the truth behind 90% of long-document OOMs.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">Four &ldquo;bargaining knives&rdquo;, and what each cuts</div>
+          <div class="p"><b>FlashAttention</b>: does not remove the memory wall, but takes attention from O(n&sup2;) to O(n),
+          letting long context flow with less overhead;
+          <b>KV cache quantization (e.g. Q8/Q4 kv)</b>: store the cache at lower bit width &mdash; the most direct slimming;
+          <b>prefix caching / kv-reuse</b>: reuse the cache for an identical system prompt or template instead of recomputing;
+          <b>GQA/MQA</b>: architecture-level reduction of KV heads &rarr; thinner by design (already built into Qwen/Llama-3).</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">Long context has a third pit: speed <span class="lvl guru">guru</span></h3>
+      <div class="insights"><span class="h">Longer context costs not just memory &mdash; every decode step slows down</span><ul>
+        <li>Every decode step must pull the entire historical key/value set to compute attention &rarr; the more tokens, the slower each step (the tail of a long document gets noticeably sluggish).</li>
+        <li><b>RoPE extrapolation / interpolation</b>: rotary position embeddings let you &ldquo;squeeze&rdquo; a model trained at 4k out to 32k/128k &mdash; at the cost of attention decay in very long stretches that needs engineering to rescue.</li>
+        <li><b>Long-document work is not &ldquo;remember everything&rdquo;</b>: RAG or a sliding window (summarization + retrieval) is often faster, more accurate and cheaper than forcing 128k.</li>
+      </ul></div>
+      <div class="callout g"><span class="head">Three things to just do (don&rsquo;t rush into big context)</span>
+        &#9312; Default to <code>8k / 16k</code> and use <b>chunked retrieval</b> when you genuinely need long material;
+        &#9313; turn on <code>flash-attn</code>, then squeeze VRAM further with KV quantization;
+        &#9314; both llama.cpp and Ollama let you set context explicitly via `-c` &mdash; the defaults often lie to you.</div>
+      <div class="callout"><span class="head">What this section solves</span>
+        Read the VRAM and speed cost behind any model&rsquo;s &ldquo;maximum context&rdquo;; know that long documents want a
+        &ldquo;structural capsule&rdquo; (RAG / retrieval) rather than brute force; stop tuning `context` by trial and error.</div>
+    </div>
+  </section>
+
+  <!-- ======= 11 SAMPLING ======= -->
+  <section class="block" id="sampling">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;11 // BEYOND &middot; DECODE</span>
+        <h2 class="title">Sampling craft: how the model actually picks words</h2>
+        <div class="line"></div>
+        <span class="lvl pro" style="margin-top:14px">&#9656; Advanced &middot; one setting decides whether it sounds like AI</span>
+        <p class="lead" style="margin-top:10px">Same model: one person dials it to lyrical prose, another to a cold database &mdash;
+        the difference lives entirely in <span class="hl">a handful of sampling parameters</span>.
+        temperature is only the tip of the iceberg. The &ldquo;stable output&rdquo; you want for programs and the
+        &ldquo;inspired output&rdquo; you want for copy were never the same parameter set.</p>
+      </div>
+
+      <h3 class="lvl-sub">Order of priority <span class="lvl core">CORE</span></h3>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">top_p (nucleus sampling)</div>
+          <div class="p">Sample only from the candidates whose cumulative probability covers roughly <code>p</code>:
+          stack by total probability and chop off the &ldquo;drifting tail&rdquo;.
+          Keeps quality while retaining variety &mdash; the handiest knob day to day.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">top_k</div>
+          <div class="p">Keep only the k highest-probability candidates and sample among those &mdash; a blunter axe.
+          Too large drifts, too small turns rigid; combined with top_p it often kills the &ldquo;starts strong then wanders&rdquo; problem.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">temperature</div>
+          <div class="p">A &ldquo;thermal&rdquo; scaling of logits: low &rarr; steadier (tends toward argmax), high &rarr; more random exploration.
+          Note it only affects <b>relative probabilities</b> &mdash; high temperature alone is usually not &ldquo;more creative&rdquo;,
+          just verbose runaway.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3">min_p &amp; repeat</div>
+          <div class="p"><b>min_p</b>: candidates below &ldquo;some ratio of the best candidate&rdquo; are dropped outright (guards against low-probability debris);
+          <b>repeat_penalty / frequency</b>: apply a small penalty to what has already been said to suppress repetition.
+          These are often more effective than aggressively lowering temp.</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">A copy-paste task &rarr; recipe table <span class="lvl guru">guru</span></h3>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>Goal</th><th>temperature</th><th>top_p</th><th>top_k</th><th>Other advice</th></tr></thead>
+          <tbody>
+            <tr><td>Stable JSON / code / function calling</td><td class="a">0.0&ndash;0.2</td><td>0.9&ndash;1.0 (near-argmax dominates)</td><td>high or off</td><td>Strongly prefer guided / JSON-schema, see &sect;12</td></tr>
+            <tr><td>General chat / translation / summarization</td><td class="g">0.7</td><td class="g">0.9</td><td>default</td><td>min_p &asymp; 0.05 to prevent debris</td></tr>
+            <tr><td>Creative copy / poetry / brainstorming</td><td>0.9&ndash;1.1</td><td>0.95&ndash;1.0</td><td>high</td><td>raise repeat, but don&rsquo;t punish loops too hard</td></tr>
+            <tr><td>Factual Q&amp;A / retrieval-augmented (RAG)</td><td class="a">0.2&ndash;0.3</td><td>0.9</td><td>default</td><td>pair with top-k, don&rsquo;t over-trigger prose heuristics</td></tr>
+            <tr><td>Long answers, avoiding &ldquo;tail repetition&rdquo;</td><td>0.6</td><td>0.92</td><td>48</td><td>add a small repeat_penalty 1.05&ndash;1.1</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>Setting the parameters in Ollama for one session</span><span class="copy">&#10697; Copy</span></div>
+        <pre><span class="p">$</span> <span class="c">ollama run qwen3:8b --num-ctx 8192 --temperature 0 --num-predict 1024</span>
+<span class="o">Use --temperature 0 for the most stable output.
+You can also pass them straight through the API:
+{ model, messages:[...],  "options": { "temperature":0.2, "top_p":0.9, "repeat_penalty":1.1 } }
+ If you switch models or tasks, treat the recipe as a starting point, not gospel.</span></pre>
+      </div>
+      <div class="callout g"><span class="head">Why you sometimes see &ldquo;the more I change, the worse it gets&rdquo;</span>
+        &#9312; First check whether <b>context is too small</b> (earlier text got truncated) &mdash; that is not sampling&rsquo;s fault;
+        &#9313; don&rsquo;t move too many knobs at once &mdash; attack the main contradiction (top_k/top_p first, then temp);
+        &#9314; &ldquo;stable&rdquo; does not mean temp=0 (argmax misses slightly-lower-probability correct words) &mdash;
+        for structured tasks prefer JSON-schema over torturing the temperature.</div>
+      <div class="callout"><span class="head">What this section solves</span>
+        Stop cranking temperature and nothing else; give JSON / chat / creative / RAG each a parameter set you can justify;
+        explain &ldquo;why the model repeats / goes dumb / drifts&rdquo;.</div>
+    </div>
+  </section>
+
+  <!-- ======= 12 STRUCTURED & TOOLS ======= -->
+  <section class="block" id="structured">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;12 // BEYOND &middot; INTEROP</span>
+        <h2 class="title">Structured output &amp; tools: making the model follow a program&rsquo;s temper</h2>
+        <div class="line"></div>
+        <span class="lvl guru" style="margin-top:14px">&#9656; Hardcore &middot; essential for wiring local apps</span>
+        <p class="lead" style="margin-top:10px">A chat box is only the start. Once you send a model to fill forms, call APIs or write
+        to a database, you need it to <b>emit valid JSON obediently</b>, and even to <b>ask to call a tool</b> &mdash;
+        that is the territory of structured output + function calling.</p>
+      </div>
+
+      <h3 class="lvl-sub">Making generation &ldquo;follow the rules&rdquo;: guided decoding <span class="lvl pro">PRO</span></h3>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">The idea: push grammar into every token</div>
+          <div class="p">Instead of letting the model generate freely and praying it is valid, <b>restrict each step to
+          only the next characters that satisfy the grammar</b>.
+          llama.cpp&rsquo;s <code>--grammar</code> / <code>--json-schema</code> and vLLM&rsquo;s <code>guided_json/grammar</code>
+          do exactly this &rarr; <b>zero structural invalidity</b>.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">JSON Schema is the laziest dialect</div>
+          <div class="p">Write a <code>JSON Schema</code> (fields / types / required) and let the engine &ldquo;translate&rdquo;
+          it into per-token constraints.
+          The result is <b>reliably valid JSON, with field names and types pinned too</b> &mdash; ten thousand times more
+          trustworthy than lobbing &ldquo;please output valid JSON&rdquo; at it.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">Function calling: the model wants to act</div>
+          <div class="p">Declare the functions you expose in a <b>tools</b> parameter (name + description + argument schema);
+          the model emits a `tool_calls` request &rarr; you execute it locally &rarr; feed the result back &rarr; the model continues.
+          This is the full remote control for local agents and automation.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3">FIM completion (the code crowd&rsquo;s thrill)</div>
+          <div class="p">Fill-in-the-Middle: rather than continuing forward, it takes &ldquo;before + after&rdquo; and
+          <b>fills the gap in between</b> &mdash; the machinery under modern IDE autocomplete.
+          Requires a model with a FIM template; llama.cpp is very well suited to these tasks.</div>
+        </div>
+      </div>
+
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>Three ways to land it (take what you need)</span><span class="copy">&#10697; Copy</span></div>
+        <pre><span class="cm"># A) llama-server with JSON-Schema (mind the escaping)</span>
+<span class="p">$</span> <span class="c">./build/bin/llama-server -m model.gguf -c 8192 \
+   --json-schema '{"type":"object","properties":{"name":{"type":"string"},"scores":{"type":"array","items":{"type":"integer"}}},"required":["name"]}'</span>
+<span class="o">Output is valid JSON (guaranteed by the engine at the token level).</span>
+
+<span class="cm"># B) Any OpenAI-compatible endpoint: pass response_format through the OpenAI client</span>
+<span class="c">curl http://127.0.0.1:11434/v1/chat/completions -H "Content-Type: application/json" -d \
+  '{"model":"qwen3:8b","messages":[{"role":"user","content":"format MySQL as JSON"}],
+    "response_format":{"type":"json_object"},"options":{"temperature":0}}'</span>
+
+<span class="cm"># C) Tool declaration via llama.cpp gguf / Ollama: a tools array makes the server emit tool_calls</span>
+<span class="cm"># Concept: the model does not "execute", it only "decides to call + fills the arguments".
+# The actual execution is always on your side (safety first).</span></pre>
+      </div>
+
+      <div class="callout warn"><span class="head">Security red line (the single most important one)</span>
+        Function calling hands AI a key. Expose <b>only whitelisted, auditable tools</b>; put a permission gate on
+        file writes, network access and shells unconditionally;
+        never let your agent &ldquo;free-fall&rdquo; call whatever it feels like &mdash; the user is still you, and so is the blame.</div>
+      <div class="callout g"><span class="head">What this section solves</span>
+        &#9312; Get local models to emit stable JSON / call schemas so app integration needs no defusing;
+        &#9313; build a local agent that actually does work with tools;
+        &#9314; understand the parent-child relation between guided decoding and sampling parameters &mdash;
+        the schema defines <i>what may be said</i>, sampling defines <i>which of those gets said</i>.</div>
+    </div>
+  </section>
+
+  <!-- ======= 13 PLAYERS ======= -->
+  <section class="block" id="players">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;13 // WHO'S WHO &middot; THE STORY</span>
+        <h2 class="title">Who's who: the people who put LLMs on the table</h2>
+        <div class="line"></div>
+        <span class="lvl guru" style="margin-top:14px">&#9656; Side volume &middot; read the people behind the board</span>
+        <p class="lead" style="margin-top:10px">When choosing a model to deploy locally, what really matters is
+        <b>who publishes it and what their open-source stance is</b>.
+        This section lays out &ldquo;major houses at home and abroad + an open-source chronology&rdquo; as one map,
+        so you can recognise faces, lines and the next hand at the table.</p>
+      </div>
+
+      <h3 class="lvl-sub">One table covers most players <span class="lvl core">CORE</span></h3>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>Camp</th><th>Vendor / team</th><th>Representative models</th><th>Open-source stance</th><th>Local friendliness</th></tr></thead>
+          <tbody>
+            <tr><td rowspan="4" class="g"><b>Overseas</b></td><td><b>Meta</b></td><td>Llama 2/3/3.2/4</td><td class="g">Open-source mainstay</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
+            <tr><td><b>Google DeepMind</b></td><td>Gemini family + open Gemma</td><td class="a">Gemini closed / Gemma open</td><td class="g">&#9733;&#9733;&#9733;&#9734;&#9734;</td></tr>
+            <tr><td><b>OpenAI</b></td><td>GPT / o series / gpt-oss (weights)</td><td class="a">Mostly closed; gpt-oss opened</td><td>&#9733;&#9733;&#9734;&#9734;&#9734;</td></tr>
+            <tr><td><b>Mistral AI</b> / Anthropic / xAI</td><td>Mistral &middot; Claude &middot; Grok</td><td class="a">Mistral mostly open / last two closed</td><td>&#9733;&#9733;&#9733;&#9734;&#9734;</td></tr>
+            <tr><td rowspan="5" class="g"><b>China</b></td><td><b>DeepSeek</b></td><td>R1 / V3 (671B-A37B)</td><td class="g">Open-source pioneer, MIT</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
+            <tr><td><b>Alibaba &middot; Qwen</b></td><td>Qwen2.5/3/3-Coder &hellip; every size</td><td class="g">Open at all scales, high heat</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
+            <tr><td><b>Zhipu Z.ai</b></td><td>ChatGLM / GLM-4-9B, GLM5 etc.</td><td class="g">Important open source (some commercial)</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9734;</td></tr>
+            <tr><td><b>Shanghai AI Lab</b></td><td>InternLM series</td><td class="g">Fully open pipeline</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9734;</td></tr>
+            <tr><td><b>Moonshot Kimi / MiniMax / Baidu / ByteDance</b></td><td>Kimi &middot; MiniMax &middot; Ernie &middot; Doubao &hellip;</td><td class="r">Mostly closed API / a little open</td><td class="r">&#9733;&#9734;&#9734;&#9734;&#9734;</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="lvl-sub">Timeline: how these 8 years got us here <span class="lvl pro">PRO</span></h3>
+      <div class="tl">
+        <div class="tl-item"><span class="tl-year">2017</span><div class="tl-main"><b>&ldquo;Attention Is All You Need&rdquo;</b> introduced the Transformer;
+          self-attention replaced RNNs as the backbone &mdash; the foundation of every general LLM today.</div></div>
+        <div class="tl-item"><span class="tl-year">2018</span><div class="tl-main"><b>GPT-1 opened generative pre-training</b> (learn massively first, fine-tune downstream).</div></div>
+        <div class="tl-item"><span class="tl-year">2020</span><div class="tl-main">GPT-3 and its 175B parameters proved the <b>&ldquo;a bit bigger and it generalises few-shot&rdquo;</b> scaling law.</div></div>
+        <div class="tl-item"><span class="tl-year">2022.11</span><div class="tl-main"><b>ChatGPT arrives</b>, conversational AI ignites global attention &mdash; and ignites the war over &ldquo;who opens up, who locks down&rdquo;.</div></div>
+        <div class="tl-item"><span class="tl-year">2023</span><div class="tl-main"><b>The year open source began</b>: Meta&rsquo;s Llama family pushed community self-hosting; Alibaba Qwen, GLM, InternLM and MiniMax raced to catch up with a faster open-source cadence.</div></div>
+        <div class="tl-item"><span class="tl-year">2024</span><div class="tl-main"><b>Efficiency and sparsity take off</b>: Mixtral, DeepSeek-MoE and others put MoE/open source on the table; Qwen/Llama-3/Gemma/Phi kept arriving, making 7&ndash;35B on a single card real.</div></div>
+        <div class="tl-item"><span class="tl-year">2025.01</span><div class="tl-main"><b>DeepSeek-R1 open-sources reasoning</b>, targeting the o1 approach and sharply lowering the bar for deep reasoning; DeepSeek-V3/R1 soon topped charts &mdash; the local crowd finally got &ldquo;thinks + open + reasonable weight&rdquo; in one package.</div></div>
+        <div class="tl-item"><span class="tl-year">2025 to now</span><div class="tl-main"><b>Agents &middot; long context &middot; tug-of-war over open weights</b>: Qwen3 / Llama / GPT-OSS / Gemma3 keep approaching flagships at smaller size,
+          while the OpenAI and Anthropic flagships stay mostly closed. For local users the dividend is visible: just watch the players who <i>give away weights</i> &mdash; DeepSeek, Qwen, Meta, Zhipu.</div></div>
+      </div>
+    </div>
+  </section>
+
+  <h3 class="lvl-sub" style="font-size:1.05rem">The deep dive &middot; how to write one entry</h3>
+  <p style="color:var(--txt-mut);font-size:.86rem;margin:0 0 14px">
+    Format: origins &rarr; key milestones &rarr; neutral verdict (strengths and limits side by side, public sources, no hype and no cheap shots) &rarr; what is live today.
+    Read the tone and grain size, then expand the ones you care about.</p>
+
+  <details class="acc" open>
+    <summary><span class="ico">&#9679;</span>OpenAI (US &middot; closed API + a step toward open weights)<span class="exp">+</span></summary>
+    <div class="body">
+      <p><b>Origins</b>: founded in California in 2015 by Musk, Altman, Sutskever, Brockman and others, positioned as &ldquo;non-profit, caring about all humanity, open-source friendly&rdquo;;
+      the intent was to hedge against &ldquo;for-profit giants locking AGI inside a few companies&rdquo;. Named OpenAI, yet early weights were deliberately withheld on safety grounds
+      (GPT-2&rsquo;s &ldquo;too dangerous to publish fully&rdquo; is one footnote to its later controversies).</p>
+      <p><b>Milestones</b>: in 2019 Microsoft&rsquo;s multi-billion backing turned it into a &ldquo;capped-profit&rdquo; structure; in 2020 GPT-3 set off the &ldquo;big doesn&rsquo;t mean dumb&rdquo; scaling law;
+      late 2022 ChatGPT brought conversational AI to the public and is regarded as the gate to the golden age from 2023 on;
+      in Nov 2023 the board abruptly fired CEO Altman and asked him back within four days &mdash; a public clash with the &ldquo;AI safety&rdquo; line;
+      the following years ran GPT-4 / o-series reasoning / various flagships on a &ldquo;closed high performance + paid API&rdquo; main line, while in 2024&ndash;25 it released the locally deployable,
+      open-weight <code>gpt-oss-20b/120b</code> (MIT/Apache &mdash; community-runnable), widely read as &ldquo;forced to respond by the open-source camp&rdquo;.</p>
+      <p><b>Neutral verdict</b>: strengths &mdash; long the reference choice for &ldquo;engineering integration + productisation + ecosystem&rdquo;, with system prompts/tooling/evals that are de facto baselines;
+      limits and criticism &mdash; transparency, data provenance and copyright, moderation boundaries, and military use plus safety-guardrail disputes have all made headlines; it still treats closed lock-in as its monetisation core,
+      with open weights as a &ldquo;fill-in&rdquo;. Both sides have public sources; avoid single-sided emotion.</p>
+      <p class="cm">Live (2026-09 view): GPT- and o-series flagships remain API-only; what you can actually deploy locally is the open-weight <code>gpt-oss-20b &middot; gpt-oss-120b (MoE; the 20B-class quant suits workstations)</code>.
+      Sources and channels: openai.com; Hugging Face repo `openai/gpt-oss*`; Ollama `gpt-oss`: 20b / 120b.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="ico">&#9679;</span>Anthropic (US &middot; Claude &middot; closed source + a safety narrative)<span class="exp">+</span></summary>
+    <div class="body">
+      <p><b>Origins</b>: founded in 2021 by former OpenAI executives including the Amodei siblings, with a stance clear from day one &mdash;
+      putting <b>interpretability and alignment</b> first. The team uses &ldquo;Constitutional AI&rdquo;, constraining the model&rsquo;s self-training with a set of values;
+      that is its biggest differentiator from the mainstream benchmark-chasing labs.</p>
+      <p><b>Milestones</b>: Claude iterated through Opus/Sonnet/Haiku tiers (a naming lineage still in use). It prioritised very long context and
+      &ldquo;code / research workflows&rdquo; early, becoming a daily driver for many developers; by 2025&ndash;26 Claude also entered coding agents and some high-frequency government and military use,
+      with the resulting &ldquo;guardrails vs authorisation boundaries&rdquo; debate appearing repeatedly in public reporting.</p>
+      <p><b>Neutral verdict</b>: strengths &mdash; an alignment narrative plus a strong real-world reputation on code and long documents, and product language naturally close to developers;
+      limits &mdash; entirely closed (no local weights), dependent on API/subscription monetisation, and &ldquo;how tight is the safety limit, and is it applied correctly&rdquo; has always been the same knife that cuts both ways.</p>
+      <p class="cm">Live (2026-09 view): API / app via Claude subscriptions; <b>cannot be self-hosted locally</b> (a fundamental dividing line from the open-source camp &mdash; settle this before choosing).
+      Channels: anthropic.com / api.anthropic.com.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="ico">&#9679;</span>Google &middot; DeepMind (closed Gemini flagship + open Gemma)<span class="exp">+</span></summary>
+    <div class="body">
+      <p><b>Origins</b>: Google&rsquo;s AI research long split between an &ldquo;academic conference school&rdquo; (Google Brain) and DeepMind&rsquo;s deep-reinforcement-learning eccentrics;
+      the two merged into Google DeepMind in 2023, wrapping the LLM product line as Gemini. Having wowed the public with AlphaGo (2016) and carrying the Transformer paper&rsquo;s team DNA,
+      it is arguably the &ldquo;original shareholder&rdquo; of the LLM era.</p>
+      <p><b>Milestones</b>: the Gemini line spread via multimodality and a &ldquo;rebuild every product&rdquo; push (Workspace/search/agent tools such as Deep Research), iterating for several generations through 2024&ndash;2026 and holding the top of evaluations;
+      it also shipped the open Gemma family (small and mid-size weights you can run locally) &mdash; a compromise footnote to the &ldquo;open about technology but not fully open flagship&rdquo; route.</p>
+      <p><b>Neutral verdict</b>: strengths &mdash; deep platform integration, strong multimodal foundations, and compute plus a big-client ecosystem;
+      limits &mdash; the Gemini flagship is closed and its services live mostly in its own ecosystem, making it &ldquo;tweakable but uncontrollable&rdquo; for third-party developers, and what it opens (Gemma, aimed at edge and small-mid tier) is far from flagship scale.</p>
+      <p class="cm">Live (2026-09 view): the flagship runs via Gemini API; <b>what you can run locally is the Gemma line (4B/12B/27B etc.)</b> and its coding/multimodal derivatives.
+      Channels: deepmind.google / aistudio.google.com / Ollama &ldquo;gemma&rdquo;.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="ico">&#9679;</span>Meta (US &middot; Llama &middot; the open-source ecosystem powerhouse)<span class="exp">+</span></summary>
+    <div class="body">
+      <p><b>Origins</b>: Meta (formerly Facebook) was not an obvious &ldquo;model lab&rdquo;, yet one Llama move in 2023 made it <b>the engine of open-source LLMs</b>.
+      What it has long wanted to accumulate is &ldquo;community + ecosystem + AI infrastructure say&rdquo; &mdash; trading weights for long-term developer stickiness and a standard-setting position,
+      the exact opposite of the &ldquo;sell APIs&rdquo; camp.</p>
+      <p><b>Milestones</b>: Llama (research) &rarr; Llama 2 (2023, commerce relaxed) &rarr; Llama 3/3.x (2024&ndash;25, many sizes, ecosystem grind) &rarr; later iterations through 2026 continuing
+      a hybrid stance of &ldquo;open, while its own Meta AI stays closed&rdquo;. If anyone rivals Google at turning open source into a traffic funnel, it is Meta.</p>
+      <p><b>Neutral verdict</b>: strengths &mdash; relatively permissive licensing and the community/inference stack (llama.cpp/Ollama supported it earliest and most completely), making it the local crowd&rsquo;s natural default;
+      limits and controversy &mdash; licence terms have tightened version by version (commercial and MAU thresholds), the early &ldquo;open &ne; freely commercial or attribution-free&rdquo; boundary was pulled back and forth by the community,
+      and Chinese ability usually trails Chinese-native models like Qwen/GLM.</p>
+      <p class="cm">Live (2026-09 view): local mainstay via quantized Llama sizes; channels: llama.com / Ollama &ldquo;llama*&rdquo;; check each generation&rsquo;s actual licence.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="ico">&#9679;</span>xAI (Grok &middot; launched on the back of the X ecosystem)<span class="exp">+</span></summary>
+    <div class="body">
+      <p><b>Origins</b>: Musk founded xAI in 2023; its flagship Grok was bound to the X (formerly Twitter) account ecosystem from birth, training while borrowing social data and traffic.
+      The stated mission is &ldquo;to understand the true nature of the universe&rdquo;, though in practice it appears more often under the banner of &ldquo;fewer limits + big data + competitive compute&rdquo;.</p>
+      <p><b>Milestones</b>: the first Grok got attention via &ldquo;sharp tongue and fast access to X&rdquo;, then shifted into a serious LLM arms race (including reasoning and multimodal mainlines),
+      and has headlined both for mouthy outputs backfiring and for a reported military contract. By 2026 the commercial closed-source tone remains dominant, with little official local weight.</p>
+      <p><b>Neutral verdict</b>: strengths &mdash; X ecosystem data and distribution plus heavy compute investment, with a differentiated, down-to-earth style;
+      limits &mdash; maturity plus multimodal and long-document ability still trail the leaders, and &ldquo;saying whatever it wants&rdquo; is both a selling point and a liability for commercial compliance; local self-hosting is essentially unavailable, a hard constraint for many enterprise buyers.</p>
+      <p class="cm">Live (2026-09 view): used mainly through X / API; <b>no official open local weights is the normal state &mdash; check the official page before planning a deployment</b>. Channel: x.ai</p>
+    </div>
+  </details>
+  <h4 class="lvl-sub" style="font-size:1.05rem">China section (same template &middot; main open-source players first, others to follow)</h4>
+
+  <details class="acc">
+    <summary><span class="ico">&#9679;</span>DeepSeek (efficient open source + the clever-and-cheap school)<span class="exp">+</span></summary>
+    <div class="body">
+      <p><b>Origins</b>: it grew out of a quant-trading-backed research outfit and is seen by the industry as &ldquo;the value-for-money efficiency camp of open source&rdquo;:
+      it first made &ldquo;spend less compute, score high&rdquo; a mainstream play with the V/R series, and in early 2025 R1&rsquo;s open reasoning plus V3&rsquo;s MoE architecture made
+      &ldquo;a Chinese lab can open weights and still top the charts&rdquo; a headline.</p>
+      <p><b>Milestones</b>: DeepSeek-R1 (2025, open reasoning line) and V3 (late 2024, MoE 671B-A37B) &rarr; the V3.1 family&rsquo;s &ldquo;thinking / direct answer hybrid&rdquo; &rarr;
+      to the <b>2026-09 V4 preview (e.g. V4-Flash: MoE, 284B total / 13B active, aimed at 1M-token context)</b>, continuing to prove that
+      &ldquo;sparse activation &times; long context&rdquo; can fit large capacity into efficient local and edge deployments.</p>
+      <p><b>Neutral verdict</b>: strengths &mdash; MIT-style (for most weights) open-source freedom, a strong reputation in Chinese general, long-document and reasoning work,
+      and a stance of generously releasing research output that developers appreciate; limits &mdash; training and launch resources are tight, international compliance and some modality depth are less developed,
+      and some &ldquo;hit waves&rdquo; see occasional queues. Check the official documentation for licence and stability before commercial use.</p>
+      <p class="cm">Live (2026-09 view): quantized tiers of the R1/V3-* series <b>run directly on a single machine or workstation</b>;
+      to try the V4 previews, look for official weights and quantized copies first (locally it needs a lot of RAM/VRAM). Channels: deepseek.com / github.com/deepseek-ai / the official HF repos (mind the version date stamps).</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="ico">&#9679;</span>Alibaba &middot; Qwen (the &ldquo;all-sizes king&rdquo; of Chinese open source)<span class="exp">+</span></summary>
+    <div class="body">
+      <p><b>Origins</b>: from Alibaba Cloud&rsquo;s research line, the Qwen family achieved extremely high adoption by &ldquo;open weights at almost every size from small to large + multilingual + strong native Chinese&rdquo;;
+      it is one of the most common defaults seen among local users in Chinese-speaking regions.</p>
+      <p><b>Milestones</b>: Qwen (1.5/2.5, full coverage from 0.x to 72B) &rarr; Qwen-Coder (coding-specific, multiple sizes) &rarr; Qwen3 (0.6B&ndash;235B, including MoE, adding thinking tiers and tools) &rarr;
+      <b>continuing into 2026 with Qwen3.5/3.8 (3.8-27B etc., plus smaller, multimodal and &ldquo;flash-next&rdquo; forward-looking tiers)</b>; its cadence makes it one of the fastest-updating open lines for deployment.</p>
+      <p><b>Neutral verdict</b>: strengths &mdash; full size coverage, generous licensing (mostly Apache-2.0 or its own permissive terms), mature tool calling and Chinese agent ecosystem,
+      and the broadest compatibility stack (a familiar face in Ollama/LM Studio); limits &mdash; data and review follow domestic delivery policy (check first for some overseas or authority-sensitive deployments),
+      and the strongest flagship versions are often not fully opened, so self-hosting requires weighing capability against licence.</p>
+      <p class="cm">Live (2026-09 view): locally prefer official Qwen quantizations at various sizes (1&ndash;27B suits mainstream home and workstation use, 36B+ MoE for bigger machines);
+      channels: qwenlm.github.io / github.com/QwenLM / Ollama &ldquo;qwen*&rdquo;; licence and review terms follow its release announcements.</p>
+    </div>
+  </details>
+
+  <details class="acc">
+    <summary><span class="ico">&#9679;</span>Zhipu Z.ai / GLM (Chinese-native &middot; open core + commercial enhancement)<span class="exp">+</span></summary>
+    <div class="body">
+      <p><b>Origins</b>: spun out of Tsinghua-linked research accumulation (the Zhipu/GLM line has a long academic lineage), it leans on a natural shape &ldquo;strong in Chinese and in coding agents&rdquo;.
+      It moved from ChatGLM to the GLM line, and after 2025 began shipping on a dual track of &ldquo;open core + a stronger commercial edition&rdquo;.</p>
+      <p><b>Milestones</b>: the GLM-4.x era already had Chinese agent and multimodal layouts; <b>by 2026 the GLM-5.3 family (including GLM-5.3-Flash: roughly 320B total / 18B active, multimodal, 1M-token context, weights already open)</b>
+      pushed &ldquo;long-horizon code and tool agents + vision in the coding loop&rdquo; as selling points; community licensing (weights or MIT, see its repos) makes it a new locally-runnable face.</p>
+      <p><b>Neutral verdict</b>: strengths &mdash; strong Chinese-native ability, a developer-community reputation for agents and tool calling, and a Flash tier whose &ldquo;small activation, high throughput&rdquo; fits personal workstations;
+      limits &mdash; some top tiers are &ldquo;commercial closed or licensed&rdquo;, the long-tail ecosystem and international plugins still trail Qwen/Llama, and deployment likewise requires reading licence and review terms.</p>
+      <p class="cm">Live (2026-09 view): locally you can get new weights from the official repo or HF &ldquo;zai-org/GLM-*&rdquo;, and smaller tiers can be tried on mid-range hardware via quantization;
+      channels: z.ai / github.com/zai-org / huggingface.</p>
+    </div>
+  </details>
+
+  <div class="callout g"><span class="head">One line to save the local crowd time</span>
+    To stay forever in the advanced-and-free pool, keep an eye on: <b>DeepSeek (performance / reasoning) &middot; Alibaba Qwen (all sizes / Chinese / code)
+    &middot; Meta Llama (ecosystem) &middot; Zhipu GLM &amp; InternLM (Chinese agents)</b> &mdash; every release is worth refreshing your local setup.</div>
+  <div class="callout warn"><span class="head">Remember to date-stamp the &ldquo;history book&rdquo;</span>
+    Release dates, parameter counts and open-source licences iterate fast; the above is a synthesis from a &ldquo;2026-09 perspective&rdquo;.
+    Check the publisher&rsquo;s official repository and date pages before acting. History is accelerating, and this chapter will age too.</div>
+
+  <!-- ======= 14 RAG ======= -->
+  <section class="block" id="rag">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;14 // PRACTICE &middot; RAG</span>
+        <h2 class="title">RAG: giving your local model its own library</h2>
+        <div class="line"></div>
+        <span class="lvl pro" style="margin-top:14px">&#9656; Practical &middot; feed private material to local AI</span>
+        <p class="lead" style="margin-top:10px">However strong, a model is <span class="hl">pinned</span> to old knowledge from its training period.
+        RAG (retrieval-augmented generation) lets you &mdash; <span class="hl">without retraining</span> &mdash; turn papers, a company wiki, personal notes or a code repository
+        into its external bookshelf: retrieve the relevant passages on question, then stitch the answer into context.</p>
+      </div>
+
+      <h3 class="lvl-sub">A complete RAG pipeline <span class="lvl core">CORE</span></h3>
+      <pre style="background:#0a101b;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;line-height:1.8;color:#b7efe0;font-size:.82rem;margin:6px 0 18px;">
+  Document corpus (docs/Notion/PDF/code)
+      │  ① load + parse
+      ▼
+  Chunks  ── ② chunking strategy (overlap / by structure)
+      │
+      ▼
+  Embedding (a small local model such as bge-m3)  ── ③ store into a vector DB (Chroma/FAISS/…)
+      │
+      ▼  a new question
+  [ Query ]: embed the question -> top-k similarity search -> (optional) rerank
+      │
+      ▼
+  Assemble the prompt (retrieved passages + original question)  ── ④ hand to the inference engine
+      │
+      ▼
+  An answer with citations</pre>
+
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">Why this &ldquo;treats&rdquo; some hallucination</div>
+          <div class="p">Put reliable source text directly into context and the model only has to <b>rephrase and integrate</b> rather than <b>recall from thin air</b>.
+          Combined with a system instruction like &ldquo;if you cannot find it, say you don&rsquo;t know&rdquo;, factuality rises markedly versus a bare model &mdash;
+          but note it does not cure hallucination (see below).</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">Three pieces you have locally</div>
+          <div class="p"><b>Vector DB</b>: Chroma (pleasant) / FAISS (fast) / pgvector (alongside Postgres);
+          <b>Embedding model</b>: <code>bge-m3 / nomic-embed / all-MiniLM</code> &mdash; prefer bge for Chinese;<br>
+          <b>The glue</b>: just talk to the OpenAI-compatible endpoints of llama.cpp / Ollama / vLLM (see &sect;05).</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">Chunking and retrieval are the real sorcery</div>
+          <div class="p">&#9312; Don&rsquo;t cut on a fixed character count: prefer <b>title/section/semantic</b> boundaries with overlap;
+          &#9313; retrieval granularity should not be too fine: usually pair <b>parent/child</b> (match a small sentence, feed back the larger block), which greatly improves coherence;
+          &#9314; don&rsquo;t settle for top-1: take top-3~5 and let the model synthesise, adding <b>rerank</b> when needed;
+          &#9315; when question and document languages differ, an English embedding is not ideal for Chinese &mdash; use a Chinese embedding for a Chinese corpus.</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">A minimal runnable RAG (Python) <span class="lvl pro">PRO</span></h3>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>venv &middot; pip install chromadb sentence-transformers</span><span class="copy">&#10697; Copy</span></div>
+        <pre>import chromadb, sentence_transformers as st
+<span class="cm"># local embedding (no cloud call)</span>
+embed = st.SentenceTransformer("BAAI/bge-m3")
+
+docs = ["paste your papers/notes/rules here, e.g.:",
+        "VRAM estimate &asymp; params(B) &times; bytes per weight + KV buffer.",
+        "a second real document …"]
+ids  = [f"id-{i}" for i in range(len(docs))]
+emb  = embed.encode(docs).tolist()          <span class="cm"># precompute vectors</span>
+
+db   = chromadb.Client()
+col  = db.create_collection("notes")
+col.add(ids=ids, documents=docs, embeddings=emb)
+
+<span class="cm"># retrieve: embed the question too</span>
+q_emb = embed.encode(["how much VRAM to run Qwen3-8B locally?"]).tolist()
+hit   = col.query(query_embeddings=q_emb, n_results=2)["documents"][0]
+print(">> hits:\n", "\n---\n".join(hit)[:200])
+
+<span class="cm"># stitch into the system prompt and hand it to the local LLM (Ollama) — see the OpenAI-compatible endpoint in §05</span></pre>
+      </div>
+
+      <div class="callout warn"><span class="head">The single most honest line</span>
+        RAG <b>cannot guarantee no hallucination</b> &mdash; retrieval may miss, chunks may be too fragmented, or the model may still fill gaps.
+        Set &ldquo;if you cannot find it, say you don&rsquo;t know&rdquo;, keep <b>source citations</b> and verify afterwards;
+        treat RAG as an <i>accuracy amplifier</i>, not an <i>absolute truth guarantor</i>.</div>
+      <div class="callout g"><span class="head">What you take away</span>
+        &#9312; A deployable pipeline of &ldquo;documents &rarr; vectors &rarr; retrieval &rarr; assembly &rarr; generation&rdquo;;
+        &#9313; the knowledge that chunking / embedding / rerank are where tuning actually happens;
+        &#9314; the ability to wire private documents into a local model using local embeddings, never leaving the machine.</div>
+    </div>
+  </section>
+
+  <!-- ======= 15 LORA FINE-TUNE ======= -->
+  <section class="block" id="fintune">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;15 // PRACTICE &middot; FINE-TUNE</span>
+        <h2 class="title">LoRA fine-tuning: giving an open model your domain instinct</h2>
+        <div class="line"></div>
+        <span class="lvl guru" style="margin-top:14px">&#9656; Practical &middot; the real deal when you want it to click</span>
+        <p class="lead" style="margin-top:10px">RAG handles &ldquo;looking things up&rdquo;; fine-tuning handles <b>learning your tone, domain conventions and private schemas</b>.
+        Full retraining costs millions? Not needed &mdash; <span class="hl">LoRA</span> learns only a tiny set of &ldquo;delta adapters&rdquo;,
+        enough to personalise a model on one GPU.</p>
+      </div>
+
+      <h3 class="lvl-sub">What LoRA actually is <span class="lvl core">CORE</span></h3>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">Don&rsquo;t move the mountain, just carve fine lines</div>
+          <div class="p">Freeze all original weights and insert tiny <b>low-rank</b> incremental matrices into attention at each layer;
+          training updates only those few thousand to few million parameters. Same effect for an order of magnitude less VRAM and time,
+          and you can detach it at any point to return to the original.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">QLoRA? That&rsquo;s the quantized version</div>
+          <div class="p">First compress the big model into VRAM at 4-bit (e.g. NF4) &rarr; then run LoRA on top.
+          That gives a 16&ndash;24GB card a shot at fine-tuning 7&ndash;14B &mdash; the default posture for a personal studio
+          (handy with <code>unsloth / peft</code>).</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">When to tune, and when not to</div>
+          <div class="p">Good fit: learning <b>output structure / style / private phrasing / a little jargon &rarr; following your prompt conventions better</b>.
+          Bad fit: expecting it to &ldquo;teach new knowledge&rdquo; &mdash; send new knowledge through RAG; and don&rsquo;t use it to patch world facts the LLM never learned
+          (it will hallucinate more elegantly). Using both hands is usually best: RAG for material, LoRA for shape.</div>
+        </div>
+      </div>
+
+      <h3 class="lvl-sub">A minimal &ldquo;just enough to grok it&rdquo; script (QLoRA &middot; PEFT) <span class="lvl pro">PRO</span></h3>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>pip install transformers peft accelerate bitsandbytes datasets</span><span class="copy">&#10697; Copy</span></div>
+        <pre><span class="cm"># Data first: prepare JSONL, one { instruction, input?, output } per line (a few dozen to a few thousand to start)</span>
+<span class="cm"># {"instruction":"draft a reply in our company format","input":"customer chasing delivery","output":"Dear customer…"}</span>
+from datasets import load_dataset
+data = load_dataset("json", data_files="my_train.jsonl")["train"]
+
+<span class="cm"># Do QLoRA on a 4-bit base</span>
+from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
+import peft, torch
+bnb = BitsAndBytesConfig(load_in_4bit=True,
+     bnb_4bit_quant_type="nf4", bnb_4bit_compute_dtype=torch.bfloat16)
+base = AutoModelForCausalLM.from_pretrained("Qwen/Qwen2.5-7B-Instruct",
+     quantization_config=bnb, device_map="auto")
+
+<span class="cm"># Attach LoRA: rank 8~16 is usually enough to start (call prepare_model_for_kbit_training first for k-bit)</span>
+model = peft.get_peft_model(base, peft.LoraConfig(
+     r=16, lora_alpha=32, target_modules=["q_proj","k_proj","v_proj","o_proj"], lora_dropout=0.05))
+
+<span class="cm"># Training loop omitted (use transformers.Trainer with a data_collator); 3 epochs is enough to overfit — stop when validation stops improving.</span>
+<span class="cm"># After training, merge and export: model.save_pretrained("adapter") → merge back to base weights → quantize to GGUF → run in ollama (see §05)</span></pre>
+      </div>
+      <div class="callout g"><span class="head">Three practical tips that save tuition</span>
+        &#9312; Data quality &gt; quantity: 300 carefully curated examples beat 3,000 with bad ones;
+        &#9313; start at 3 epochs and keep a separate validation set &mdash; watching only training loss is self-anaesthesia;<br>
+        &#9314; for Ollama compatibility use <code>pip install unsloth</code> or llama.cpp&rsquo;s gguf-merge for the quantized export, so you can run locally and roll back painlessly.</div>
+      <div class="callout warn"><span class="head">Licence red line &amp; don&rsquo;t forget common sense</span>
+        Check the base model&rsquo;s licence before fine-tuning (Llama/Qwen/GLM differ; some forbid commercial use, some require attribution); AI-generated data needs human review to avoid recursive contamination.
+        And don&rsquo;t expect fine-tuning to &ldquo;add knowledge it never had&rdquo;.</div>
+    </div>
+  </section>
+
+  <!-- ======= 16 HOMEBREW 2026 ======= -->
+  <section class="block" id="homebrew">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;16 // HOMEBREW &middot; 2026</span>
+        <h2 class="title">2026 homebrew ground: the models the community most wants to touch</h2>
+        <div class="line"></div>
+        <span class="lvl guru" style="margin-top:14px">&#9656; Viewpoint 2026-09 &middot; real commands &middot; VRAM tiers</span>
+        <p class="lead" style="margin-top:10px">No more just listing names. Each entry spells out: <span class="hl">why it is worth the tinkering &rarr; how to actually run it locally (including grassroots tactics for big models) &rarr; one command you can copy &rarr; where the pits are</span>.
+        Tiers: runs on a sweet-spot card / workstation pick / grassroots big-RAM assault.</p>
+      </div>
+
+      <div class="filterrow">
+        <span class="badge b-green" id="hbstat">…loading</span>
+        <span class="badge b-cyan">snapshot 2026-09</span>
+        <span class="badge b-amber">commands follow common Ollama / HF paths</span>
+      </div>
+
+      <div class="mcards" id="hbwall" aria-live="polite">
+        <noscript><p class="lead">Please enable JavaScript to render the homebrew list.</p></noscript>
+      </div>
+
+      <div class="callout warn"><span class="head">Honest boundaries</span>
+        The &ldquo;VRAM thresholds&rdquo; above are rough post-quantization estimates that float with context, KV optimization and engine;
+        for very large models (e.g. V4 / GLM-5.3 class) whose weights are cloud-only or released late, local use falls under
+        <b>big-RAM / multi-GPU grassroots assault</b> &mdash; not &ldquo;anyone can run it on one card&rdquo;. The official repository and licence page are the final word.</div>
+    </div>
+  </section>
+
+  <!-- ======= GLOSSARY ======= -->
+  <section class="block" id="glossary">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&phi; // GLOSSARY</span>
+        <h2 class="title">Geek glossary: understood in one line, looked up on the go</h2>
+        <div class="line"></div>
+        <span class="lvl core" style="margin-top:14px">&#9656; Dictionary &middot; come back whenever you forget</span>
+        <p class="lead" style="margin-top:10px">All the jargon in the book, reconciled in one place. Hit an unfamiliar acronym and glance back here.</p>
+      </div>
+      <dl class="gloss">
+        <div class="gs"><dt>Token</dt><dd>The smallest encoding unit of text; roughly 0.7&ndash;1.5 Chinese characters each. The base currency of every length.</dd></div>
+        <div class="gs"><dt>Context</dt><dd>The maximum number of tokens the model can hold &ldquo;in mind&rdquo; at once (prompt plus generated).</dd></div>
+        <div class="gs"><dt>Parameter</dt><dd>A learnable weight; 7B &asymp; 7 billion. VRAM is computed from this &times; bytes per weight.</dd></div>
+        <div class="gs"><dt>Active params</dt><dd>In MoE, the parameters actually used per token &mdash; what decides how light a &ldquo;big total, small active&rdquo; model is to infer.</dd></div>
+        <div class="gs"><dt>Logits</dt><dd>The unnormalised scores from the layer before output; higher means more likely to be chosen.</dd></div>
+        <div class="gs"><dt>Sampling</dt><dd>The set of strategies for picking the next token from a probability distribution.</dd></div>
+        <div class="gs"><dt>temperature</dt><dd>The &ldquo;thermal&rdquo; scaling of logits; &lt;1 steadier, &gt;1 more freewheeling (and prone to running away).</dd></div>
+        <div class="gs"><dt>top_p (nucleus)</dt><dd>Sample only from the candidate subset whose cumulative probability covers about p &mdash; trims the tail, keeps quality.</dd></div>
+        <div class="gs"><dt>top_k</dt><dd>Sample only from the k most likely tokens &mdash; a blunter chop at the tail.</dd></div>
+        <div class="gs"><dt>min_p</dt><dd>Drop tokens below some ratio of the best candidate outright, guarding against debris.</dd></div>
+        <div class="gs"><dt>repeat penalty</dt><dd>A small penalty on already-emitted content, suppressing loops and rehashing.</dd></div>
+        <div class="gs"><dt>KV cache</dt><dd>The per-layer cache of historical K/V attention; grows linearly with context and eats VRAM.</dd></div>
+        <div class="gs"><dt>Flash-Attention</dt><dd>An IO-optimised attention implementation: less VRAM and more speed on long context.</dd></div>
+        <div class="gs"><dt>Quantization</dt><dd>Aligning FP16 weights to a lower bit width (Q4/Q8&hellip;), trading a sliver of accuracy for size and speed.</dd></div>
+        <div class="gs"><dt>GGUF</dt><dd>The llama.cpp single-file model format (with quantization schema and template baked in) &mdash; the local crowd&rsquo;s &ldquo;.dmg&rdquo;.</dd></div>
+        <div class="gs"><dt>MoE</dt><dd>Mixture of sparse experts: large total parameters, only top-k experts woken per token &mdash; eats storage, saves compute.</dd></div>
+        <div class="gs"><dt>Router / Top-k</dt><dd>The little router in MoE that decides &ldquo;which experts get this token&rdquo;.</dd></div>
+        <div class="gs"><dt>RoPE</dt><dd>Rotary position encoding, injecting a sense of order into self-attention; long context often relies on it for extrapolation and interpolation.</dd></div>
+        <div class="gs"><dt>Embedding</dt><dd>Mapping text to vectors so semantic closeness can be measured &mdash; the foundation of retrieval.</dd></div>
+        <div class="gs"><dt>RAG</dt><dd>Retrieval-augmented generation: retrieve private material first, then generate &mdash; cheaper and more accurate than forcing 128k.</dd></div>
+        <div class="gs"><dt>Vector DB</dt><dd>Efficient storage for similarity search over embedding vectors (Chroma/FAISS/pgvector).</dd></div>
+        <div class="gs"><dt>LoRA / QLoRA</dt><dd>Fine-tuning that learns only a tiny low-rank delta; QLoRA stacks 4-bit compression so a personal card can tune big models.</dd></div>
+        <div class="gs"><dt>Full fine-tune vs PEFT</dt><dd>The former changes all weights and needs lots of VRAM; the latter changes only the LoRA parameters &mdash; fast and detachable.</dd></div>
+        <div class="gs"><dt>Chat Template</dt><dd>The delimiters that stitch system/user/assistant into the input shape the model expects; a Jinja template.</dd></div>
+        <div class="gs"><dt>Guided Decoding</dt><dd>Let the model emit only tokens that satisfy a grammar or JSON schema, step by step &mdash; zero structural invalidity.</dd></div>
+        <div class="gs"><dt>Tools / Function Call</dt><dd>The model &ldquo;decides&rdquo; to call a tool you declared and fills the arguments, and you execute it &mdash; the agent handshake.</dd></div>
+        <div class="gs"><dt>FIM completion</dt><dd>Fill-in-the-Middle: given before + after, fill the gap; the machinery under IDE autocomplete.</dd></div>
+        <div class="gs"><dt>Prefill / Decode</dt><dd>Reading the whole prompt (parallel, fast) &rarr; autoregressive per-token generation (slow); TTFT and tokens/s come from this.</dd></div>
+        <div class="gs"><dt>Backend / runtime</dt><dd>CUDA (NVIDIA) / ROCm (AMD) / MPS (Apple) &mdash; each is the switch that makes a model usable on that vendor&rsquo;s hardware.</dd></div>
+        <div class="gs"><dt>Ollama / llama.cpp / vLLM</dt><dd>The three local runtimes: minimal | low-level GGUF | high-throughput serving. See &sect;05.</dd></div>
+      </dl>
+      <div class="callout"><span class="head">This table grows with the chapters</span>
+        Want a term in more detail, or a new entry added? All easy &mdash; just keep this site bookmarked.</div>
+    </div>
+  </section>
+
   <footer>
     <div class="fwrap">
       <div class="foot-rows">

@@ -9,6 +9,9 @@ demo-doc-extract/
 # 本目录的项目笔记不对外（GitHub 仓库有自己的 README）
 /README.md
 
+# ---- AI 规则文件（仅存本地，绝不提交 / 不上线）----
+.clinerules
+
 # ---- 版本备份（历史遗留）----
 *.bak
 

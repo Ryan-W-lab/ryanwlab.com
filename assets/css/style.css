@@ -148,6 +148,12 @@ nav.links a.active{color:var(--green);background:rgba(51,255,140,.12);box-shadow
   .lang-switch{margin-left:auto;}
   .lang-switch a{font-size:.68rem;padding:5px 8px;}
   .lang-switch + .nav-toggle{margin-left:8px;}
+  /* 页脚：小屏改为纵向堆叠，避免链接区溢出 */
+  .foot-rows{flex-direction:column;gap:12px;}
+  .foot-links{font-size:.74rem;}
+  /* Hero：三个按钮小屏折行，允许均分宽度，不溢出 */
+  .cta{gap:10px;}
+  .cta .btn{font-size:.82rem;padding:11px 16px;}
 }
 
 /* 进度条 */
@@ -217,6 +223,9 @@ h2.title{font-size:clamp(1.6rem,3.6vw,2.5rem);margin:20px 0 8px;
 .btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(51,255,140,.5);}
 .btn-ghost{background:transparent;color:var(--txt);border:1px solid var(--line-bright);}
 .btn-ghost:hover{border-color:var(--cyan);color:var(--cyan);}
+/* 幽灵按钮 · 绿色文字变体（B站视频入口，不抢主按钮视觉） */
+.btn-ghost.btn-bili{color:var(--green);border-color:rgba(51,255,140,.42);}
+.btn-ghost.btn-bili:hover{border-color:var(--green);color:var(--green);background:rgba(51,255,140,.08);}
 .hero-scroll{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);
   color:var(--txt-dim);font-size:.7rem;letter-spacing:3px;animation:floaty 2.2s infinite;}
 @keyframes floaty{0%,100%{transform:translate(-50%,0);}50%{transform:translate(-50%,8px);}}
@@ -337,6 +346,14 @@ footer .fwrap{padding:44px var(--pad) 24px;background:linear-gradient(180deg,tra
 .foot-rows{color:var(--txt-dim);font-size:.8rem;border-top:1px dashed var(--line);padding-top:18px;
   display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}
 .backtotop{color:var(--cyan);cursor:pointer;}
+/* 频道链接区（B站 / GitHub）—— 纯文字链接，与终端风页脚同调 */
+.foot-links{
+  display:flex;flex-wrap:wrap;align-items:baseline;gap:0 6px;
+  font-family:var(--mono);font-size:.78rem;line-height:1.8;
+}
+.foot-links .fl-sep{color:var(--txt-dim);opacity:.6;user-select:none;}
+.foot-links a{color:var(--green);border:none;transition:.15s;}
+.foot-links a:hover{color:#fff;text-decoration:underline;}
 
 /* 载入 veil */
 #veil{position:fixed;inset:0;z-index:999;background:#05070c;align-items:center;justify-content:center;

@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="color-scheme" content="dark">
 <meta name="theme-color" content="#07090d">
-<meta name="description" content="LOCAL LLM GATE — a hands-on field manual for running open-source LLMs on your own hardware. Concepts, VRAM budgets, model map, deployment, quantisation and pitfalls.">
+<meta name="description" content="LOCAL LLM GATE — a hands-on field manual for running open-source LLMs on your own hardware. 8 chapters, from first concepts to a working local endpoint: what an LLM actually is, why self-host, VRAM budgets, the model arsenal, deployment with Ollama/llama.cpp/vLLM, quantization, war stories and tuning.">
 <title>LOCAL·LLM·GATE · Run Open-Source LLMs on Your Own Iron</title>
 <link rel="canonical" href="https://ryanwlab.com/en/">
 <link rel="alternate" hreflang="en" href="https://ryanwlab.com/en/">
@@ -15,7 +15,7 @@
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="Ryan W Lab">
 <meta property="og:title" content="LOCAL·LLM·GATE · Run Open-Source LLMs on Your Own Iron">
-<meta property="og:description" content="LOCAL LLM GATE — a hands-on field manual for running open-source LLMs on your own hardware. Concepts, VRAM budgets, model map, deployment, quantisation and pitfalls.">
+<meta property="og:description" content="LOCAL LLM GATE — a hands-on field manual for running open-source LLMs on your own hardware. 8 chapters, from first concepts to a working local endpoint: what an LLM actually is, why self-host, VRAM budgets, the model arsenal, deployment with Ollama/llama.cpp/vLLM, quantization, war stories and tuning.">
 <meta property="og:url" content="https://ryanwlab.com/en/">
 <meta property="og:locale" content="en_US">
 <meta property="og:locale:alternate" content="zh_CN">
@@ -26,7 +26,7 @@
 <!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="LOCAL·LLM·GATE · Run Open-Source LLMs on Your Own Iron">
-<meta name="twitter:description" content="LOCAL LLM GATE — a hands-on field manual for running open-source LLMs on your own hardware. Concepts, VRAM budgets, model map, deployment, quantisation and pitfalls.">
+<meta name="twitter:description" content="LOCAL LLM GATE — a hands-on field manual for running open-source LLMs on your own hardware. 8 chapters, from first concepts to a working local endpoint: what an LLM actually is, why self-host, VRAM budgets, the model arsenal, deployment with Ollama/llama.cpp/vLLM, quantization, war stories and tuning.">
 <meta name="twitter:image" content="https://ryanwlab.com/assets/img/og-cover.png">
 <meta name="twitter:image:alt" content="LOCAL LLM GATE — hands-on field manual for local LLMs">
 <link rel="icon" type="image/svg+xml" href="../favicon.svg">
@@ -50,16 +50,45 @@
   <div class="gnav-inner">
     <a href="#top" class="logo"><span class="prompt">user@gate</span>:~# ./local-llm</a>
     <nav class="links" id="topNav" aria-label="Main navigation">
-      <a href="#models" data-go="models">Models</a>
-      <a href="#local" data-go="local">Why local</a>
-      <a href="#start" data-go="start">Quick start</a>
+      <a href="#top" data-ref="home">&#8962;</a>
+      <span class="tsep">&sect;</span>
+      <a href="#what"   data-go="what">01 Concept</a>
+      <a href="#why"    data-go="why">02 Why local</a>
+      <a href="#hw"     data-go="hw">03 Hardware</a>
+      <a href="#models" data-go="models" class="hot">04 Arsenal</a>
+      <a href="#deploy" data-go="deploy">05 Deploy</a>
+      <a href="#quant"  data-go="quant">06 Quantization</a>
+      <a href="#pits"   data-go="pits">07 War stories</a>
+      <a href="#res"    data-go="res">08 Tuning</a>
     </nav>
     <span class="lang-switch" role="group" aria-label="Language">
       <a href="/" hreflang="zh-CN" lang="zh-CN">中文</a>
       <a href="/en/" class="cur" aria-current="page" hreflang="en">EN</a>
     </span>
+    <button type="button" class="nav-toggle" id="navToggle"
+            aria-label="Open chapter navigation" aria-expanded="false" aria-controls="navDrawer">&#9776; Chapters</button>
   </div>
 </header>
+
+<!-- Mobile chapter drawer (<=900px, opened by the hamburger button) -->
+<div class="nav-drawer" id="navDrawer" role="dialog" aria-modal="true" aria-label="Chapter navigation">
+  <div class="nd-panel">
+    <div class="nd-head">
+      <span class="nd-title">SECTIONS &middot; &sect;01&ndash;08</span>
+      <button type="button" class="nd-close" id="navDrawerClose" aria-label="Close chapter navigation">&#10005; CLOSE</button>
+    </div>
+    <nav class="nd-list" aria-label="Chapter list">
+      <a class="nd-main" href="#what"   data-go="what"><span class="nd-num">&sect;01</span><span class="nd-name">Concept &middot; what it is</span></a>
+      <a class="nd-main" href="#why"    data-go="why"><span class="nd-num">&sect;02</span><span class="nd-name">Why go local</span></a>
+      <a class="nd-main" href="#hw"     data-go="hw"><span class="nd-num">&sect;03</span><span class="nd-name">Hardware &amp; VRAM</span></a>
+      <a class="nd-main nd-hot" href="#models" data-go="models"><span class="nd-num">&sect;04</span><span class="nd-name">Model arsenal</span></a>
+      <a class="nd-main" href="#deploy" data-go="deploy"><span class="nd-num">&sect;05</span><span class="nd-name">Deployment</span></a>
+      <a class="nd-main" href="#quant"  data-go="quant"><span class="nd-num">&sect;06</span><span class="nd-name">Quantization</span></a>
+      <a class="nd-main" href="#pits"   data-go="pits"><span class="nd-num">&sect;07</span><span class="nd-name">War stories</span></a>
+      <a class="nd-main" href="#res"    data-go="res"><span class="nd-num">&sect;08</span><span class="nd-name">Tuning &amp; ecosystem</span></a>
+    </nav>
+  </div>
+</div>
 
 <main id="top">
   <!-- ======= HERO ======= -->
@@ -78,54 +107,211 @@
         </p>
         <div class="hero-stats">
           <div class="stat"><div class="v">40+</div><div class="k">commands &amp; recipes &middot; copy-paste ready</div></div>
-          <div class="stat"><div class="v">8GB</div><div class="k">VRAM to start &middot; quantised entry point</div></div>
+          <div class="stat"><div class="v">8GB</div><div class="k">VRAM to start &middot; quantized entry point</div></div>
           <div class="stat"><div class="v" style="color:var(--cyan)">12</div><div class="k">open-source models in the arsenal</div></div>
           <div class="stat"><div class="v" style="color:var(--green)">100%</div><div class="k">data sovereignty &middot; by you, for you</div></div>
         </div>
         <div class="cta">
           <a class="btn btn-primary" href="#models">&#9656; Model arsenal</a>
-          <a class="btn btn-ghost" href="#start">&#9656; One-command start</a>
-          <a class="btn btn-ghost" href="/" hreflang="zh-CN" lang="zh-CN">Full Chinese manual &#8594;</a>
+          <a class="btn btn-ghost" href="#deploy">&#9656; One-command start</a>
+          <a class="btn btn-ghost btn-bili" href="https://space.bilibili.com/3707050336979686" target="_blank" rel="noopener">&#9656; Watch on Bilibili</a>
         </div>
       </div>
     </div>
   </section>
-  <!-- ======= WHY LOCAL ======= -->
-  <section class="block" id="local">
-    <div class="wrap">
+  <!-- ======= 01 CONCEPT ======= -->
+  <section class="block" id="what">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;01 // CONCEPT</span>
+        <h2 class="title">What a &ldquo;large language model&rdquo; actually is</h2>
+        <div class="line"></div>
+        <p class="lead">In one line: an LLM is a probability machine force-fed hundreds of billions of tokens.
+        What it learned isn&rsquo;t the text itself but the <span class="hl">patterns and co-occurrence structure</span> between words.
+        It&rsquo;s not a database &mdash; it&rsquo;s a statistical brain that compressed the world.</p>
+      </div>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3"><span class="cmd">&gt;_</span>So what is it, really</div>
+          <div class="p">Feed it a long string of tokens (chunks of text), push them through a deep neural network layer by layer,
+          and it predicts the &ldquo;next most likely token&rdquo;. Think of it as an extremely strong autoregressive model built on
+          <span class="n">attention</span>.
+          <br><br>Key parts: <code>tokenization</code> &rarr; <code>embedding</code> &rarr; several
+          <code>Transformer blocks (self-attention / feed-forward)</code> &rarr; output probability distribution.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3"><span class="cmd">!</span>What it is not</div>
+          <div class="p">It is not a knowledge-base cache, not a web API connector, not a search engine.
+          It <b>does not guarantee facts</b> &mdash; it is merely superb at &ldquo;finding probability extremes in language space&rdquo;,
+          which is exactly why it can lie with a perfectly straight face.</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3"><span class="cmd">#</span>One forward pass, end to end (ASCII view)</div>
+          <pre style="background:#0a101b;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;line-height:1.9;color:#a9d9f5;font-size:.82rem;margin:10px 0 0;">
+  "hello world" ──▸ [ Tokenizer ] ─▸ [1024,  98]──┐
+              (split into tokens)                 ▼
+  each Token  ──▸ [ project to vector + positional enc ]
+              ▼
+   ┌────────────  Transformer × N layers ──────────┐
+   │   · multi-head self-attention: who relates?   │
+   │      └─ the real source of long-range deps    │
+   │         — and of KV memory burn               │
+   │   · residual + LayerNorm + RoPE               │
+   │   · feed-forward FFN: the param-heavy         │
+   │      "memory warehouse"                       │
+   └──────────────┬─────────┬──────────────────────┘
+                  ▼         ▼
+            Logits → Softmax ──▸ next-token distribution
+                  │
+          argmax / top-p sampling ──▸ "world hello the ×"
+          （that is the text you actually see）</pre>
+          <p class="p" style="margin-top:10px;color:var(--txt-mut)">
+          Two big VRAM costs: ① <code>weights</code> (the furnace) ② the runtime-growing <code>KV cache</code>
+          (temporary context memory that lengthens with the conversation).
+          Grasp these two and every &ldquo;VRAM and quantization&rdquo; argument downstream falls into place.</p>
+        </div>
+      </div>
+
+      <div class="grid cards2" style="margin-top:18px">
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">Hardcore term cheat-sheet</div>
+          <div class="p">
+          <div class="numline"><span class="n">param</span>learnable weight count, 7B = ~7 billion</div>
+          <div class="numline"><span class="n">token</span>sub-word unit; ~0.7&ndash;1.5 Chinese chars each</div>
+          <div class="numline"><span class="n">context (ctx)</span>max tokens it can &ldquo;hold&rdquo; at once</div>
+          <div class="numline"><span class="n">logits / logprobs</span>unnormalized scores / log probabilities</div>
+          <div class="numline"><span class="n">temperature</span>sampling spread, higher = more random</div>
+          <div class="numline"><span class="n">top-p / nucleus</span>sample within cumulative probability p</div>
+          <div class="numline"><span class="n">KV cache</span>attention cache; scales linearly with context</div>
+          </div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
+          <div class="h3">Why &ldquo;more parameters &ne; better&rdquo;</div>
+          <div class="p">Capability = data quality + architecture + training strategy + <b>inference optimization</b>.
+          Many &ldquo;small but strong&rdquo; models today (the 8B class) grind away at better data and MoE / distillation
+          and now approach old flagships on single-user tasks.
+          For the local crowd this is <b>enormous news</b>: stop worshipping 70B+.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= 02 WHY LOCAL ======= -->
+  <section class="block" id="why">
+    <div class="wrap reveal-seed">
       <div class="sect-head">
         <span class="tag">&sect;02 // WHY LOCAL</span>
-        <h2 class="title">Own the weights, own the answers</h2>
+        <h2 class="title">Why you should bring the model back home</h2>
+        <div class="line"></div>
+        <p class="lead">Outsourcing every prompt to the cloud is, fundamentally, <code>streaking your thinking</code> in front of a third party.
+        Going local buys back <span class="hl">sovereignty, privacy, control, and an offline freedom with no leash</span>.</p>
       </div>
-      <div class="tbl-scroll">
+      <div class="grid cards2">
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
+          <div class="h3"><span class="cmd">&#10003;</span>Data sovereignty &amp; privacy</div>
+          <div class="p">Code, medical records, contracts, private journals &mdash; they never cross your network card.
+          No lingering worry about &ldquo;your chats are being used to train the model&rdquo;, no grey zone between
+          enterprise tiers and regulatory compliance. The ultimate safety comes from being <b>un-sendable</b>.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3"><span class="cmd">&#10003;</span>Offline &amp; zero-latency &amp; unlimited</div>
+          <div class="p">Keeps running with the cable pulled. Chat on a plane or a train. Tokens are no longer metered &mdash;
+          <b>the compute is yours, so running more is free</b>. No rate limits (RPM), so you can let loose on batch
+          summarization, scraping or code review &mdash; the dirty work.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3"><span class="cmd">&#10003;</span>Forgeable &middot; yours to command</div>
+          <div class="p">Keep fine-tuning, swap quantization strategies, bolt on a private knowledge base, tune
+          `top_p` / `temperature` to death. One command swaps the model &mdash; you are not hostage to a vendor
+          &ldquo;freezing a version / changing behaviour / quietly throttling&rdquo; you.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3"><span class="cmd">&#10003;</span>The cost curve falls off a cliff</div>
+          <div class="p">Under sustained heavy use, the electricity bill of one sweet-spot card (a few hundred to a few
+          thousand dollars) is often far below a year of API subscription. Move the data local and marginal cost
+          approaches zero. #OfflineInfrastructureNerd stats fully maxed.</div>
+        </div>
+      </div>
+
+      <div class="tbl-scroll" style="margin-top:22px">
         <table class="tbl">
           <thead><tr><th>Dimension</th><th>Cloud API</th><th class="g">Local, self-hosted</th></tr></thead>
           <tbody>
             <tr><td>Privacy</td><td class="a">Data leaves your machine &middot; terms may change</td><td class="g">Fully controllable &middot; never leaves the box</td></tr>
             <tr><td>Availability</td><td>Needs network and an account</td><td class="g">Works offline</td></tr>
             <tr><td>Cost model</td><td>Per-token billing &middot; queues at peak</td><td class="g">One-off hardware &middot; then mostly electricity</td></tr>
-            <tr><td>Customisation</td><td>Limited</td><td class="g">Full freedom &mdash; fine-tune, quantise, ablate</td></tr>
+            <tr><td>Customization / fine-tuning</td><td>Limited</td><td class="g">Total freedom</td></tr>
             <tr><td>Ceiling</td><td class="g">Biggest, newest, most complete</td><td>Limited by your VRAM / RAM</td></tr>
             <tr><td>Maintenance</td><td class="g">None (someone else's problem)</td><td>You set up, upgrade and babysit it</td></tr>
           </tbody>
         </table>
       </div>
-      <div class="callout warn" style="margin-top:18px">
-        <span class="head">Honest note: local &ne; unbeatable</span>
-        Local is bound by your hardware. On the strongest frontier models, huge benchmarks and very complex agents, cloud APIs still usually win.
-        The smart play is a <b>hybrid line</b>: run sensitive, heavy or high-frequency work locally; send rare and genuinely hard problems to the cloud.
-      </div>
+
+      <div class="callout warn"><span class="head">Honest note: local &ne; unbeatable</span>
+        Local is bound by your hardware. On the strongest frontier models, huge benchmarks and very complex agents,
+        cloud APIs still usually win. The smart play is a <b>hybrid line</b>: run sensitive, heavy or high-frequency
+        work locally; ask the cloud only for the rare and genuinely hard problems.</div>
     </div>
   </section>
 
-  <!-- ======= MODEL ARSENAL ======= -->
-  <section class="block" id="models">
-    <div class="wrap">
+  <!-- ======= 03 HARDWARE ======= -->
+  <section class="block" id="hw">
+    <div class="wrap reveal-seed">
       <div class="sect-head">
-        <span class="tag">&sect;04 // MODEL ARSENAL</span>
-        <h2 class="title">12 open-source models worth running locally</h2>
-        <p class="en-note">VRAM figures are estimates after quantisation. They shift with engine, context length and KV-cache settings &mdash; always trust your own <code>ollama ps</code> / <code>nvidia-smi</code>. Verify licences and parameter counts against the publisher's repository, Ollama or Hugging Face.</p>
+        <span class="tag">&sect;03 // HARDWARE</span>
+        <h2 class="title">Hardware: VRAM decides how big a brain you can keep</h2>
+        <div class="line"></div>
+        <p class="lead">The biggest law of physics for local deployment is <span class="hl">VRAM</span>.
+        Don&rsquo;t rush out and buy a card &mdash; first run one formula to nail down your requirement, then talk about anything else.</p>
       </div>
+
+      <div class="card" style="grid-column:1/-1">
+        <div class="h3"><span class="cmd">$</span>The VRAM rule of thumb (estimation school)</div>
+        <pre class="frame" style="background:#0a101b;border:1px solid var(--line);border-radius:10px;padding:18px 20px;overflow-x:auto;color:#b7efe0;line-height:1.9;font-size:.9rem;margin:8px 0;">
+Will it fit?  ──  weights ≈ params(B) × bits-per-weight ÷ 8   [+ 2~4GB runtime / KV buffer]
+
+Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
+  → weight baseline ≈ 14 × 0.61 ≈ 8.5 GB   + system/KV ≈ 1~3 GB
+  → you need at least ~12GB VRAM to drag it around comfortably
+    (longer context = more KV = the requirement creeps up)</pre>
+        <p class="p" style="color:var(--txt-mut);margin-top:10px">Key takeaway:
+        <b>what eats VRAM is &ldquo;parameter count × precision&rdquo;, not &ldquo;how smart the model is&rdquo;</b>.
+        The bar to comfortably run 8B inference is now as low as 6&ndash;10GB of VRAM
+        (or pure CPU with plenty of RAM &mdash; just slower).</p>
+      </div>
+
+      <div class="tbl-scroll" style="margin-top:22px">
+        <table class="tbl">
+          <thead><tr><th>Your VRAM (roughly)</th><th>Sweet-spot models (after Q4)</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td>&lt; 6GB (iGPU / old card)</td><td><b>1B&ndash;4B</b>: Qwen3-1.7B/4B, Llama3.2-3B, Phi-4-mini, Gemma-2B</td><td>Pure CPU also fine &mdash; for fun / edge</td></tr>
+            <tr><td class="g">8&ndash;12GB (2060/3060/RX6xxx)</td><td class="g"><b>7B&ndash;8B</b>: Qwen3-8B, DeepSeek-R1-7B/8B, qwen coder 7B</td><td class="g">The entry sweet spot. Punches hard</td></tr>
+            <tr><td class="g">16&ndash;24GB (4060Ti-16/4070Ti/4080/4090)</td><td class="g"><b>14B&ndash;34B</b>: Qwen3-14B/32B, R1-14B/32B, Gemma3-27B</td><td class="g">One card, sideways. Nice</td></tr>
+            <tr><td class="a">24&ndash;48GB (7900XTX ×2 / 4080 ×2)</td><td class="a"><b>Qwen3-30B class / R1-32B large ctx / MoE 235B or 70B Q5</b></td><td class="a">Workstation watershed; start agents/RAG</td></tr>
+            <tr><td class="r">&ge; 2×24GB or big multi-GPU</td><td class="r"><b>70B-class Q4 or MoE-Large</b> (R1-70B, LLaMA3.3-70B, Qwen3-235B neighbours)</td><td class="r">Multi-GPU tensor split; hobbyist small-server territory</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="callout g"><span class="head">CPU-only works too</span>
+        No decent GPU? As long as RAM &gt; model size + some headroom, it runs (lots of SDRAM is cheap and can be huge).
+        Throughput trails a GPU though, and generation feels slow.
+        <code>llama.cpp</code> / <code>Ollama</code> both support pure CPU; enable AVX2 / Apple&rsquo;s Metal / AMD&rsquo;s Vulkan to speed up.</div>
+    </div>
+  </section>
+
+  <!-- ======= 04 MODEL ARSENAL ======= -->
+  <section class="block" id="models">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;04 // ARMORY</span>
+        <h2 class="title">Model arsenal: open-weight models worth running locally</h2>
+        <div class="line"></div>
+        <p class="lead">Only ones that a <span class="hl">personal PC / small workstation</span> can actually move,
+        with open lineage and a solid reputation. VRAM is estimated after quantization;
+        for precision, read the official repository and licence.</p>
+      </div>
+      <p class="en-note">VRAM figures are estimates after quantization. They shift with engine, context length and KV-cache settings &mdash; always trust your own <code>ollama ps</code> / <code>nvidia-smi</code>. Verify licences and parameter counts against the publisher's repository, Ollama or Hugging Face.</p>
       <div class="tbl-scroll">
         <table class="tbl">
           <thead>
@@ -198,41 +384,362 @@
           </tbody>
         </table>
       </div>
-      <div class="callout" style="margin-top:18px">
-        <span class="head">Reading the licence column</span>
-        A trailing <b>?</b> means "verify before commercial use" &mdash; the upstream repo or model card is the single source of truth. Licences and parameter counts change; this page is a snapshot.
-      </div>
+      <div class="callout warn"><span class="head">Disclaimer (important)</span>
+        The "VRAM thresholds" above are <b>rough estimates after quantization</b>. They float with the quantization
+        method, context length, KV-cache optimization and engine. Licence names and labels follow the official wording
+        at release time; for some models, community aliases differ from the official ones.</div>
+
+      <div class="callout g"><span class="head">If this is your first deployment (read this)</span>
+        For Chinese / general work start with <b>Qwen3-8B</b>; want some visible thinking, pick <b>DeepSeek-R1-7B/8B</b>;
+        code only &rarr; <b>Qwen2.5-Coder-7B</b> or <b>R1-14B (distill)</b>; tiny machine and just curious &rarr;
+        <b>Qwen3-1.7B or Llama3.2-3B</b>. Small first, big later. Get the whole flow working in Ollama before
+        chasing extremes.</div>
     </div>
   </section>
 
-  <!-- ======= QUICK START ======= -->
-  <section class="block" id="start">
-    <div class="wrap">
+  <!-- ======= 05 DEPLOY ======= -->
+  <section class="block" id="deploy">
+    <div class="wrap reveal-seed">
       <div class="sect-head">
-        <span class="tag">&sect;05 // QUICK START</span>
-        <h2 class="title">From zero to a local endpoint</h2>
+        <span class="tag">&sect;05 // DEPLOY</span>
+        <h2 class="title">Deployment: actually getting the model onto the machine</h2>
+        <div class="line"></div>
+        <p class="lead">For newcomers always start with <span class="hl">Ollama</span> (one command) or
+        <span class="hl">LM Studio</span> (drag and drop GUI); move to <code>llama.cpp / vLLM</code> when you want
+        performance and control. Four paths below, easy to hard, all spelled out.</p>
+      </div>
+
+      <div class="grid cards2">
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
+          <div class="h3">&#9312; Ollama &mdash; the geek default</div>
+          <div class="p">Smooshes llama.cpp's complexity into one sentence. Cross-platform, auto-quantizes and downloads,
+          ships an OpenAI-compatible endpoint, supports model switching and Modelfile parameter tuning.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">&#9313; LM Studio &mdash; the desktop GUI sweet spot</div>
+          <div class="p">Visually download, test-drive and compare models. Good on Windows / macOS; a few clicks gets you
+          a local chat plus a Local Server.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">&#9314; llama.cpp &mdash; king of low-level control</div>
+          <div class="p">Native GGUF C/C++ runtime, zero dependencies per token, fast even on CPU; a single GGUF file is easy
+          to move around and copy offline without Docker.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3">&#9315; vLLM &mdash; throughput / serving (advanced)</div>
+          <div class="p">PagedAttention for high-concurrency token generation and OpenAI-compatible batch inference.
+          Suits small servers / production packaging local capability as an API.</div>
+        </div>
+      </div>
+
+      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">Main path &middot; Ollama (Windows / macOS / Linux)</h3>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>zsh ~ Win PowerShell equivalent &middot; install &amp; run</span><span class="copy">&#10697; Copy</span></div>
+        <pre><span class="cm"># 1) Install: https://ollama.com/download (Win/mac download &amp; go) or Linux:</span>
+<span class="p">$</span> <span class="c">curl -fsSL https://ollama.com/install.sh | sh</span>
+
+<span class="cm"># 2) Pull and run a model (auto-quantized download) | a solid 7B-class generalist</span>
+<span class="p">$</span> <span class="c">ollama run qwen3:8b</span>
+<span class="o">&gt;&gt;&gt; hello, this is 100% local.</span>
+
+<span class="cm"># 3) Swap in something that "thinks": the DeepSeek-R1 distills</span>
+<span class="p">$</span> <span class="c">ollama run deepseek-r1:8b</span>
+
+<span class="cm"># 4) List local models / exit / set concurrency and context</span>
+<span class="p">$</span> <span class="c">ollama list           # installed inventory</span>
+<span class="p">$</span> <span class="c">/bye                 # exit the session</span>
+<span class="p">$</span> <span class="c">env OLLAMA_CONTEXT_LENGTH=32768 ollama run qwen3:8b</span></pre>
       </div>
       <div class="term">
-        <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">install &amp; pull</span></div>
-        <pre>$ curl -fsSL https://ollama.com/install.sh | sh   # or grab the desktop build
-$ ollama pull qwen3:8b          # smallest useful generalist
-$ ollama pull deepseek-r1:7b    # compact reasoner
-$ ollama run qwen3:8b "explain MoE in one sentence"</pre>
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>Point any OpenAI client at local (Ollama port 11434)</span><span class="copy">&#10697; Copy</span></div>
+        <pre><span class="cm"># Is the service up?</span>
+<span class="p">$</span> <span class="c">curl http://localhost:11434/api/tags</span>
+<span class="o">{"models":[{... "name":"qwen3:8b" ...}]}</span>
+
+<span class="cm"># Fire one minimal request:</span>
+<span class="p">$</span> <span class="c">curl http://localhost:11434/v1/chat/completions -H "Content-Type: application/json" -d '{</span>
+  "model": "qwen3:8b",
+  "messages": [{ "role": "user", "content": "tell me a cold-start joke only a geek would get" }]
+<span class="c">}'</span>
+
+<span class="cm"># So: point OPENAI_BASE_URL in your .env at this machine and almost any client flips to local.
+# e.g. (Python / OpenAI SDK): OpenAI(base_url="http://127.0.0.1:11434/v1", api_key="ollama")</span></pre>
       </div>
+
+      <div class="grid cards2" style="margin:26px 0 4px">
+        <div class="callout g" style="margin:0"><span class="head">&#9313; LM Studio (Windows / macOS GUI)</span>
+          Download and install from the site &rarr; on the Models page search <code>qwen3 8b</code> or <code>deepseek r1</code> &rarr;
+          pick a GGUF tag (Q4_K_M is a good default) &rarr; Download &rarr; hit Chat / <span class="hl">Local Server</span> top-right
+          and you get an OpenAI-compatible endpoint at `http://localhost:1234`. All mouse, great for demoing to a
+          non-technical teammate.</div>
+        <div class="callout g" style="margin:0"><span class="head">Pull a specific quantization tag (GGUF)</span>
+          Ollama: <code>ollama pull qwen3:8b-q4_K_M</code>; want smaller and slower use <code>-q3</code>, more accurate <code>-q8</code>.
+          Many publishers on HuggingFace ship single-file <code>Qwen_Q3/…_K_M.gguf</code>; download it and one line
+          <code>ollama create name -f ./Modelfile</code> registers it as a local model.
+        </div>
+      </div>
+
+      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">&#9314; llama.cpp &mdash; single GGUF file, runs on CPU too</h3>
       <div class="term">
-        <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">check what's actually on the GPU</span></div>
-        <pre>$ ollama ps        # which model is resident, and how it's split
-$ nvidia-smi       # VRAM headroom &mdash; the number that actually matters</pre>
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>bash &middot; llama-server (ships an OpenAI-compatible endpoint)</span><span class="copy">&#10697; Copy</span></div>
+        <pre><span class="cm"># 0) Build it, or grab a prebuilt binary from GitHub Releases (ggml-...-bin)</span>
+<span class="p">$</span> <span class="c">git clone --depth 1 https://github.com/ggml-org/llama.cpp &amp;&amp; cd llama.cpp</span>
+<span class="p">$</span> <span class="c">cmake -B build -DGGML_NATIVE=ON &amp;&amp; cmake --build build --config Release -j</span>
+
+<span class="cm"># 1) Get a .gguf (from HF, for instance)</span>
+<span class="c">wget https://…/models/…/qwen3_8b_q4_k_m.gguf</span>
+
+<span class="cm"># 2) Pure CPU / -ngl sets offloaded layers; -c context; -t threads; --jinja native template</span>
+<span class="p">$</span> <span class="c">./build/bin/llama-server -m ./qwen3_8b_q4_k_m.gguf \
+   --port 8080 -c 8192 -t 8 --jinja</span>
+<span class="o">[..] server is listening on http://0.0.0.0:8080</span>
+
+<span class="cm"># 3) Structured LLM apps usually hit /v1/chat/completions or /completion here</span>
+<span class="p">$</span> <span class="c">curl http://localhost:8080/v1/chat/completions -H "Content-Type: application/json" -d \
+  '{"model":"qwen3","messages":[{"role":"user","content":"hi"}]}' </span>
+
+<span class="cm"># Tip: llama-server's edge is control over kernel params plus streaming / JSON-schema-guided output</span></pre>
       </div>
-      <div class="callout">
-        <span class="head">The one rule that saves hours</span>
-        Start with the <b>smallest model that does the job</b>, measure VRAM, then scale up. Most "my GPU is too small" problems are really "my quantisation is too greedy" problems.
+
+      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">&#9315; vLLM &mdash; when you want production-grade throughput</h3>
+      <div class="term">
+        <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
+          <span>bash &middot; pip/uv install + OpenAI-compatible service</span><span class="copy">&#10697; Copy</span></div>
+        <pre><span class="cm"># Needs an NVIDIA / decent CPU environment, Python 3.10+; on Windows use WSL2 or Docker</span>
+<span class="p">$</span> <span class="c">pip install vllm</span>
+
+<span class="cm"># Serve HF weights such as Qwen or Llama:</span>
+<span class="p">$</span> <span class="c">python -m vllm.entrypoints.openai.api_server \
+   --model Qwen/Qwen3-8B \
+   --gpu-memory-utilization 0.9 \
+   --max-model-len 16384 \
+   --port 8000</span>
+<span class="o">INFO: Started server process … http://0.0.0.0:8000</span>
+
+<span class="cm"># It is now an OpenAI API — test it</span>
+<span class="p">$</span> <span class="c">curl http://localhost:8000/v1/chat/completions -H "Content-Type: application/json" \
+  -d '{"model":"Qwen/Qwen3-8B","messages":[{"role":"user","content":"write two lines of hello world"}]}'</span>
+
+<span class="cm"># Advanced combos: batch(packing) huge ctx / prefix caching / speculative decoding / tensor-parallel=2</span></pre>
       </div>
-      <div class="callout g" style="margin-top:18px">
-        <span class="head">Want the full manual?</span>
-        The complete Chinese handbook covers 16 chapters &mdash; quantisation deep-dive, MoE, KV-cache, sampling craft, RAG, LoRA fine-tuning, pitfalls and a 2026 homebrew frontier.
-        <a class="btn btn-primary" style="margin-top:10px" href="/" hreflang="zh-CN" lang="zh-CN">Read the full Chinese manual &#8594;</a>
+
+      <div class="tbl-scroll" style="margin-top:26px">
+        <table class="tbl">
+          <thead><tr><th>Engine</th><th>Learning curve</th><th>Strength</th><th>Who it's for</th><th>Platform notes</th></tr></thead>
+          <tbody>
+            <tr><td class="g"><b>Ollama</b></td><td>&#9733; minimal</td><td>Minimal commands &middot; auto-quantize &middot; broad ecosystem</td><td>Beginners / the default for 80% of cases</td><td class="g">Native Win/mac/Linux</td></tr>
+            <tr><td class="g"><b>LM Studio</b></td><td>&#9733; GUI</td><td>Visual model testing &middot; one-click endpoint</td><td>Desktop folks / demos</td><td class="g">Win/macOS</td></tr>
+            <tr><td><b>llama.cpp</b></td><td>&#9733;&#9733;&#9733;</td><td>Low-level GGUF control &middot; best CPU compatibility</td><td>Deep customization / old machines</td><td class="a">Win needs Git/CMake</td></tr>
+            <tr><td><b>vLLM</b></td><td>&#9733;&#9733;&#9733;&#9733;</td><td>High-throughput batching &middot; OpenAI serving</td><td>Production / small multi-user service</td><td class="a">Prefer CUDA / WSL2</td></tr>
+            <tr><td class="a"><b>Docker (jetson etc.)</b></td><td>&#9733;&#9733;</td><td>Environment isolation &middot; GPU passthrough</td><td>Zero-setup machine swaps / trying images</td><td class="a">Win uses WSL2 backend</td></tr>
+          </tbody>
+        </table>
       </div>
+
+      <div class="callout"><span class="head">Apple Silicon / macOS users, this way</span>
+        Unified memory <i>is</i> "VRAM". An M-series with 16GB+ and <code>Metal</code> runs 8B fast and cool.
+        Ollama/llama.cpp both support it natively; don't believe the stale joke that "Macs can't do AI".
+        When picking models, look for `Metal / GGML` optimizations.</div>
+      <div class="callout warn"><span class="head">Three Windows landmines (fair warning)</span>
+        &#9312; You need a CUDA driver; &#9313; avoid non-ASCII characters and spaces in paths; &#9314; if the first
+        <code>ollama show</code> or a run is extremely slow it is probably not using the GPU &mdash;
+        check that <code>PROCESSOR</code> in <code>ollama ps</code> says GPU. Clear these before moving on.</div>
+    </div>
+  </section>
+
+  <!-- ======= 06 QUANTIZATION ======= -->
+  <section class="block" id="quant">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;06 // QUANTIZATION</span>
+        <h2 class="title">Quantization deep end: compressing your iron heart</h2>
+        <div class="line"></div>
+        <p class="lead">Same model, but the gap between Q8 and Q3 is not file size &mdash; it is
+        <span class="hl">the edge of &ldquo;does every sentence still land&rdquo;</span>.
+        Understand the mechanics and you can plant your flag firmly between <b>size × speed × feel</b>.</p>
+      </div>
+
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">What quantization is doing</div>
+          <div class="p">It &ldquo;snaps&rdquo; continuous FP16/BF16 weights down to a low-bit representation
+          (Q4 = 4 bits per weight). Neural networks are astonishingly tolerant of this: each individual weight loses a
+          sliver of precision, but across millions of parameters the losses cancel more than they accumulate, and the
+          overall semantics barely move. So we can squeeze a model into <b>half or even a quarter of the VRAM</b>
+          and get more speed in return.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">Where the cost lands</div>
+          <div class="p">The fewer bits, the more easily long-range dependencies, multi-step math and the
+          &ldquo;precise tail&rdquo; of JSON/code completion get bitten off.
+          Q2/Q1 is &ldquo;it runs but starts babbling&rdquo;; for sensitive work prefer going back to Q6/F16 or a bigger
+          base model rather than stubbornly skimping on VRAM.</div>
+        </div>
+        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">Common GGUF tiers, quick reference (llama.cpp / Ollama / LM Studio)</div>
+          <div class="p">
+          <div class="numline"><span class="n">F16 / BF16</span>&asymp;2B per weight &middot; closest to the original &middot; heaviest on VRAM</div>
+          <div class="numline"><span class="n">Q8_0</span>&asymp;1.06B &middot; essentially lossless &middot; a bit chunky</div>
+          <div class="numline"><span class="n">Q6_K</span>&asymp;0.82B &middot; high-quality floor, the &ldquo;safe sweet spot&rdquo;</div>
+          <div class="numline"><span class="n">Q5_K_M</span>&asymp;0.72B &middot; very common price/performance <b>recommendation</b></div>
+          <div class="numline"><span class="n">Q4_K_M</span>&asymp;0.61B &middot; the crowd favourite, best size/feel balance &middot; <b>newcomer default</b></div>
+          <div class="numline"><span class="n">Q3_K_S/M</span>&asymp;0.47B &middot; starts to show &middot; only tolerable on big models</div>
+          <div class="numline"><span class="n">Q2_K</span>&asymp;0.33B &middot; VRAM-extreme only &middot; high semantic risk</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout g"><span class="head">Three &ldquo;good enough&rdquo; rules for the non-tinkerer</span>
+        &#9312; If <code>Q4_K_M</code> or <code>Q5_K_M</code> runs, use those &mdash; don&rsquo;t gamble on 2% of feel;
+        &#9313; when tight, cut context rather than bits &mdash; slimming the KV (e.g. KV-quant) is often a better trade
+        than hacking weights; &#9314; for code / long reasoning, prefer L+KV-quant or a capacity step up over Q3.</div>
+      <div class="callout"><span class="head">Advanced terms (know they exist, look them up when needed)</span>
+        AWQ / GPTQ (more stable group quantization), AQLM, KV cache quantization, imatrix calibration, quantization-aware
+        training (QAT). CPU/Apple is smoothest through the GGUF system; NVIDIA throughput people usually pick AWQ/GPTQ
+        with vLLM for a native experience.</div>
+    </div>
+  </section>
+
+  <!-- ======= 07 WAR STORIES ======= -->
+  <section class="block" id="pits">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;07 // WAR STORIES</span>
+        <h2 class="title">War stories: pits I already fell into, so you don't have to</h2>
+        <div class="line"></div>
+        <p class="lead">Symptom &rarr; cause &rarr; fix. Open the hole that looks like wherever you are stuck.</p>
+      </div>
+
+      <details class="acc" open>
+        <summary><span class="ico">&#9632;</span>It installed, but now it babbles fast / spews garbage<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>Cause</b>: quantization too low (Q2/Q1) or the context was artificially squeezed; the default temperature may also be too high.</p>
+          <p><b>Fix</b>: switch to <code>q4_K_M/q5_K_M</code>; set <code>num_ctx</code> (OLLAMA_CONTEXT_LENGTH) to 8192+; drop <code>temperature</code> to 0.6&ndash;0.8; for code tasks keep <code>top_p</code> near 0.9. Still broken? Try that model's original F16 once to determine whether the damage is &ldquo;quantization&rdquo; or &ldquo;the data was always weak&rdquo;.</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">&#9632;</span>GPU is clearly there, but it is slow / Ollama keeps chewing CPU<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>Cause</b>: it never actually landed on the card; driver or model layer was not recognized as GPU-capable.</p>
+          <p><b>Fix</b>: check whether <code>PROCESSOR</code> in <code>ollama ps</code> says GPU; on Windows install the matching CUDA driver and use a supported backend; for llama.cpp check the <code>-ngl</code> layer count and <code>offload</code> in the logs. Don&rsquo;t be fooled by &ldquo;it started&rdquo; &mdash; seeing is believing.</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">&#9632;</span>Huge files: downloads stall halfway / VRAM never enough<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>Cause</b>: you are downloading the original FP16 rather than a quantization; or the context is pushed to the ceiling and KV blows up.</p>
+          <p><b>Fix</b>: find a <code>…-GGUF</code> repository and pick <code>Q4_K_M</code>; start at <code>-c 4096</code> and creep upward; if that is still not enough consider KV-cache quantization or <code>--flash-attn</code>. To do it in one shot, pick the model size that matches your VRAM tier.</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">&#9632;</span>Client can't reach local / port already in use / CORS error<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>Cause</b>: the service isn't listening on 0.0.0.0; or traffic still goes through another proxy; or the browser blocked cross-origin.</p>
+          <p><b>Fix</b>: confirm the endpoint answers with <code>curl http://localhost:11434/v1/models</code>; use the official web UI or enable the <code>CORS</code> switch; try another browser hitting <code>127.0.0.1</code> directly. Kill clash / system proxy and retry &mdash; that alone usually fixes it instantly.</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">&#9632;</span>OOM crash / machine turns into a slideshow / swap storm<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>Cause</b>: weights + KV + runtime exceed physical VRAM, so the system falls back to RAM/disk thrashing.</p>
+          <p><b>Fix</b>: drop one model tier or bit width; squeeze <code>-c</code> context; enable <code>flash attention</code> &amp; KV quantization; close browser/AI processes competing for VRAM. If it still crashes, this model simply is not for this machine &mdash; downsizing is not shameful.</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">&#9632;</span>Multilingual: small models only speak English / weak at other languages<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>Cause</b>: training corpora skew English-heavy; small parameter counts under-cover other languages.</p>
+          <p><b>Fix</b>: for non-English work prefer the <b>Qwen / GLM / InternLM / DeepSeek</b> families and language-boosted variants; watch for <code>chat/…zh</code> in the model name; don't expect &ldquo;full-strength academic-grade&rdquo; output from a small model &mdash; when it is time to go 8B&rarr;14B, don't scrimp.</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">&#9632;</span>Downloads crawl / HF is unstable from your region<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>Cause</b>: direct connections to huggingface.co are slow from some networks.</p>
+          <p><b>Fix</b>: use a mirror via <code>HF_ENDPOINT=https://hf-mirror.com</code>; Ollama uses its own distribution channel; if needed run <code>hf download</code> with <code>hf_transfer</code> for multithreading; pull only the quantization file you need rather than a whole snapshot.</p>
+        </div>
+      </details>
+      <details class="acc">
+        <summary><span class="ico">&#9632;</span>Shared by several people and always saturated / vLLM OOMs then idles<span class="exp">+</span></summary>
+        <div class="body">
+          <p><b>Cause</b>: no concurrency or batching was configured, so every request monopolizes KV and VRAM.</p>
+          <p><b>Fix</b>: add <code>Continuous batching</code> at the serving layer (Ollama / OpenWebUI have queues), cap <code>max model len</code>,
+          spread across <code>tensor-parallel</code> (multi-GPU) or <code>data-parallel</code> (multiple instances); don't hand everyone a 128k context.</p>
+        </div>
+      </details>
+
+      <div class="callout"><span class="head">Can't categorize it? Here's the universal three-step</span>
+        <code>1&gt; Logs first</code> &mdash; server stdout always has a clue;
+        <code>2&gt; Minimal reproduction</code> &mdash; strip RAG/proxies/plugins and <code>curl</code> the bare model;
+        <code>3&gt; Version check</code> &mdash; Ollama/llama.cpp are rolling releases, so run <code>ollama update</code> first. Don't dive straight into the source.</div>
+    </div>
+  </section>
+
+  <!-- ======= 08 TUNE & ECOSYSTEM ======= -->
+  <section class="block" id="res">
+    <div class="wrap reveal-seed">
+      <div class="sect-head">
+        <span class="tag">&sect;08 // TUNE &amp; ECOSYSTEM</span>
+        <h2 class="title">Tuning &amp; ecosystem: from &ldquo;it runs&rdquo; to &ldquo;it's good&rdquo;</h2>
+        <div class="line"></div>
+        <p class="lead">Deployment is only step one. Getting throughput, context and tooling to shake hands with you
+        is where the real engineering starts.</p>
+      </div>
+      <div class="grid cards2">
+        <div class="card"><span class="accent"></span>
+          <div class="h3">Throughput first</div>
+          <div class="p">Want high <b>tokens per second</b>: enable flash-attn, raise batch, on CPU use multithreading + AVX2,
+          use the Metal/CUDA backend in llama.cpp; KV cache quantization kills the OOM tail. <code>bench</code> first, then act.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
+          <div class="h3">Working with context</div>
+          <div class="p">Don't stuff an entire book into the conversation. Use <b>RAG to retrieve only relevant passages</b>,
+          keep system prompts tight and leave whitespace; when needed, <code>kv cache reuse / prefix caching</code>
+          makes long conversations feel more responsive.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
+          <div class="h3">Tooling &amp; agents</div>
+          <div class="p">Give the model <code>function-calling</code>: hand it JS/JSON schemas and use
+          <code>guided decode/grammar</code> to guarantee valid output. Front-ends like
+          <b>OpenWebUI / LobeChat / Continue (IDE)</b> take over interaction and double the experience instantly.</div>
+        </div>
+        <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--magenta),transparent)"></span>
+          <div class="h3">Solidify and iterate</div>
+          <div class="p">Pick the right base, then &ldquo;cook it&rdquo;: <code>LoRA fine-tuning</code> to learn your domain,
+          <code>DPO/RMM</code> to shape persona, and save an FP16 copy before quantizing as a baseline.
+          Version your Modelfile so you can roll back when you trip.</div>
+        </div>
+      </div>
+
+      <div class="tbl-scroll" style="margin-top:24px">
+        <table class="tbl">
+          <thead><tr><th>What you want</th><th>Recommended first step</th></tr></thead>
+          <tbody>
+            <tr><td>A full local chat UI</td><td><b>OpenWebUI</b> (containerized + multi-user + web search plugins)</td></tr>
+            <tr><td>AI code completion in your IDE</td><td><b>Continue / Tabby</b> pointed at <code>localhost</code>'s OpenAI endpoint</td></tr>
+            <tr><td>Wire AI into your own Python</td><td>OpenAI SDK with a changed <code>base_url</code> / or <code>ollama-python</code></td></tr>
+            <tr><td>Runs on an old machine / no GPU</td><td>llama.cpp + a Q4 tier + batching</td></tr>
+            <tr><td>Small server / production throughput</td><td>vLLM + AWQ + prefix caching + tensor-parallel</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card" style="margin-top:20px">
+        <div class="h3">The library &middot; entry points worth bookmarking</div>
+        <div class="p" style="line-height:2">
+          <span class="badge b-green">Official</span> Ollama(github.com/ollama/ollama) &middot; llama.cpp(github.com/ggml-org/llama.cpp) &middot; vLLM(github.com/vllm-project/vllm)
+          &middot; LM Studio(lmstudio.ai) &middot; OpenWebUI(github.com/open-webui/open-webui)<br>
+          <span class="badge b-cyan">Community / data</span> HuggingFace(huggingface.co) &middot; Ollama library(ollama.com/library) &middot; Open LLM leaderboard(HF Space) &middot; each model's official repo and licence page<br>
+          <span class="badge b-amber">Tools / sentinels</span> Local Remote (local comparison) &middot; VRAM calculator &middot; GGUF-KoboldCpp &middot; CT2-Transformers
+        </div>
+      </div>
+      <div class="callout warn"><span class="head">Security reminder (required reading for long-term ops)</span>
+        A local AI with network access / agent tools is also a <code>privilege escalation point</code>. Never let it run as bare root;
+        run it in a container, least privilege, separate tokens, sandbox and review content; don't hand private keys to
+        model-generated code casually. Play wild, but bolt the back door.</div>
     </div>
   </section>
 
@@ -241,15 +748,16 @@ $ nvidia-smi       # VRAM headroom &mdash; the number that actually matters</pre
     <div class="wrap">
       <div class="foot-rows">
         <div class="en-note">
-          This page is a standalone English landing page. The full handbook &mdash; 16 chapters, all commands and the glossary &mdash;
-          lives in the <a href="/" hreflang="zh-CN" lang="zh-CN">Chinese manual</a>.
-        </div>
-        <div class="en-note" style="margin-top:10px">
           Licences, parameter counts and VRAM figures change &mdash; verify against the publisher's repository, Ollama or Hugging Face.
           Run local AI with sandboxed permissions; never give an agent bare admin rights.
         </div>
         <div class="foot-rows" style="margin-top:14px">
           <div>&copy; <span id="year">2026</span> LOCAL LLM GATE &middot; Ryan W Lab</div>
+          <div class="foot-links">
+            <a href="https://space.bilibili.com/3707050336979686" target="_blank" rel="noopener">B站</a>
+            <span class="fl-sep">&middot;</span>
+            <a href="https://github.com/Ryan-W-lab/ryanwlab.com" target="_blank" rel="noopener">GitHub</a>
+          </div>
           <div class="lang-switch">
             <a href="/" hreflang="zh-CN" lang="zh-CN">中文</a>
             <a href="/en/" class="cur" aria-current="page" hreflang="en">EN</a>

@@ -132,10 +132,22 @@ nav.links a.active{color:var(--green);background:rgba(51,255,140,.12);box-shadow
 .nav-drawer .nd-list a.on .nd-num{color:var(--green);}
 .nav-drawer .nd-list a.nd-hot .nd-name{color:var(--cyan);}
 
+/* ============ 语言切换（中/英） ============ */
+.lang-switch{display:inline-flex;gap:2px;align-items:center;margin-left:10px;flex:0 0 auto;}
+.lang-switch a{
+  font-family:var(--mono);font-size:.74rem;padding:4px 9px;border-radius:7px;
+  border:1px solid var(--line-bright);color:var(--txt-mut);transition:.15s;white-space:nowrap;
+}
+.lang-switch a:hover{color:#fff;border-color:var(--green);}
+.lang-switch a.cur{color:var(--green);border-color:rgba(51,255,140,.55);background:rgba(51,255,140,.08);}
+
 @media(max-width:900px){
   nav.links{display:none;}
   .nav-toggle{display:inline-block;}
   .hnav-hint{display:none;}
+  .lang-switch{margin-left:auto;}
+  .lang-switch a{font-size:.68rem;padding:5px 8px;}
+  .lang-switch + .nav-toggle{margin-left:8px;}
 }
 
 /* 进度条 */

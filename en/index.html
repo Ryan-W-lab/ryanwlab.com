@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#07090d">
+<meta name="description" content="LOCAL LLM GATE — a hands-on field manual for running open-source LLMs on your own hardware. Concepts, VRAM budgets, model map, deployment, quantisation and pitfalls.">
+<title>LOCAL·LLM·GATE · Run Open-Source LLMs on Your Own Iron</title>
+<link rel="canonical" href="https://ryanwlab.com/en/">
+<link rel="alternate" hreflang="en" href="https://ryanwlab.com/en/">
+<link rel="alternate" hreflang="zh-CN" href="https://ryanwlab.com/">
+<link rel="alternate" hreflang="x-default" href="https://ryanwlab.com/">
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Ryan W Lab">
+<meta property="og:title" content="LOCAL·LLM·GATE · Run Open-Source LLMs on Your Own Iron">
+<meta property="og:description" content="LOCAL LLM GATE — a hands-on field manual for running open-source LLMs on your own hardware. Concepts, VRAM budgets, model map, deployment, quantisation and pitfalls.">
+<meta property="og:url" content="https://ryanwlab.com/en/">
+<meta property="og:locale" content="en_US">
+<meta property="og:locale:alternate" content="zh_CN">
+<meta property="og:image" content="https://ryanwlab.com/assets/img/og-cover.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="LOCAL LLM GATE — hands-on field manual for local LLMs">
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="LOCAL·LLM·GATE · Run Open-Source LLMs on Your Own Iron">
+<meta name="twitter:description" content="LOCAL LLM GATE — a hands-on field manual for running open-source LLMs on your own hardware. Concepts, VRAM budgets, model map, deployment, quantisation and pitfalls.">
+<meta name="twitter:image" content="https://ryanwlab.com/assets/img/og-cover.png">
+<meta name="twitter:image:alt" content="LOCAL LLM GATE — hands-on field manual for local LLMs">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="alternate icon" href="../favicon.ico" sizes="32x32">
+<link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="../assets/css/style.css">
+<style>
+/* English landing page: only what this page needs beyond the shared stylesheet.
+   .lang-switch lives in assets/css/style.css so both pages share it. */
+.en-note{color:var(--txt-dim);font-size:.85rem;}
+.en-note code{font-family:var(--mono);color:var(--cyan);font-size:.9em;}
+</style>
+</head>
+<body>
+<div class="progress"></div>
+
+<header class="gnav">
+  <div class="gnav-inner">
+    <a href="#top" class="logo"><span class="prompt">user@gate</span>:~# ./local-llm</a>
+    <nav class="links" id="topNav" aria-label="Main navigation">
+      <a href="#models" data-go="models">Models</a>
+      <a href="#local" data-go="local">Why local</a>
+      <a href="#start" data-go="start">Quick start</a>
+    </nav>
+    <span class="lang-switch" role="group" aria-label="Language">
+      <a href="/" hreflang="zh-CN" lang="zh-CN">中文</a>
+      <a href="/en/" class="cur" aria-current="page" hreflang="en">EN</a>
+    </span>
+  </div>
+</header>
+
+<main id="top">
+  <!-- ======= HERO ======= -->
+  <section class="hero">
+    <div class="inner wrap" style="padding-top:20px">
+      <div class="hero-boot">
+        <div class="o">&gt; local-llm --version</div>
+        <div class="ok">&nbsp;&nbsp;Local LLM Gate v2025.REV &middot; homebrew for geeks</div>
+        <div class="o">&gt; sudo ./init_curiosity &amp;&amp; exec gw</div>
+        <h1 class="bigname">
+          <span class="neon1">LOCAL </span><span class="neon3">LLM </span><span class="neon2">GATE</span>
+        </h1>
+        <p class="tagline">
+          <b>No cloud. No walls.</b> Run trillion-parameter LLMs on <span class="hl">your own iron</span>.<br>
+          A hands-on field manual &mdash; from the first concepts to a working local endpoint.
+        </p>
+        <div class="hero-stats">
+          <div class="stat"><div class="v">40+</div><div class="k">commands &amp; recipes &middot; copy-paste ready</div></div>
+          <div class="stat"><div class="v">8GB</div><div class="k">VRAM to start &middot; quantised entry point</div></div>
+          <div class="stat"><div class="v" style="color:var(--cyan)">12</div><div class="k">open-source models in the arsenal</div></div>
+          <div class="stat"><div class="v" style="color:var(--green)">100%</div><div class="k">data sovereignty &middot; by you, for you</div></div>
+        </div>
+        <div class="cta">
+          <a class="btn btn-primary" href="#models">&#9656; Model arsenal</a>
+          <a class="btn btn-ghost" href="#start">&#9656; One-command start</a>
+          <a class="btn btn-ghost" href="/" hreflang="zh-CN" lang="zh-CN">Full Chinese manual &#8594;</a>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- ======= WHY LOCAL ======= -->
+  <section class="block" id="local">
+    <div class="wrap">
+      <div class="sect-head">
+        <span class="tag">&sect;02 // WHY LOCAL</span>
+        <h2 class="title">Own the weights, own the answers</h2>
+      </div>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>Dimension</th><th>Cloud API</th><th class="g">Local, self-hosted</th></tr></thead>
+          <tbody>
+            <tr><td>Privacy</td><td class="a">Data leaves your machine &middot; terms may change</td><td class="g">Fully controllable &middot; never leaves the box</td></tr>
+            <tr><td>Availability</td><td>Needs network and an account</td><td class="g">Works offline</td></tr>
+            <tr><td>Cost model</td><td>Per-token billing &middot; queues at peak</td><td class="g">One-off hardware &middot; then mostly electricity</td></tr>
+            <tr><td>Customisation</td><td>Limited</td><td class="g">Full freedom &mdash; fine-tune, quantise, ablate</td></tr>
+            <tr><td>Ceiling</td><td class="g">Biggest, newest, most complete</td><td>Limited by your VRAM / RAM</td></tr>
+            <tr><td>Maintenance</td><td class="g">None (someone else's problem)</td><td>You set up, upgrade and babysit it</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warn" style="margin-top:18px">
+        <span class="head">Honest note: local &ne; unbeatable</span>
+        Local is bound by your hardware. On the strongest frontier models, huge benchmarks and very complex agents, cloud APIs still usually win.
+        The smart play is a <b>hybrid line</b>: run sensitive, heavy or high-frequency work locally; send rare and genuinely hard problems to the cloud.
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= MODEL ARSENAL ======= -->
+  <section class="block" id="models">
+    <div class="wrap">
+      <div class="sect-head">
+        <span class="tag">&sect;04 // MODEL ARSENAL</span>
+        <h2 class="title">12 open-source models worth running locally</h2>
+        <p class="en-note">VRAM figures are estimates after quantisation. They shift with engine, context length and KV-cache settings &mdash; always trust your own <code>ollama ps</code> / <code>nvidia-smi</code>. Verify licences and parameter counts against the publisher's repository, Ollama or Hugging Face.</p>
+      </div>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Model</th><th>Publisher</th><th>Type</th><th>Licence</th>
+              <th>Available sizes</th><th class="g">Rough VRAM after quant</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><b>DeepSeek-R1</b></td><td>DeepSeek &middot; China</td><td>Reasoning</td><td>MIT</td>
+              <td>1.5b &middot; 7b &middot; 8b &middot; 14b &middot; 32b &middot; 70b &middot; 671b</td>
+              <td class="g">7B quant &asymp; 4&ndash;6 GB &middot; 32B &asymp; 20 GB+ &middot; one of the most-run local reasoners</td>
+            </tr>
+            <tr>
+              <td><b>DeepSeek-V3 family</b></td><td>DeepSeek &middot; China</td><td>General &middot; chat</td><td>MIT</td>
+              <td>671B-A37B (smaller recipes also open)</td>
+              <td class="a">Needs multi-GPU &middot; Q4 still ~380 GB+ &middot; small rigs should use R1 distills or an API</td>
+            </tr>
+            <tr>
+              <td><b>Qwen3</b></td><td>Alibaba &middot; open</td><td>General &middot; chat &middot; reasoning</td><td>Apache-2.0?</td>
+              <td>0.6b &middot; 1.7b &middot; 4b &middot; 8b &middot; 14b &middot; 30b &middot; 32b (A3B MoE) &middot; 235b</td>
+              <td class="g">8B/14B quant 8&ndash;12 GB, smooth &middot; MoE 32B is even lighter</td>
+            </tr>
+            <tr>
+              <td><b>Qwen2.5-Coder</b></td><td>Alibaba &middot; open</td><td>Code</td><td>Apache-2.0?</td>
+              <td>0.5b &middot; 1.5b &middot; 3b &middot; 7b &middot; 14b &middot; 32b</td>
+              <td class="g">7B/14B quant 6&ndash;12 GB &middot; pairs beautifully with a local IDE</td>
+            </tr>
+            <tr>
+              <td><b>Llama 3.2 / 3.3</b></td><td>Meta</td><td>General &middot; edge</td><td>Llama 3</td>
+              <td>3.2: 1b &middot; 3b &nbsp;|&nbsp; 3.3: 70b</td>
+              <td class="g">3B runs on pure CPU &middot; 1B is phone-class &middot; 70B Q4 &asymp; 45 GB</td>
+            </tr>
+            <tr>
+              <td><b>Gemma 3</b></td><td>Google DeepMind</td><td>General &middot; vision &middot; edge</td><td>Gemma</td>
+              <td>1b &middot; 4b &middot; 12b &middot; 27b</td>
+              <td class="g">4B/12B quant 4&ndash;10 GB</td>
+            </tr>
+            <tr>
+              <td><b>Phi-4 / Phi-4-mini</b></td><td>Microsoft</td><td>Chat &middot; general</td><td>MIT</td>
+              <td>3.8b &middot; 14b</td>
+              <td class="g">3.8B &asymp; 3 GB &middot; drops straight into an edge box or phone</td>
+            </tr>
+            <tr>
+              <td><b>GLM-4-9B family</b></td><td>Zhipu Z.ai</td><td>General &middot; chat</td><td>MIT</td>
+              <td>9b (plus long-context, vision and air variants)</td>
+              <td class="g">Q4 &asymp; 5&ndash;6 GB &middot; excellent for Chinese-language work</td>
+            </tr>
+            <tr>
+              <td><b>InternLM3-8B</b></td><td>Shanghai AI Lab</td><td>Chat &middot; general</td><td>Apache-2.0?</td>
+              <td>8b</td>
+              <td class="g">8&ndash;10 GB comfortably</td>
+            </tr>
+            <tr>
+              <td><b>Mistral / Nemo</b></td><td>Mistral AI</td><td>General &middot; edge</td><td>Apache-2.0?</td>
+              <td>7b &middot; 12b (Nemo)</td>
+              <td class="g">7B &asymp; 6 GB and up</td>
+            </tr>
+            <tr>
+              <td><b>gpt-oss-20b</b></td><td>OpenAI</td><td>Reasoning &middot; code</td><td>Apache-2.0 (MIT)?</td>
+              <td>20b &middot; 120b (MoE)</td>
+              <td class="g">20B (GPT-OSS-20B-A4B) Q4 &asymp; 11 GB</td>
+            </tr>
+            <tr>
+              <td><b>Qwen3-Coder / frontier preview</b></td><td>Alibaba / multi-source</td><td>Code &middot; general</td><td>Apache-2.0?</td>
+              <td>30b-A3B (agent variants too)</td>
+              <td class="g">Q3/Q4 &asymp; 12&ndash;16 GB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout" style="margin-top:18px">
+        <span class="head">Reading the licence column</span>
+        A trailing <b>?</b> means "verify before commercial use" &mdash; the upstream repo or model card is the single source of truth. Licences and parameter counts change; this page is a snapshot.
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= QUICK START ======= -->
+  <section class="block" id="start">
+    <div class="wrap">
+      <div class="sect-head">
+        <span class="tag">&sect;05 // QUICK START</span>
+        <h2 class="title">From zero to a local endpoint</h2>
+      </div>
+      <div class="term">
+        <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">install &amp; pull</span></div>
+        <pre>$ curl -fsSL https://ollama.com/install.sh | sh   # or grab the desktop build
+$ ollama pull qwen3:8b          # smallest useful generalist
+$ ollama pull deepseek-r1:7b    # compact reasoner
+$ ollama run qwen3:8b "explain MoE in one sentence"</pre>
+      </div>
+      <div class="term">
+        <div class="bar"><span class="dots"><i></i><i></i><i></i></span><span class="t">check what's actually on the GPU</span></div>
+        <pre>$ ollama ps        # which model is resident, and how it's split
+$ nvidia-smi       # VRAM headroom &mdash; the number that actually matters</pre>
+      </div>
+      <div class="callout">
+        <span class="head">The one rule that saves hours</span>
+        Start with the <b>smallest model that does the job</b>, measure VRAM, then scale up. Most "my GPU is too small" problems are really "my quantisation is too greedy" problems.
+      </div>
+      <div class="callout g" style="margin-top:18px">
+        <span class="head">Want the full manual?</span>
+        The complete Chinese handbook covers 16 chapters &mdash; quantisation deep-dive, MoE, KV-cache, sampling craft, RAG, LoRA fine-tuning, pitfalls and a 2026 homebrew frontier.
+        <a class="btn btn-primary" style="margin-top:10px" href="/" hreflang="zh-CN" lang="zh-CN">Read the full Chinese manual &#8594;</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ======= FOOTER ======= -->
+  <footer>
+    <div class="wrap">
+      <div class="foot-rows">
+        <div class="en-note">
+          This page is a standalone English landing page. The full handbook &mdash; 16 chapters, all commands and the glossary &mdash;
+          lives in the <a href="/" hreflang="zh-CN" lang="zh-CN">Chinese manual</a>.
+        </div>
+        <div class="en-note" style="margin-top:10px">
+          Licences, parameter counts and VRAM figures change &mdash; verify against the publisher's repository, Ollama or Hugging Face.
+          Run local AI with sandboxed permissions; never give an agent bare admin rights.
+        </div>
+        <div class="foot-rows" style="margin-top:14px">
+          <div>&copy; <span id="year">2026</span> LOCAL LLM GATE &middot; Ryan W Lab</div>
+          <div class="lang-switch">
+            <a href="/" hreflang="zh-CN" lang="zh-CN">中文</a>
+            <a href="/en/" class="cur" aria-current="page" hreflang="en">EN</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </footer>
+</main>
+
+<script>
+/* Minimal script for this landing page: year stamp only.
+   No dependency on the main site's model-rendering logic. */
+(function () {
+  "use strict";
+  var y = document.getElementById("year");
+  if (y) y.textContent = String(new Date().getFullYear());
+})();
+</script>
+</body>
+</html>

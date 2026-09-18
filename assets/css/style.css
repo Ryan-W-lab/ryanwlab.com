@@ -341,7 +341,7 @@ table.tbl{border-collapse:collapse;width:100%;min-width:760px;font-size:.86rem;}
 
 /* 页脚 ================================================= */
 footer{margin-top:70px;border-top:1px solid var(--line);}
-footer .ascii{color:var(--txt-dim);font-size:.6rem;line-height:1.4;overflow-x:auto;}
+footer .ascii{color:var(--txt-dim);font-size:.6rem;line-height:1;letter-spacing:0;overflow-x:auto;}
 footer .fwrap{padding:44px var(--pad) 24px;background:linear-gradient(180deg,transparent,rgba(5,8,12,.9));max-width:1180px;margin:0 auto;}
 .foot-rows{color:var(--txt-dim);font-size:.8rem;border-top:1px dashed var(--line);padding-top:18px;
   display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;}

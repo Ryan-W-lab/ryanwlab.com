@@ -194,21 +194,21 @@
         <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
           <div class="h3"><span class="cmd">#</span>一次前向「推理」旅途（ASCII 透视）</div>
           <pre style="background:#0a101b;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;line-height:1.9;color:#a9d9f5;font-size:.82rem;margin:10px 0 0;">
-  "你好世界" ──▸ [ Tokenizer ] ─▸ [1024,  98]──┐
-              (切成词元)                        ▼
-  每个Token ——▸ [ h²/⁹ 投成 向量 ] · 位置编码
-              ▼
-   ┌────────────  Transformer × N 层 ───────────┐
-   │   · 多头自注意力：谁和谁有关？(Q/K/V)      │
-   │      └─ 长程依赖的真凶，也是显存大户 KV │
-   │   · 残差 + LayerNorm + RoPE 旋转位置       │
-   │   · 前馈网络 FFN：参数最多的"记忆仓库"     │
-   └──────────────┬─────────┬──────────────────┘
-                  ▼         ▼
-            Logits → Softmax ──▸ 下一个Token分布概率
-                  │
-          argmax / top-p 采样 ──▸ "的世界你好×"
-          （这就是你会看到的文字）</pre>
+  "hello 世界" --> [ Tokenizer ] --> [1024,  98]--+
+              (切成词元)                         v
+每个 Token  ---> [ 映射成高维向量 ] . 位置编码
+                v
++---------  Transformer x N 层  ----------+
+| . 多头自注意力: 谁和谁有关? (Q/K/V)     |
+|     +-- 长程依赖的真凶, 也是显存大户 KV |
+| . 残差 + LayerNorm + RoPE 旋转位置      |
+| . 前馈网络 FFN: 参数量最大的"记忆仓库"  |
++--------------+-----------------+--------+
+               v                 v
+            Logits -> Softmax  --> 下一个 Token 概率分布
+               |
+        argmax / top-p 采样  -->  "的世界你好x"
+        (这就是你会看到的文字)</pre>
           <p class="p" style="margin-top:10px;color:var(--txt-mut)">
           显存两大开销：①<code>权重</code>（烤炉）②运行时动态增长的 <code>KV-Cache</code>（随对话变长的临时上下文缓存）。
           理解了这两块，后面所有「显存量化」逻辑就不攻自破。</p>

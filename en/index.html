@@ -159,23 +159,22 @@
         <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
           <div class="h3"><span class="cmd">#</span>One forward pass, end to end (ASCII view)</div>
           <pre style="background:#0a101b;border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto;line-height:1.9;color:#a9d9f5;font-size:.82rem;margin:10px 0 0;">
-  "hello world" ──▸ [ Tokenizer ] ─▸ [1024,  98]──┐
-              (split into tokens)                 ▼
-  each Token  ──▸ [ project to vector + positional enc ]
-              ▼
-   ┌────────────  Transformer × N layers ──────────┐
-   │   · multi-head self-attention: who relates?   │
-   │      └─ the real source of long-range deps    │
-   │         — and of KV memory burn               │
-   │   · residual + LayerNorm + RoPE               │
-   │   · feed-forward FFN: the param-heavy         │
-   │      "memory warehouse"                       │
-   └──────────────┬─────────┬──────────────────────┘
-                  ▼         ▼
-            Logits → Softmax ──▸ next-token distribution
-                  │
-          argmax / top-p sampling ──▸ "world hello the ×"
-          （that is the text you actually see）</pre>
+  "hello world" --> [ Tokenizer ] --> [1024,  98]--+
+              (split into tokens)                  v
+each Token  ---> [ project to vector + pos enc ]
+                v
++--------------  Transformer x N layers  --------------+
+| . multi-head self-attention: who relates to whom?    |
+|     +-- the real source of long-range deps           |
+|         -- and of KV memory burn                     |
+| . residual + LayerNorm + RoPE                        |
+| . feed-forward FFN: the parameter-heavy memory store |
++--------------+-----------------+---------------------+
+               v                 v
+            Logits -> Softmax  --> next-token distribution
+               |
+        argmax / top-p sampling  -->  "world hello the x"
+        (that is the text you actually see)</pre>
           <p class="p" style="margin-top:10px;color:var(--txt-mut)">
           Two big VRAM costs: ① <code>weights</code> (the furnace) ② the runtime-growing <code>KV cache</code>
           (temporary context memory that lengthens with the conversation).

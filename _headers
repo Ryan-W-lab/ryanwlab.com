@@ -1,0 +1,16 @@
+# Cloudflare Pages 自定义响应头
+#
+# LICENSE：文件为 UTF-8（含中英双语），但无扩展名，
+#           浏览器无法从 <meta> 得知编码，默认按 Latin-1 解码会乱码。
+#           必须在 HTTP 响应头显式声明 charset，才能正确显示中文与 — · 等符号。
+
+/LICENSE
+  Content-Type: text/plain; charset=utf-8
+
+# 兜底：所有纯文本资源一律声明 UTF-8
+/*.txt
+  Content-Type: text/plain; charset=utf-8
+/*.md
+  Content-Type: text/plain; charset=utf-8
+/robots.txt
+  Content-Type: text/plain; charset=utf-8

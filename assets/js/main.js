@@ -28,9 +28,9 @@
     })();
   }
   const tyEl = $("#tw");
-  const lines = [
+  const lines = document.documentElement.lang.startsWith("en") ? ["> Start small. Run locally.", "> Check the sources. Test the commands."] : [
     "> ./boot local_ai.sys --homebrew",
-    "> 以本地之力 · 驯服万亿参数巨兽",
+    "> 从小模型开始 · 先跑通再调优",
     "> 每一行代码，都不该被云端遥控。"
   ];
   let li = 0;
@@ -65,7 +65,7 @@
     drawerLinks.forEach((a) => a.classList.toggle("on", a.dataset.go === id));
     if (guruBtn) guruBtn.classList.toggle("on", inD || id === "players");
     if (inD) openSnDeep(true);
-    history.replaceState(null, "", id === "top" ? location.pathname : "#" + id);
+    // Scrollspy highlights navigation without rewriting the clicked URL hash.
   }
   const spy = new IntersectionObserver(
     (entries) => { entries.forEach((e) => { if (e.isIntersecting) setActive(e.target.id); }); },
@@ -158,7 +158,7 @@
           io.unobserve(entry.target);
         });
       },
-      { threshold: 0.1 }
+      { threshold: 0, rootMargin: "0px 0px 100px 0px" }
     );
     io.observe(el);
   });
@@ -211,20 +211,6 @@
   }, { threshold: 0.4 });
   $$("[data-count-block]").forEach((b) => cio.observe(b));
 
-  /* ---------- term 复制按钮 ---------- */
-  $$(".bar .copy").forEach((b) => {
-    b.addEventListener("click", () => {
-      const pre = b.closest(".term").querySelector("pre");
-      if (navigator.clipboard && pre) {
-        const plain = pre.textContent.replace(/\u200b/g, "");
-        navigator.clipboard.writeText(plain).then(() => {
-          const old = b.textContent; b.textContent = "✓ copied";
-          setTimeout(() => (b.textContent = old), 1400);
-        });
-      }
-    });
-  });
-
   /* ---------- 平滑跳转并保持导航 ---------- */
   $$('a[href^="#"]').forEach((a) => {
     a.addEventListener("click", (e) => {
@@ -246,43 +232,52 @@
   /* ---------- 模型墙数据 + 渲染 ---------- */
   const KIND = { full:"全能", chat:"对话/通用", reason:"深度推理", code:"代码/智能体", vision:"视觉/多模态", edge:"轻量/端侧" };
   const ARS = [   // 近一年多 可本地部署的开源强模型（量化后大致门槛）
-    { n:"DeepSeek-R1", org:"DeepSeek · 中国", kinds:["reason"], licText:"MIT",
+    { n:"DeepSeek-R1", org:"DeepSeek · 中国", kinds:["reason"], licText:"按具体版本核验",
       b:"首个将长链推理(Reinforcement)→思维链内化的开源；1.5B 迷你版都带推理痕迹。",
       sizes:"1.5b · 7b · 8b · 14b · 32b · 70b · 671b", gpu:"7B/量化≈6–9GB，32B 约20GB+，全网最热本地推理之一" },
-    { n:"DeepSeek-V3 系", org:"DeepSeek · 中国", kinds:["full","chat"], licText:"MIT",
+    { n:"DeepSeek-V3 系", org:"DeepSeek · 中国", kinds:["full","chat"], licText:"按具体版本核验",
       b:"MoE 671B 总参数、仅 37B 激活的旗舰；稠密对话质量世界级，本地入门建议 quant 蒸馏或租卡。",
       sizes:"671B-A37B（亦有开源小配方）", gpu:"单双卡难完整；Q4 仍需 ~380GB+，中小机请用 R1 蒸馏档或 API 平替" },
-    { n:"Qwen3", org:"阿里 · 开源", kinds:["full","chat","reason"], licText:"Apache-2.0?",
+    { n:"Qwen3", org:"阿里 · 开源", kinds:["full","chat","reason"], licText:"按具体版本核验",
       b:"Qwen 生态年度集大成：自带 thinking 开关、工具调用；稠密 0.6B→32B 完美覆盖个人机。",
-      sizes:"0.6b·1.7b·4b·8b·14b·30b·32b(A3B MoE)·235b", gpu:"8B/14B 量化 8–12GB 亲测流畅；MoE 32B 更轻" },
-    { n:"Qwen2.5-Coder", org:"阿里 · 开源", kinds:["code"], licText:"Apache-2.0?",
+      sizes:"0.6b·1.7b·4b·8b·14b·32b（稠密）·30b-A3B·235b-A22B", gpu:"8B/14B 的实际内存需求取决于量化、上下文与引擎，本站未提供统一实测；30B-A3B 为 MoE；总参决定权重存储需求" },
+    { n:"Qwen2.5-Coder", org:"阿里 · 开源", kinds:["code"], licText:"按具体版本核验",
       b:"编程领域开源常青树，0.5B–32B 全覆盖，配合本地 IDE 补全性价比极高。",
       sizes:"0.5b · 1.5b · 3b · 7b · 14b · 32b", gpu:"7B/14B 量化 6–12GB 即可起飞" },
-    { n:"Llama 3.2 / 3.3", org:"Meta", kinds:["full","edge"], licText:"Llama 3",
+    { n:"Llama 3.2 / 3.3", org:"Meta", kinds:["full","edge"], licText:"Llama · 核对具体版本",
       b:"3.2 主打轻量(1B/3B 端侧)，3.3-70B 稠密逼近前沿；Llama 系生态与工具链最成熟。",
       sizes:"3.2: 1b·3b | 3.3: 70b", gpu:"3B 可纯CPU；1B 手机级；70B Q4≈45GB" },
-    { n:"Gemma 3", org:"Google DeepMind", kinds:["full","vision","edge"], licText:"Gemma",
+    { n:"Gemma 3", org:"Google DeepMind", kinds:["full","vision","edge"], licText:"Gemma · 核对具体版本",
       b:"单 GPU 能力的天花板选手之一，多模态 + 极长上下文；1B 起极小本也能啃。",
       sizes:"1b · 4b · 12b · 27b", gpu:"4B/12B 量化 4–10GB" },
-    { n:"Phi-4 / Phi-4-mini", org:"Microsoft", kinds:["chat","full"], licText:"MIT",
+    { n:"Phi-4 / Phi-4-mini", org:"Microsoft", kinds:["chat","full"], licText:"按具体版本核验",
       b:"微软以小博大：Phi-4-14B 稠密训练中庸数据质量取胜，Phi-4-mini 3.8B 端侧明星。",
       sizes:"3.8b · 14b", gpu:"3.8B≈3GB 直插手机边缘盒" },
-    { n:"GLM-4-9B 系", org:"智谱Z.ai", kinds:["full","chat"], licText:"MIT",
+    { n:"GLM-4-9B 系", org:"智谱Z.ai", kinds:["full","chat"], licText:"按具体版本核验",
       b:"GLM-4-9B-0414 以 9B 体量追 14B 级别中文能力，家族含长文本/图像变体；中文原生友好。",
       sizes:"9b（另有 长文本・vision・air 变体）", gpu:"Q4≈5–6GB，中文场景强烈推荐" },
-    { n:"InternLM3-8B", org:"上海AI Lab", kinds:["chat","full"], licText:"Apache-2.0?",
+    { n:"InternLM3-8B", org:"上海AI Lab", kinds:["chat","full"], licText:"按具体版本核验",
       b:"书生系：开源训练全链条，8B 在 Agent/工具调用上平衡出色。",
       sizes:"8b", gpu:"8–10GB 轻松跑" },
-    { n:"Mistral / Nemo", org:"Mistral AI", kinds:["full","edge"], licText:"Apache-2.0?",
+    { n:"Mistral / Nemo", org:"Mistral AI", kinds:["full","edge"], licText:"按具体版本核验",
       b:"欧洲之光；Mistral-7B-v0.3 与 Mistral-Nemo-12B(量级 GPT-4 启发架构) 性价比老将。",
       sizes:"7b · 12b(Nemo)", gpu:"7B≈6GB 起" },
-    { n:"gpt-oss-20b", org:"OpenAI", kinds:["reason","code"], licText:"Apache-2.0(MIT)?" ,
+    { n:"gpt-oss-20b", org:"OpenAI", kinds:["reason","code"], licText:"按具体版本核验" ,
       b:"OpenAI 首个开放权重：gpt-oss-20b/120b，强推理/Agent 定位，桌面级可选 20B。",
       sizes:"20b · 120b(MoE)", gpu:"20B(GPT-OSS-20B-A4B)Q4 约11GB" },
-    { n:"Qwen3-Coder / 前沿预览", org:"阿里/多源", kinds:["code","full"], licText:"Apache-2.0?",
+    { n:"Qwen3-Coder / 前沿预览", org:"阿里/多源", kinds:["code","full"], licText:"按具体版本核验",
       b:"Qwen3-Coder-30B-A3B 让 30B 总/MoE 落到单卡；开发最热刷新中。",
       sizes:"30b-A3B · 亦有 agent 变体", gpu:"Q3/Q4 约12–16GB" },
   ];
+  const sources = [
+    "https://huggingface.co/deepseek-ai/DeepSeek-R1", "https://huggingface.co/deepseek-ai/DeepSeek-V3",
+    "https://huggingface.co/Qwen/Qwen3-8B", "https://huggingface.co/Qwen/Qwen2.5-Coder-7B-Instruct",
+    "https://huggingface.co/meta-llama", "https://huggingface.co/google/gemma-3-4b-it",
+    "https://huggingface.co/microsoft/phi-4", "https://huggingface.co/THUDM/GLM-4-9B-0414",
+    "https://huggingface.co/internlm/internlm3-8b-instruct", "https://huggingface.co/mistralai",
+    "https://huggingface.co/openai/gpt-oss-20b", "https://huggingface.co/Qwen/Qwen3-Coder-30B-A3B-Instruct"
+  ];
+  ARS.forEach((model, i) => { model.source = sources[i]; });
   const wall = $("#mwall");
   const stat = $("#mstat");
   const escHtml = (s) => String(s)
@@ -298,6 +293,7 @@
       <div class="rt">${escHtml(d.b)}</div>
       <div class="spec">${chips}</div>
       <div class="vc"><b>可用档位 · </b>${d.sizes}<br><b>量化后大致门槛 · </b>${d.gpu}</div>
+      <p class="model-source"><a href="${d.source}" target="_blank" rel="noopener">官方模型与许可 ↗</a></p>
     </article>`;
   }
   function renderW(list){

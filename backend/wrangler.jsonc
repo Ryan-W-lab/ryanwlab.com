@@ -1,0 +1,17 @@
+{
+  "$schema": "https://raw.githubusercontent.com/cloudflare/workers-sdk/main/packages/wrangler/config-schema.json",
+  "name": "ryanwlab-messages",
+  "main": "worker.mjs",
+  "compatibility_date": "2026-10-29",
+  "vars": {
+    "ALLOWED_ORIGINS": "https://ryanwlab.com,https://www.ryanwlab.com"
+  },
+  "d1_databases": [{
+    "binding": "DB",
+    "database_name": "ryanwlab-messages",
+    "database_id": "0cc931df-0f6a-4d4a-86c1-3c1016fc6555",
+    "migrations_dir": "migrations"
+  }],
+  "triggers": { "crons": ["17 18 * * *"] },
+  "observability": { "enabled": false }
+}

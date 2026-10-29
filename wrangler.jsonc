@@ -2,6 +2,9 @@
   "name": "ryanwlab-com",
   "compatibility_date": "2026-09-17",
   "assets": {
-    "directory": "./"
+    "directory": "./site-dist"
+  },
+  "build": {
+    "command": "node scripts/build-site.mjs"
   }
 }

@@ -1,6 +1,6 @@
 # 私密留言箱：部署与查看
 
-当前状态：实现与本地测试完成，尚未连接生产 Cloudflare D1 / Worker。GitHub 存代码和静态网页；留言在私有 D1，不进入仓库。没有公开留言读取接口，也没有客户端数据库密钥。
+当前状态：生产 Cloudflare D1 与 Worker 已连接并通过保存及重试测试；网页通过 GitHub main 自动发布。GitHub 存代码和静态网页；留言在私有 D1，不进入仓库。没有公开留言读取接口，也没有客户端数据库密钥。
 
 ## 功能规则
 
@@ -31,10 +31,11 @@ node scripts/preview-messages.mjs
 
 ```sh
 npx wrangler login
-npx wrangler d1 create ryanwlab-messages --config backend/wrangler.jsonc
+## 已存在数据库，当前账号无需再次创建。迁移到其他账号时才创建：
+# npx wrangler d1 create ryanwlab-messages --config backend/wrangler.jsonc
 ```
 
-将创建结果的 database_id 填入 `backend/wrangler.jsonc`，替换 `REPLACE_WITH_CREATED_D1_DATABASE_ID`。确认允许来源为正式网站的准确 Origin（协议＋域名），不要设置为 `*`。
+当前 `backend/wrangler.jsonc` 已填写实际 database_id。迁移账号时才替换它。确认允许来源为正式网站的准确 Origin（协议＋域名），不要设置为 `*`。
 
 ```sh
 npx wrangler d1 migrations apply ryanwlab-messages --remote --config backend/wrangler.jsonc
@@ -52,7 +53,7 @@ IP_HASH_SECRET 应在本地生成至少 32 字节随机值，通过 Wrangler 的
 
 根目录 `wrangler.jsonc` 保留原 Worker 名称，新增 build 命令，静态目录改为 `site-dist`，避免把 backend、测试、Git 数据或本地秘密发布成静态文件。
 
-在原构建环境添加公开环境变量 `MESSAGE_API_URL`，其值为上面部署好的 `/api/messages` URL，再重新构建并发布。构建脚本同时设置中英文页面。
+中英文 HTML 已配置公开接口 `https://ryanwlab-messages.ryan-w-lab.workers.dev/api/messages`。可用公开环境变量 `MESSAGE_API_URL` 在构建时覆盖该地址。
 
 ```sh
 MESSAGE_API_URL=https://你的-worker域名/api/messages node scripts/build-site.mjs
@@ -69,7 +70,7 @@ npx wrangler deploy
 
 ## 查看留言
 
-Cloudflare 控制台 → Workers & Pages → D1 → ryanwlab-messages → Console，可运行：
+Cloudflare 控制台 → Workers & Pages → D1 → ryanwlab-messages → Studio → 选择 `inbox`，即可查看北京时间、昵称、留言。也可在 Console 运行：
 
 ```sql
 SELECT datetime(created_at, 'unixepoch', '+8 hours') AS beijing_time,

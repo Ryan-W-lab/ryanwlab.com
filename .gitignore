@@ -30,3 +30,9 @@ Thumbs.db
 
 # ---- 本地预览产物 ----
 *.log
+
+# Message service secrets and local runtime state
+.dev.vars*
+.env*
+.wrangler/
+site-dist/

@@ -547,3 +547,51 @@ a.top-group.cur{color:var(--green);background:rgba(51,255,140,.1);box-shadow:ins
   #guruJump{font-size:.64rem;padding:5px 8px;}
 }
 
+
+/* Reading and navigation quality pass · 2026-10 */
+:root { --txt-mut:#a4b2c5; --txt-dim:#93a4bb; }
+.lead, .card .p, .mcard .rt { line-height:1.85; }
+.copy { font:inherit; background:transparent; border:1px solid var(--line-bright); padding:4px 9px; border-radius:6px; cursor:pointer; }
+button:focus-visible, a:focus-visible, summary:focus-visible { outline:2px solid var(--cyan); outline-offset:4px; }
+#start .card { min-width:0; }
+#start summary { cursor:pointer; color:var(--green); font-weight:700; }
+#start p, #start h3, #start ul { margin:16px 0; }
+#start li { margin:8px 0 8px 22px; }
+#start, section[id] { scroll-margin-top:80px; }
+.source-notes { padding-top:32px; padding-bottom:32px; border-top:1px solid var(--line); color:var(--txt-mut); }
+.model-source { margin-top:14px; font-size:.85rem; }
+.mcard, .term, .wrap, details { min-width:0; }
+.mcard h3, .mcard p { overflow-wrap:anywhere; }
+/* Content remains readable during anchor jumps, without waiting for animation. */
+.reveal-seed > * { opacity:1 !important; transform:none !important; }
+@media (max-width:600px) {
+  .gnav-inner { gap:8px; }
+  .gnav .logo { font-size:.72rem; }
+  .lang-switch { margin-left:auto; }
+  .nav-toggle { margin-left:0; font-size:.72rem; }
+  .bar { flex-wrap:wrap; gap:8px; }
+  .hero .cta { flex-wrap:wrap; }
+}
+@media (prefers-reduced-motion:reduce) {
+  html { scroll-behavior:auto; }
+  *, *::before, *::after { animation:none !important; transition:none !important; }
+}
+
+/* Private message box */
+.message-wrap { max-width:880px; }
+#message-form { padding:clamp(18px,4vw,32px); border:1px solid var(--line-bright); border-radius:var(--radius); background:var(--panel); }
+#message-form label { display:block; margin:0 0 8px; font-weight:600; }
+#message-form input, #message-form textarea { display:block; width:100%; color:var(--txt); background:var(--bg); border:1px solid var(--line-bright); border-radius:8px; padding:12px 14px; font:inherit; font-size:16px; margin-bottom:20px; }
+#message-form textarea { resize:vertical; min-height:160px; }
+#message-form input:focus, #message-form textarea:focus { outline:2px solid var(--cyan); outline-offset:2px; }
+#message-form ::placeholder { color:var(--txt-mut); opacity:.85; }
+#message-form .message-meta { display:flex; justify-content:space-between; gap:12px; color:var(--txt-mut); font-size:.8rem; margin-top:-12px; }
+#message-count { white-space:nowrap; }
+#message-count.over-limit, #message-status[data-state="error"] { color:#ff9ba9; }
+.message-rules { color:var(--txt-mut); font-size:.82rem; margin:16px 0; }
+#message-form button { font:inherit; cursor:pointer; }
+#message-form button:disabled { opacity:.45; cursor:not-allowed; box-shadow:none; }
+#message-status { min-height:1.8em; margin-top:16px; color:var(--txt-mut); overflow-wrap:anywhere; }
+#message-status[data-state="success"] { color:var(--green); }
+@media (max-width:600px) { #message-form .message-meta { flex-wrap:wrap; } }
+#messages { padding-top:64px; padding-bottom:64px; }

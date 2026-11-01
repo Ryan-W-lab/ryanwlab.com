@@ -1358,7 +1358,20 @@ model = peft.get_peft_model(base, peft.LoraConfig(
     <noscript><p>请启用 JavaScript 后提交留言。</p></noscript>
   </form>
 </div></section>
-<aside class="wrap source-notes"><h2>来源与校验范围</h2><p>本次修订：2026-10-29。已核对下列文档和标签；其余历史章节不是逐条实测报告。运行结果需结合本机版本验证。</p><p><a href="https://qwenlm.github.io/blog/qwen3/">Qwen3</a> · <a href="https://docs.ollama.com/context-length">Ollama context</a> · <a href="https://docs.ollama.com/modelfile">Modelfile</a> · <a href="https://huggingface.co/Qwen/Qwen3-8B-GGUF">Qwen3 GGUF</a></p></aside>
+<aside class="wrap source-notes">
+  <h2>来源与校验范围</h2>
+  <p>本次修订：<b>2026-11-01</b>。已核对下列文档和标签；其余历史章节不是逐条实测报告。运行结果需结合本机版本验证。
+  模型参数、上下文长度与许可证会随版本变动，请以训练/发布方仓库为准。</p>
+  <p><a href="https://qwenlm.github.io/blog/qwen3/">Qwen3</a> · <a href="https://docs.ollama.com/context-length">Ollama context</a> · <a href="https://docs.ollama.com/modelfile">Modelfile</a> · <a href="https://huggingface.co/Qwen/Qwen3-8B-GGUF">Qwen3 GGUF</a></p>
+  <h2>最近更新</h2>
+  <ul>
+    <li><b>2026-11-01</b> 新增交接手册与更新日志；留言框提示精简为「1—500 个字符」+ 额度说明；加入 CI 自动巡检、中英一致性校验，以及终端查看与备份留言的脚本。</li>
+    <li><b>2026-10-29</b> 私密留言箱上线：每日限额、幂等重试、90 天自动清理、后台可读视图。</li>
+    <li><b>2026-09-18</b> 修复 LICENSE 乱码、页脚字标与英文拼写。</li>
+  </ul>
+  <p>完整记录见 <a href="https://github.com/Ryan-W-lab/ryanwlab.com/blob/main/CHANGELOG.md" target="_blank" rel="noopener">更新日志</a> ·
+  源码与反馈 <a href="https://github.com/Ryan-W-lab/ryanwlab.com" target="_blank" rel="noopener">GitHub</a></p>
+</aside>
 <footer>
   <div class="fwrap">
     <pre class="ascii">
@@ -1378,6 +1391,8 @@ model = peft.get_peft_model(base, peft.LoraConfig(
         <a href="https://space.bilibili.com/3707050336979686" target="_blank" rel="noopener">B站</a>
         <span class="fl-sep">·</span>
         <a href="https://github.com/Ryan-W-lab/ryanwlab.com" target="_blank" rel="noopener">GitHub</a>
+        <span class="fl-sep">·</span>
+        <a href="https://github.com/Ryan-W-lab/ryanwlab.com/blob/main/CHANGELOG.md" target="_blank" rel="noopener">更新日志</a>
         <span class="fl-sep">·</span>
         <a href="LICENSE">CC BY-NC-SA 4.0</a>
       </div>

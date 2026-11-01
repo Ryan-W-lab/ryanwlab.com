@@ -1491,8 +1491,9 @@ model = peft.get_peft_model(base, peft.LoraConfig(
     <label for="message-nickname">Nickname (optional, up to 20 characters)</label>
     <input id="message-nickname" name="nickname" type="text" autocomplete="nickname" placeholder="What should I call you?">
     <label for="message-text">Your message</label>
-    <textarea id="message-text" name="message" rows="6" required aria-describedby="message-count" placeholder="For example: my model loads but replies slowly. Could you make a troubleshooting guide?"></textarea>
+    <textarea id="message-text" name="message" rows="6" required aria-describedby="message-count message-note" placeholder="For example: my model loads but replies slowly. Could you make a troubleshooting guide?"></textarea>
     <div class="message-meta"><span>1–500 characters</span><output id="message-count" for="message-text">0 / 500</output></div>
+    <p id="message-note" class="message-note">Up to 3 messages per network address per day, and at least 60 seconds between submissions.</p>
     <button type="submit" class="btn btn-primary" disabled>Submit message</button>
     <p id="message-status" role="status" aria-live="polite">The message box is not connected yet. Nothing will be submitted.</p>
     <noscript><p>Enable JavaScript to submit a message.</p></noscript>

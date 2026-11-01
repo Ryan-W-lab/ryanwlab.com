@@ -1350,8 +1350,9 @@ model = peft.get_peft_model(base, peft.LoraConfig(
     <label for="message-nickname">昵称（选填，最多 20 个字符）</label>
     <input id="message-nickname" name="nickname" type="text" autocomplete="nickname" placeholder="怎么称呼你？">
     <label for="message-text">留言内容</label>
-    <textarea id="message-text" name="message" rows="6" required aria-describedby="message-count" placeholder="比如：我的模型能加载，但回复特别慢，希望你做一期排查教程。"></textarea>
+    <textarea id="message-text" name="message" rows="6" required aria-describedby="message-count message-note" placeholder="比如：我的模型能加载，但回复特别慢，希望你做一期排查教程。"></textarea>
     <div class="message-meta"><span>1—500 个字符</span><output id="message-count" for="message-text">0 / 500</output></div>
+    <p id="message-note" class="message-note">同一网络地址每天最多提交 3 条，两次提交之间至少间隔 60 秒。</p>
     <button type="submit" class="btn btn-primary" disabled>提交留言</button>
     <p id="message-status" role="status" aria-live="polite">留言箱尚未接通，暂时无法提交。</p>
     <noscript><p>请启用 JavaScript 后提交留言。</p></noscript>

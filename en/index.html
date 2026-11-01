@@ -356,6 +356,12 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
               <td class="r">Q4 &asymp; 560 GB+, needs a cluster</td></tr>
             <tr><td><b>Muse-Spark-Open</b></td><td>Meta</td><td>816B / 42B</td><td>not published</td><td class="r">Proprietary (check terms)</td>
               <td class="r">Q4 &asymp; 450 GB (:cloud only)</td></tr>
+            <tr><td><b>Hy4-preview</b></td><td>Tencent &middot; Hunyuan</td><td>770B / 49B (+10B MTP)</td><td>1,048,576</td><td class="g">Apache-2.0</td>
+              <td class="r">Q4 &asymp; 467 GB (8&times;80 GB class)</td></tr>
+            <tr><td><b>Ring 2.6-1T (Ant)</b></td><td>Ant Group &middot; Ring</td><td>1,025B / &mdash;</td><td>128K &rarr; 256K</td><td class="g">MIT</td>
+              <td class="r">Q4 &asymp; 560 GB+, and no GGUF exists</td></tr>
+            <tr><td><b>MiMo-V2.6-Pro</b></td><td>Xiaomi &middot; MiMo</td><td>1.02T / 42B (384 experts, top-8)</td><td>1,048,576</td><td class="g">MIT</td>
+              <td class="r">Q4 &asymp; 560 GB, server scale</td></tr>
             <tr><td><b>GLM-5 / 5.1 / 5.2 / 5.3</b></td><td>Z.ai</td><td>744B&ndash;754B / 40B (not published from 5.1)</td><td>202,752 &rarr; 1,048,576</td><td class="g">MIT (proprietary from 5.3)</td>
               <td class="r">Q4 &asymp; 420 GB &mdash; but the 5.x Flash exit is in the local list below</td></tr>
           </tbody>
@@ -483,7 +489,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
               <td class="g">4.6v · 4.6v-flash (official GGUF, no Ollama tag)<br>Flash Q4 ≈ 6 GB, easy on one card · 4.6V Q4 ≈ 60 GB, multi-GPU</td><td>single 24 GB card</td>
             </tr>
             <tr>
-              <td><b>MiniMax M3 / M3.1-Flash</b></td><td>MiniMax</td><td>general · code/agents · vision/multimodal</td><td>Community licence (M3)</td>
+              <td><b>MiniMax M3 / M3.1-Flash</b></td><td>MiniMax</td><td>general · code/agents · vision/multimodal</td><td>Community licence (non-commercial)</td>
               <td>428B total / 23B active<br><span class="dim">1,048,576</span></td><td>2026-06 / 2026-10</td>
               <td class="g">428b-A23b (Ollama ships :cloud only)<br>Q4 ≈ 240 GB (4×80 GB or large-memory offload); self-host for local use</td><td>multi-GPU / large RAM</td>
             </tr>
@@ -524,13 +530,13 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
             </tr>
             <tr>
               <td><b>Hy-SimulMT-30B-A3B (simultaneous translation)</b></td><td>Tencent · Hunyuan</td><td>general · vision/multimodal</td><td>Apache-2.0</td>
-              <td>30B total / 3B active<br><span class="dim">not published</span></td><td>2026-10</td>
+              <td>30B total / 3B active<br><span class="dim">262,144</span></td><td>2026-10</td>
               <td class="g">30B-A3B (official FP8 and GGUF available)<br>Q4 ≈ 18 GB — one 24 GB card is enough</td><td>single 24 GB card</td>
             </tr>
             <tr>
               <td><b>ERNIE 4.5 / 4.5-VL</b></td><td>Baidu</td><td>general · chat · vision/multimodal</td><td>Apache-2.0</td>
-              <td>300B-A47B | VL-424B-A47B | VL-28B-A3B<br><span class="dim">not published</span></td><td>2025-06 / 2025-11</td>
-              <td class="g">ERNIE-4.5-300B-A47B (plus multimodal and Paddle variants)<br>300B Q4 ≈ 170 GB; VL-28B-A3B Q4 ≈ 17 GB, one card</td><td>multi-GPU / large RAM</td>
+              <td>Released in-window: 21B-A3B-Thinking | VL-28B-A3B-Thinking; the 300B-A47B dates from 2025-06<br><span class="dim">not published</span></td><td>2025-09 / 2025-11</td>
+              <td class="g">ERNIE-4.5-21B-A3B-Thinking · ERNIE-4.5-VL-28B-A3B-Thinking (community GGUF)<br>21B-A3B Q4 ≈ 13 GB on one card; VL-28B-A3B Q4 ≈ 17 GB also fits</td><td>multi-GPU / large RAM</td>
             </tr>
             <tr>
               <td><b>gpt-oss-20b / 120b / safeguard</b></td><td>OpenAI</td><td>reasoning · code/agents</td><td>Apache-2.0</td>
@@ -611,6 +617,176 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
               <td><b>DeepSeek-R1 (distills, still in service)</b></td><td>DeepSeek</td><td>reasoning</td><td>MIT</td>
               <td>1.5B – 70B dense distills<br><span class="dim">32,768 – 131,072 (by tier)</span></td><td>2025-01</td>
               <td class="g">1.5b · 7b · 8b · 14b · 32b · 70b<br>7B quant ≈ 6–9 GB; 32B ≈ 20 GB+</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Ling 3.0-flash / 3.0-tiny</b></td><td>Ant Group · Ling</td><td>general · reasoning</td><td>MIT</td>
+              <td>flash: 124B / 5.1B active (hybrid-linear MoE) | tiny: 7.9B / 1.3B active<br><span class="dim">256K (flash) | 131,072 (tiny)</span></td><td>2026-08 / 2026-09</td>
+              <td class="g">Official GGUF: flash Q4_K_M ≈ 77 GB, tiny Q4_K_M ≈ 4.8 GB<br>tiny Q4 ≈ 4.8 GB, one card (vendor reports 86–90 tok/s on an M4 Pro); flash Q4 ≈ 77 GB needs an 80 GB card</td><td>multi-GPU / large RAM</td>
+            </tr>
+            <tr>
+              <td><b>Ling 3.1-flash</b></td><td>Ant Group · Ling</td><td>general · reasoning</td><td>MIT</td>
+              <td>560B total / 25B active<br><span class="dim">1,048,576</span></td><td>2026-10</td>
+              <td class="g">Ling-3.1-flash (plus a 1019 refresh; no official GGUF yet)<br>Q4 estimate ≈ 310 GB, so a 4×80 GB class rig; vendor suggests SGLang TP8+EP8</td><td>multi-GPU / large RAM</td>
+            </tr>
+            <tr>
+              <td><b>MiMo-V2.6-Distill-Qwen-9B / Flash / Pro</b></td><td>Xiaomi · MiMo</td><td>general · chat · code/agents</td><td>MIT</td>
+              <td>Distill-9B: 9.41B | Flash: 309B / 15B active | Pro: 1.02T / 42B active<br><span class="dim">262,144 (9B) | 1,048,576 (Flash / Pro)</span></td><td>2026-09</td>
+              <td class="g">bartowski's MiMo-V2.6-Distill-Qwen-9B-GGUF has close to a million downloads<br>9B Q4 ≈ 5.7 GB, easy on one card; Flash Q4 ≈ 170 GB, multi-GPU</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Spark X2.6 (iFlytek)</b></td><td>iFlytek · Spark</td><td>general · chat · code/agents</td><td>Apache-2.0</td>
+              <td>4.11B / 1.71B<br><span class="dim">1,048,576</span></td><td>2026-08 / 2026-10</td>
+              <td class="g">Official GGUF: X2.6-4B Q4_K_M ≈ 3.5 GB, X2.6-1.7B ≈ 1 GB<br>4B Q4 ≈ 3.5 GB on one card — a 1M context window at 4B</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Kimi-Linear-48B-A3B</b></td><td>Moonshot</td><td>general · reasoning</td><td>MIT</td>
+              <td>48B total / 3B active<br><span class="dim">1,048,576</span></td><td>2025-10</td>
+              <td class="g">Kimi-Linear-48B-A3B-Instruct / -Base (community GGUF)<br>Q4 ≈ 27 GB, just inside a 32 GB card</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>LLaDA2.2-mini / flash (diffusion LLM)</b></td><td>Ant Group</td><td>reasoning · general</td><td>Apache-2.0</td>
+              <td>mini: 16B / 1.4B active | flash: 102.9B<br><span class="dim">131,072</span></td><td>2026-07 / 2026-09</td>
+              <td class="g">LLaDA2.2-mini · LLaDA2.2-flash<br>mini Q4 ≈ 9 GB on one card; flash Q4 ≈ 57 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>MiniCPM5-2B / 1B</b></td><td>OpenBMB</td><td>general · chat · edge</td><td>Apache-2.0</td>
+              <td>2.52B | 1.08B<br><span class="dim">131,072</span></td><td>2026-05 / 2026-09</td>
+              <td class="g">Official GGUF: 2B Q4_K_M ≈ 1.6 GB, 1B ≈ 0.7 GB (plus MLX, GPTQ and a DSpark draft head)<br>1B Q4 ≈ 0.7 GB; 2B Q4 ≈ 1.6 GB — long context on the edge</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>JanusCoder-8B / 14B</b></td><td>Shanghai AI Lab</td><td>code/agents</td><td>Apache-2.0</td>
+              <td>8.25B | 14.77B<br><span class="dim">32,768</span></td><td>2025-10</td>
+              <td class="g">JanusCoder-8B / -14B (community GGUF)<br>8B Q4 ≈ 5 GB; 14B Q4 ≈ 8.5 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>InternVL3.5 Flash family</b></td><td>Shanghai AI Lab</td><td>vision/multimodal</td><td>Apache-2.0</td>
+              <td>1.15B · 2.49B · 4.91B · 8.81B · 15.5B · 30.99B · 39.56B · 241.71B-A28B<br><span class="dim">40,960 (language backbone)</span></td><td>2025-09</td>
+              <td class="g">Official GGUF (2B / 8B / 14B); the 1B–8B tiers fit one card<br>8B Q4 ≈ 5 GB; 14B Q4 ≈ 9 GB; the 241B tier needs a cluster</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Hy3 (Tencent Hunyuan)</b></td><td>Tencent · Hunyuan</td><td>general · reasoning</td><td>Apache-2.0</td>
+              <td>295B total / 21B active (plus a 3.8B MTP head)<br><span class="dim">262,144</span></td><td>2026-07</td>
+              <td class="g">Hy3 and Hy3-FP8 (community GGUF)<br>Q4 ≈ 182 GB, so a 2×80 GB class rig</td><td>multi-GPU / large RAM</td>
+            </tr>
+            <tr>
+              <td><b>Hy-Memory-30B-A3B / Hy-MT2-7B</b></td><td>Tencent · Hunyuan</td><td>general · chat</td><td>Apache-2.0</td>
+              <td>30.06B / 3B active | 8.03B dense<br><span class="dim">262,144</span></td><td>2026-05 / 2026-10</td>
+              <td class="g">Official GGUF: Hy-Memory Q4_K_M ≈ 18.2 GB, Hy-MT2-7B ≈ 4.6 GB<br>Hy-Memory Q4 ≈ 18 GB; Hy-MT2-7B Q4 ≈ 4.6 GB — 22-language translation</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Nanbeige4.3-33B</b></td><td>Nanbeige</td><td>general · chat · code/agents</td><td>Apache-2.0</td>
+              <td>33.12B dense, Llama architecture<br><span class="dim">524,288</span></td><td>2026-10</td>
+              <td class="g">Official INT4/INT8/FP8; community GGUF Q4_K_M ≈ 20.8 GB<br>Q4 ≈ 20.8 GB, one 24 GB card — keep the context around 16K for headroom</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>dots.llm1 (RedNote)</b></td><td>RedNote</td><td>general · chat</td><td>MIT</td>
+              <td>142B total / 14B active (128 experts, top-6)<br><span class="dim">32,768</span></td><td>2025-06</td>
+              <td class="g">dots.llm1.base / .inst (community GGUF)<br>Q4 ≈ 80 GB, so an 80 GB card or multi-GPU</td><td>multi-GPU / large RAM</td>
+            </tr>
+            <tr>
+              <td><b>SenseNova-Loop-9B / AREX-2</b></td><td>SenseTime · BAAI</td><td>general · vision/multimodal · reasoning</td><td>Apache-2.0</td>
+              <td>Loop-9B: 9.66B backbone (looped weights) | AREX-2: 27B (Qwen3.5 architecture)<br><span class="dim">262,144</span></td><td>2026-07 / 2026-09</td>
+              <td class="g">SenseNova-Loop-9B-Preview · AREX-2 (community GGUF)<br>Loop-9B Q4 ≈ 5.5 GB; AREX-2 Q4 ≈ 15 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Seed-OSS-36B</b></td><td>ByteDance · Seed</td><td>general · chat</td><td>Apache-2.0</td>
+              <td>36.15B dense<br><span class="dim">524,288</span></td><td>2025-08</td>
+              <td class="g">Seed-OSS-36B-Base / -Instruct<br>Q4 ≈ 21 GB — one 24 GB card</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Stable-DiffCoder-8B (diffusion code model)</b></td><td>ByteDance · Seed</td><td>code/agents</td><td>MIT</td>
+              <td>8.25B<br><span class="dim">8,192</span></td><td>2026-01</td>
+              <td class="g">Stable-DiffCoder-8B-Base / -Instruct<br>Q4 ≈ 5 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Qianfan-VL-70B / 8B / 3B</b></td><td>Baidu</td><td>vision/multimodal</td><td>MIT (70B) · other (3B/8B)</td>
+              <td>71.8B | 8.8B | 2.44B<br><span class="dim">not published</span></td><td>2025-09</td>
+              <td class="g">Qianfan-VL-70B / -8B / -3B<br>3B Q4 ≈ 1.5 GB · 8B Q4 ≈ 5 GB · 70B Q4 ≈ 40 GB, multi-GPU</td><td>multi-GPU / large RAM</td>
+            </tr>
+            <tr>
+              <td><b>WeVisOne-VL-4B / 2B</b></td><td>Tencent</td><td>vision/multimodal · edge</td><td>Apache-2.0</td>
+              <td>4.83B | 2.44B<br><span class="dim">262,144</span></td><td>2026-10</td>
+              <td class="g">WeVisOne-VL-4B / -2B<br>2B Q4 ≈ 1.5 GB · 4B Q4 ≈ 3 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Youtu-LLM-2B</b></td><td>Tencent · Youtu</td><td>general · edge · chat</td><td>youtu-llm (proprietary)</td>
+              <td>1.96B<br><span class="dim">131,072</span></td><td>2025-12</td>
+              <td class="g">Youtu-LLM-2B (GGUF on a repo branch)<br>Q4 ≈ 1.2 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Ming-3.0 audio family (flash / asr-tiny / tts)</b></td><td>Ant Group · Ming</td><td>general · edge</td><td>MIT</td>
+              <td>flash: 126B / 6.5B active | asr-tiny: 8.87B | tts: 1.48B<br><span class="dim">131,072 (flash) | 8,192 (asr-tiny)</span></td><td>2026-09 / 2026-10</td>
+              <td class="g">Ming-3.0-audio-flash · -audio-tiny · -asr-tiny · -tts-0.5B<br>asr-tiny Q4 ≈ 5 GB on one card; tts Q4 ≈ 1 GB; flash Q4 ≈ 70 GB</td><td>multi-GPU / large RAM</td>
+            </tr>
+            <tr>
+              <td><b>Ring 2.6-1T / 2.5-1T (Ant)</b></td><td>Ant Group · Ring</td><td>reasoning</td><td>MIT</td>
+              <td>1,025B (2.6) | 1,012B (2.5)<br><span class="dim">128K → 256K (YaRN)</span></td><td>2026-02 / 2026-05</td>
+              <td class="g">Ring-2.6-1T · Ring-2.5-1T (no GGUF; BF16/FP8 across many GPUs)<br>Q4 estimate ≈ 560 GB+, and no GGUF exists — server scale only</td><td>server / cloud only</td>
+            </tr>
+            <tr>
+              <td><b>Intern-S2-397B / -Mobius</b></td><td>Shanghai AI Lab</td><td>general · vision/multimodal · reasoning</td><td>Apache-2.0</td>
+              <td>397B tier: 403.42B (Qwen3.5-397B-A17B architecture) | Mobius: 35.96B (2560 experts, top-8)<br><span class="dim">262,144</span></td><td>2026-05 / 2026-07</td>
+              <td class="g">Intern-S2-397B · -Mobius · -Preview (community GGUF)<br>Mobius Q4 ≈ 21 GB; the 397B tier Q4 ≈ 230 GB, multi-GPU</td><td>multi-GPU / large RAM</td>
+            </tr>
+            <tr>
+              <td><b>Intern-Decision-4B / 2B / 0.8B</b></td><td>Shanghai AI Lab</td><td>reasoning · vision/multimodal · edge</td><td>Apache-2.0</td>
+              <td>4.54B | 2.44B | 0.87B<br><span class="dim">262,144</span></td><td>2026-09</td>
+              <td class="g">Intern-Decision-4B / -2B / -0.8B (GGUF available)<br>0.8B Q4 ≈ 0.5 GB · 4B Q4 ≈ 2.5 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Step-5-Preview</b></td><td>StepFun</td><td>general · reasoning · vision/multimodal</td><td>StepFun Model License 1.0</td>
+              <td>600B total / 27B active (FP8 checkpoint 604.3B)<br><span class="dim">1,048,576</span></td><td>2026-09</td>
+              <td class="g">Step-5-Preview (BF16 / NVFP4)<br>Q4 estimate ≈ 330 GB, so a cluster</td><td>server / cloud only</td>
+            </tr>
+            <tr>
+              <td><b>MiMo-V2.6-Pro (Xiaomi)</b></td><td>Xiaomi · MiMo</td><td>general · reasoning · vision/multimodal</td><td>MIT</td>
+              <td>1.02T total / 42B active (384 experts, top-8)<br><span class="dim">1,048,576</span></td><td>2026-09</td>
+              <td class="g">MiMo-V2.6-Pro-RL / -Pro-MOPD<br>Q4 estimate ≈ 560 GB, server scale</td><td>server / cloud only</td>
+            </tr>
+            <tr>
+              <td><b>MiMo-Audio-7B / MiMo-Embodied-7B</b></td><td>Xiaomi · MiMo</td><td>edge · general</td><td>MIT</td>
+              <td>8.0B (audio) | 8.0B (embodied)<br><span class="dim">not published</span></td><td>2025-09 / 2025-11</td>
+              <td class="g">MiMo-Audio-7B-Base / -Instruct · MiMo-Embodied-7B<br>Q4 ≈ 4.5 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Baichuan-M3-235B</b></td><td>Baichuan</td><td>general · chat</td><td>Apache-2.0</td>
+              <td>235.09B (Qwen3-MoE architecture, 128 experts, top-8)<br><span class="dim">40,960 — short for a 235B flagship</span></td><td>2026-01</td>
+              <td class="g">Official Q4_K_M GGUF (about 131 GB)<br>Q4 ≈ 131 GB, so a 2×80 GB class rig</td><td>multi-GPU / large RAM</td>
+            </tr>
+            <tr>
+              <td><b>SenseNova-MARS-32B / U1.5-8B-MoT</b></td><td>SenseTime</td><td>vision/multimodal · reasoning</td><td>MIT (MARS) · Apache-2.0 (U1.5)</td>
+              <td>MARS: 32B | U1.5: 17.5B<br><span class="dim">not published</span></td><td>2026-01 / 2026-08</td>
+              <td class="g">SenseNova-MARS-32B · SenseNova-U1.5-8B-MoT<br>MARS Q4 ≈ 19 GB; U1.5 Q4 ≈ 10 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>MOSS-VL-Realtime</b></td><td>OpenMOSS</td><td>vision/multimodal</td><td>Apache-2.0</td>
+              <td>11.34B<br><span class="dim">262,144</span></td><td>2026-07</td>
+              <td class="g">MOSS-VL-Realtime<br>Q4 ≈ 6.5 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>AutoGLM-Phone-9B / UI2Code_N</b></td><td>Z.ai</td><td>general · code/agents</td><td>MIT</td>
+              <td>9.66B<br><span class="dim">not published</span></td><td>2025-11 / 2025-12</td>
+              <td class="g">AutoGLM-Phone-9B · UI2Code_N · WebVIA-Agent<br>Q4 ≈ 5.5 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Confucius4 (NetEase Youdao)</b></td><td>NetEase Youdao</td><td>edge · general</td><td>Apache-2.0 · check (R2T2)</td>
+              <td>not published<br><span class="dim">not published</span></td><td>2026-05</td>
+              <td class="g">Confucius4 · -R2T2 · -T3PO (official GGUF)<br>not published</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>BFS-Prover-V2-32B / 7B</b></td><td>ByteDance · Seed</td><td>reasoning</td><td>Apache-2.0</td>
+              <td>32.8B | 7.6B<br><span class="dim">not published</span></td><td>2025-09 / 2025-10</td>
+              <td class="g">BFS-Prover-V2-32B · -7B<br>7B Q4 ≈ 4.5 GB; 32B Q4 ≈ 18 GB</td><td>single 24 GB card</td>
+            </tr>
+            <tr>
+              <td><b>Qwen-AgentWorld-35B-A3B / Tongyi-DeepResearch-30B-A3B</b></td><td>Alibaba · Qwen</td><td>reasoning · general</td><td>Apache-2.0</td>
+              <td>36.0B / 3B active<br><span class="dim">not published</span></td><td>2025-09 / 2026-06</td>
+              <td class="g">Qwen-AgentWorld-35B-A3B · Tongyi-DeepResearch-30B-A3B<br>Q4 ≈ 21 GB</td><td>multi-GPU / large RAM</td>
+            </tr>
+            <tr>
+              <td><b>BitCPM-CANN (bit-level edge model)</b></td><td>OpenBMB</td><td>edge</td><td>Apache-2.0</td>
+              <td>0.5B / 1B / 3B / 8B<br><span class="dim">not published</span></td><td>2026-05</td>
+              <td class="g">BitCPM-CANN-0.5B / 1B / 3B / 8B (official GGUF for 1B and 8B)<br>1B Q4 ≈ 0.6 GB; 8B Q4 ≈ 4.5 GB</td><td>single 24 GB card</td>
             </tr>
           </tbody>
         </table>

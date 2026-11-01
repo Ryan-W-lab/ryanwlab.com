@@ -34,3 +34,16 @@ Chinese/English forms added with 1–500 Unicode code points, optional 20-charac
 Eight Node/SQLite tests passed: quota, bursts, retries, midnight reset, input/body limits, origins/methods/configuration, SQL-text safety, database failure and scheduled cleanup. Browser integration on loopback confirmed successful submission and clearing, disabling submission at 501 characters, and preserving text after a cooldown rejection; the English form also rendered correctly. Cloudflare production runtime, D1 binding and mobile devices remain unverified. No production deployment or GitHub push occurred.
 
 Public endpoint configuration is intentionally empty until deployment: the source form is disabled and never reports a fake success. The dedicated preview uses an in-memory SQLite adapter and a loopback-only API. Static builds use an explicit public-file allowlist; backend sources and local secrets are excluded.
+
+## Maintenance tooling — 2026-11-01
+
+New checks and tools, so that maintenance does not depend on remembering to run things by hand:
+
+- `scripts/check_i18n.py` (new): compares the hand-written Chinese and English pages — chapter ids and order, heading counts, message-box widget ids, the character-limit hint, the visitor-facing quota note, and the absence of the internal wording that was removed on 2026-11-01. Verified by deliberately breaking the English copy (removed note, reworded hint): the script reported both defects and exited non-zero.
+- `scripts/list-messages.sh` (extended): `--watch` refreshes the production inbox every 30 seconds (`--watch 10` for 10 seconds); argument parsing accepts an optional row count. Still a read-only SELECT and still credential-free.
+- `scripts/backup-messages.sh` (new): exports the inbox to `backups/messages-<timestamp>.csv` (`--days N` for a recent window). `backups/` is now excluded by `.gitignore`; the export contains nicknames and message bodies, so it is personal data that must stay local.
+- `.github/workflows/ci.yml` (new): runs `check_site.py`, `check_i18n.py` and `node --test tests/messages.test.mjs` on every push and pull request against `main`, plus a separate non-blocking production smoke test that checks both pages return HTTP 200 and still carry the message endpoint and the message form.
+
+Validation of the above on this machine: `python3 scripts/check_site.py` passed, `python3 scripts/check_i18n.py` passed (19 chapters / 20 h2 in both languages), `node --test tests/messages.test.mjs` 8/8 passed, `scripts/list-messages.sh` and `scripts/backup-messages.sh` both returned the four messages currently stored in the production database, and `git diff --check` passed.
+
+Limits: the GitHub Actions workflow has been written and committed but has not yet run on GitHub; the production smoke test was exercised manually against the live site rather than through Actions. Cloudflare observability is still disabled, so submission volume and error rates are not measured anywhere.

@@ -70,6 +70,31 @@ npx wrangler deploy
 
 ## 查看留言
 
+### 终端（推荐）
+
+```sh
+scripts/list-messages.sh              # 最近 20 条
+scripts/list-messages.sh 100          # 最近 100 条
+scripts/list-messages.sh --watch      # 每 30 秒自动刷新（Ctrl-C 退出）
+scripts/list-messages.sh --watch 10   # 每 10 秒刷新
+```
+
+脚本只执行 SELECT，不写入、不删除任何留言，也不含任何密钥：它复用本机 Cloudflare
+OAuth 登录态（`~/Library/Preferences/.wrangler/config/default.toml`，在仓库之外），
+首次使用需先执行 `npx wrangler@4.156.0 login`（浏览器授权）。
+
+### 备份
+
+```sh
+scripts/backup-messages.sh            # 导出全部到 backups/messages-<时间戳>.csv
+scripts/backup-messages.sh --days 30  # 只导出最近 30 天
+```
+
+90 天后留言会被定时任务清理，需要长期留档请定期导出。备份含昵称与留言正文，
+属于个人数据：`backups/` 已被 `.gitignore` 排除，存本机、别入库、别上传。
+
+### 网页控制台
+
 Cloudflare 控制台 → Workers & Pages → D1 → ryanwlab-messages → Studio → 选择 `inbox`，即可查看北京时间、昵称、留言。也可在 Console 运行：
 
 ```sql

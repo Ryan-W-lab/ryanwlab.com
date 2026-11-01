@@ -172,7 +172,8 @@ h1.title,h2.title{font-family:var(--sans);font-weight:700;line-height:1.15;lette
 h2.title{font-size:clamp(1.6rem,3.6vw,2.5rem);margin:20px 0 8px;
   background:linear-gradient(90deg,#eafcff,var(--cyan) 45%,var(--green));
   -webkit-background-clip:text;background-clip:text;color:transparent;}
-.lead{color:var(--txt-mut);font-size:clamp(.95rem,1.5vw,1.06rem);max-width:820px;}
+.lead{color:var(--txt-mut);font-size:clamp(.95rem,1.5vw,1.06rem);max-width:960px;
+  text-align:justify;text-justify:inter-ideograph;}
 .sect-head{margin-bottom:34px;}
 .sect-head .line{width:64px;height:2px;background:linear-gradient(90deg,var(--green),transparent);margin-top:16px;}
 
@@ -281,7 +282,9 @@ table.tbl{border-collapse:collapse;width:100%;min-width:760px;font-size:.86rem;}
 .term .bar .dots span:nth-child(1){background:#ff5f57;}
 .term .bar .dots span:nth-child(2){background:#febc2e;}
 .term .bar .dots span:nth-child(3){background:#28c840;}
-.term pre{background:#060a11;color:#cfe9dd;padding:16px 20px;overflow-x:auto;font-size:.84rem;line-height:1.6;margin:0;}
+.term pre{background:#060a11;color:#cfe9dd;padding:16px 20px;overflow-x:auto;font-size:.84rem;line-height:1.6;margin:0;
+  text-align:left;text-justify:auto;}
+pre,code{text-align:left;text-justify:auto;}
 .term pre .c{color:var(--green);}
 .term pre .o{color:var(--txt-dim);}
 .term pre .cm{color:var(--txt-mut);font-style:italic;}
@@ -302,7 +305,7 @@ table.tbl{border-collapse:collapse;width:100%;min-width:760px;font-size:.86rem;}
 .acc[open] summary .exp{transform:rotate(45deg);}
 .acc .body{margin:0 18px 16px;padding:14px 0 4px;color:var(--txt-mut);
   font-size:.9rem;border-top:1px dashed var(--line);}
-.acc .body p{margin-bottom:8px;}
+.acc .body p{margin-bottom:8px;text-align:justify;text-justify:inter-ideograph;}
 /* 许可 / license tag */
 .lic{font-size:.7rem;padding:2px 8px;border-radius:4px;border:1px solid;font-weight:700;}
 .lic.mit{color:var(--green);border-color:rgba(51,255,140,.5);}
@@ -315,6 +318,7 @@ table.tbl{border-collapse:collapse;width:100%;min-width:760px;font-size:.86rem;}
 .callout.warn{border-color:var(--amber);background:rgba(255,180,84,.06);}
 .callout.g{border-color:var(--green);background:rgba(51,255,140,.05);}
 .callout .head{font-weight:700;color:var(--cyan);display:block;margin-bottom:4px;}
+.callout p,.callout li{text-align:justify;text-justify:inter-ideograph;}
 .callout.warn .head{color:var(--amber);}
 .callout.g .head{color:var(--green);}
 

@@ -366,6 +366,65 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         Flash sibling of the same family (GLM-5.3-Flash, MiniMax M3.1-Flash, DeepSeek-V4.1-Flash &mdash; all in the list below),
         or lean on community quantizations with CPU offload, or call the vendor API.</div>
 
+      <h3 class="lvl-sub">Closed-source flagships (API / subscription only) <span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">These have <b>no downloadable weights</b> &mdash; you cannot run them
+      locally &mdash; but they are worth tracking: they mark the capability ceiling and show how far the open-weight
+      versions still have to climb. Prices are the official per-million-token rates observed on 2026&#8209;11-01 (in / out).</p>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>Flagship</th><th>Vendor</th><th>Released</th><th>Context</th><th>Access</th><th class="g">Price (in / out)</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><b>GPT-6 Astra</b></td><td>OpenAI</td><td>2026&#8209;09</td><td>1.05M</td><td>API / ChatGPT / enterprise</td><td class="g">$10 / $50</td>
+              <td>Positioned by the vendor as the strongest model; no custom temperature</td></tr>
+            <tr><td><b>GPT-6.1 Sol</b></td><td>OpenAI</td><td>2026&#8209;09</td><td>&mdash;</td><td>API / ChatGPT</td><td class="g">$2 / $10</td>
+              <td>Close to Astra at lower cost; multi-agent (beta)</td></tr>
+            <tr><td><b>GPT-6 Luna</b></td><td>OpenAI</td><td>2026&#8209;09</td><td>&mdash;</td><td>API / Decisions API</td><td class="g">$0.10 / $0.50</td>
+              <td>Highest-throughput tier; the only launch model of the Decisions API</td></tr>
+            <tr><td><b>Claude Fable 5.1</b></td><td>Anthropic</td><td>2026&#8209;09</td><td>1M</td><td>API / Bedrock / AWS / Google Cloud / Foundry</td><td class="g">$10 / $50</td>
+              <td>Vendor calls it the strongest model for coding and knowledge work; 30-day data retention required</td></tr>
+            <tr><td><b>Claude Opus 5.5</b></td><td>Anthropic</td><td>2026&#8209;09</td><td>1M</td><td>same</td><td class="g">$4 / $20</td>
+              <td>Leads on agentic coding; ~40% cheaper than Opus 5 on typical loads, per the vendor</td></tr>
+            <tr><td><b>Claude Sonnet 5.5</b></td><td>Anthropic</td><td>2026&#8209;09</td><td>1M</td><td>same</td><td class="g">$2 / $10</td>
+              <td>Vendor states 30%+ faster than Sonnet 5</td></tr>
+            <tr><td><b>Claude Haiku 5.5</b></td><td>Anthropic</td><td>2026&#8209;10</td><td>1M</td><td>same</td><td class="g">from $0.10 / $0.50</td>
+              <td>&ldquo;The fastest, most capable small model&rdquo; &mdash; summarising, sub-agents, browser use</td></tr>
+            <tr><td><b>Gemini 4 Argon</b></td><td>Google</td><td>2026&#8209;09</td><td>1M</td><td>Gemini API / AI Studio / AI Ultra</td><td class="g">$2 / $10 (promo)</td>
+              <td>Frontier for real-world coding, enterprise knowledge work and cyber defence</td></tr>
+            <tr><td><b>Gemini 4 Carbon</b></td><td>Google</td><td>2026&#8209;10</td><td>&mdash;</td><td class="r">not open to developers yet</td><td class="g">$4 / $20</td>
+              <td>Cited by the vendor as topping Artificial Analysis v5.0, but currently limited to specific programme users</td></tr>
+            <tr><td><b>Grok 4.7</b></td><td>xAI</td><td>2026&#8209;09</td><td>500K</td><td>API / Grok App / Grok Build / Bedrock</td><td class="g">$2 / $6</td>
+              <td>Vendor calls it the strongest coding and knowledge-work model to date, at twice the speed and half the price</td></tr>
+            <tr><td><b>Muse Wonder</b></td><td>Meta</td><td>2026&#8209;10</td><td>1,048,576</td><td>Meta Model API (still preview)</td><td class="g">$4 / $20</td>
+              <td>The flagship of Meta's hosted API; a subscription-only tier sits above it</td></tr>
+            <tr><td><b>Mistral Large 4</b></td><td>Mistral</td><td>2026&#8209;10</td><td>&mdash;</td><td>Mistral Platform</td><td class="g">not confirmed</td>
+              <td>Vendor calls it the most advanced open-weight multimodal general model &mdash; but under its own restricted licence</td></tr>
+            <tr><td><b>DeepSeek V4-Pro / Flash</b></td><td>DeepSeek</td><td>2026&#8209;08 / 10</td><td>1M (384K max output)</td><td>API (OpenAI and Anthropic formats)</td><td class="g">$0.66 / $1.98 | $0.15 / $0.60</td>
+              <td>Introduces peak/off-peak pricing (UTC weekdays 01&ndash;04 and 06&ndash;10 cost double)</td></tr>
+            <tr><td><b>Qwen3.8-Max</b></td><td>Alibaba &middot; Qwen</td><td>2026&#8209;08</td><td>1,000,000</td><td>QwenCloud API / Qwen Chat / QwenWork</td><td class="g">$1.65 in</td>
+              <td>2.4T total / 95B active; vendor claims it can code autonomously for ten days straight</td></tr>
+            <tr><td><b>Kimi K3.1 Pro</b></td><td>Moonshot</td><td>2026&#8209;10</td><td>1M</td><td>Kimi API / app / membership</td><td class="g">membership (1M needs a high tier)</td>
+              <td>Vendor calls it the strongest 3T-class model &mdash; and <b>it is itself an open-weight model</b></td></tr>
+            <tr><td><b>GLM-5.3</b></td><td>Z.ai</td><td>2026&#8209;10</td><td>1M (128K max output)</td><td>Z.ai API / coding plan</td><td class="g">$1.4 / $4.4</td>
+              <td>Same base model as GLM-5.2, gains from post-training only; vendor claims +50% on Code Bench</td></tr>
+            <tr><td><b>ERNIE 5.1</b></td><td>Baidu</td><td>2026&#8209;05</td><td>128K</td><td>Qianfan API / Wenxin</td><td class="g">not confirmed</td>
+              <td>Vendor claims leading results at 6% of comparable pretraining cost, using decoupled fully-async RL</td></tr>
+            <tr><td><b>Seed 2.1 / Seedance 2.5</b></td><td>ByteDance</td><td>2026&#8209;06 / 07</td><td>&mdash;</td><td>Volcano Ark / Doubao / Coze</td><td class="g">not confirmed</td>
+              <td>Seedance 2.5 generates 30-second narratives in one pass and supports multi-turn continuation</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warn"><span class="head">&ldquo;It is in the model catalogue&rdquo; does not mean the product line is alive</span>
+        OpenAI's <b>Sora 2 and the entire Videos API were shut down on 2026-09-24</b>, and the deprecation notice
+        states there is no one-for-one replacement API. Closed access in 2026 actually has three layers: fully public
+        APIs, <b>restricted APIs</b> (Gemini 4 Carbon is still out of reach for developers, Claude Mythos is limited to
+        a specific programme, GPT-6 Rosalind needs approval), and models that are never released at all.
+        Check which layer you are in before planning around a model.</div>
+      <div class="callout g"><span class="head">A counter-intuitive trend: closed flagships are opening their weights</span>
+        From late 2026 on, the Qwen3.8-Max tier <b>opened its weights for the first time</b>, Moonshot's current
+        flagship Kimi K3 is itself an open-weight model, GLM-5.3 is listed as open-weight on the vendor's own
+        platform, and Tencent's Hy series shipped to the open-source community on day one.
+        <b>So do not pick a vendor by &ldquo;are they closed&rdquo; &mdash; check what weights they released in the last six months.</b></div>
+
       <h3 class="lvl-sub">Models you can actually run locally (by VRAM) <span class="lvl core">CORE</span></h3>
       <p class="en-note">VRAM figures are estimates after quantization. They shift with engine, context length and KV-cache settings &mdash; always trust your own <code>ollama ps</code> / <code>nvidia-smi</code>. Verify licences and parameter counts against the publisher's repository, Ollama or Hugging Face. <b>Model details on this page were verified on 2026-11-01</b>; re-check the publisher repository before commercial use.</p>
       <div class="tbl-scroll">

@@ -383,6 +383,62 @@ ollama run qwen3:1.7b</pre></div>
         再往上就是数据中心量级，进不了这一档。想在本地拿到同等能力，路径是：① 找同家的低激活 / Flash 版（GLM-5.3-Flash、MiniMax M3.1-Flash、DeepSeek-V4.1-Flash，见下表）；
         ② 用社区量化 + CPU offload 硬扛；③ 或者直接用厂商 API。</div>
 
+      <h3 class="lvl-sub">闭源旗舰（只能走 API / 订阅，看行业上限）<span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">这些模型<b>没有可下载的权重</b>，本地跑不了，但值得知道它们在哪 ——
+      既是能力上限的参照，也决定开源版还差多少。价格均为 2026&#8209;11-01 观测到的官方定价（每百万 token，输入/输出）。</p>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>旗舰</th><th>厂商</th><th>发布</th><th>上下文</th><th>访问方式</th><th class="g">价格（输入/输出）</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>GPT-6 Astra</b></td><td>OpenAI</td><td>2026&#8209;09</td><td>1.05M</td><td>API / ChatGPT / 企业</td><td class="g">$10 / $50</td>
+              <td>官方定位"最强模型"；不支持自定义 temperature</td></tr>
+            <tr><td><b>GPT-6.1 Sol</b></td><td>OpenAI</td><td>2026&#8209;09</td><td>—</td><td>API / ChatGPT</td><td class="g">$2 / $10</td>
+              <td>接近 Astra 的性能、更低成本；支持多 agent（beta）</td></tr>
+            <tr><td><b>GPT-6 Luna</b></td><td>OpenAI</td><td>2026&#8209;09</td><td>—</td><td>API / Decisions API</td><td class="g">$0.10 / $0.50</td>
+              <td>最高吞吐档；Decisions API 唯一首发模型</td></tr>
+            <tr><td><b>Claude Fable 5.1</b></td><td>Anthropic</td><td>2026&#8209;09</td><td>1M</td><td>API / Bedrock / AWS / Google Cloud / Foundry</td><td class="g">$10 / $50</td>
+              <td>官方称编码与知识工作最强；需 30 天数据保留</td></tr>
+            <tr><td><b>Claude Opus 5.5</b></td><td>Anthropic</td><td>2026&#8209;09</td><td>1M</td><td>同上</td><td class="g">$4 / $20</td>
+              <td>agentic 编码领先；官方称典型负载比 Opus 5 便宜约 40%</td></tr>
+            <tr><td><b>Claude Sonnet 5.5</b></td><td>Anthropic</td><td>2026&#8209;09</td><td>1M</td><td>同上</td><td class="g">$2 / $10</td>
+              <td>官方称比 Sonnet 5 快 30%+</td></tr>
+            <tr><td><b>Claude Haiku 5.5</b></td><td>Anthropic</td><td>2026&#8209;10</td><td>1M</td><td>同上</td><td class="g">$0.10 / $0.50 起</td>
+              <td>"最快最强的小模型"，面向摘要与子 agent</td></tr>
+            <tr><td><b>Gemini 4 Argon</b></td><td>Google</td><td>2026&#8209;09</td><td>1M</td><td>Gemini API / AI Studio / AI Ultra</td><td class="g">$2 / $10（促销）</td>
+              <td>真实世界编码、企业知识工作、网络安全防御的前沿</td></tr>
+            <tr><td><b>Gemini 4 Carbon</b></td><td>Google</td><td>2026&#8209;10</td><td>—</td><td class="r">尚未对开发者开放</td><td class="g">$4 / $20</td>
+              <td>官方引用 Artificial Analysis v5.0 榜首，但目前只给特定计划用户</td></tr>
+            <tr><td><b>Grok 4.7</b></td><td>xAI</td><td>2026&#8209;09</td><td>500K</td><td>API / Grok App / Grok Build / Bedrock</td><td class="g">$2 / $6</td>
+              <td>官方称迄今最强编码与知识工作模型，速度翻倍、价格减半</td></tr>
+            <tr><td><b>Muse Wonder</b></td><td>Meta</td><td>2026&#8209;10</td><td>1,048,576</td><td>Meta Model API（仍为 preview）</td><td class="g">$4 / $20</td>
+              <td>Meta 托管 API 的旗舰；另有一档仅订阅制</td></tr>
+            <tr><td><b>Mistral Large 4</b></td><td>Mistral</td><td>2026&#8209;10</td><td>—</td><td>Mistral Platform</td><td class="g">官方未确认</td>
+              <td>官方称最先进的开放权重通用多模态模型，但用的是自有限制许可</td></tr>
+            <tr><td><b>DeepSeek V4-Pro / Flash</b></td><td>DeepSeek</td><td>2026&#8209;08 / 10</td><td>1M（最大输出 384K）</td><td>API（OpenAI 与 Anthropic 两种格式）</td><td class="g">$0.66 / $1.98 ｜ $0.15 / $0.60</td>
+              <td>引入了峰时/离峰双价制（UTC 工作日 01–04、06–10 为峰时翻倍）</td></tr>
+            <tr><td><b>Qwen3.8-Max</b></td><td>阿里 · 通义</td><td>2026&#8209;08</td><td>1,000,000</td><td>QwenCloud API / 千问 / QwenWork</td><td class="g">输入 $1.65</td>
+              <td>2.4T 总参 / 95B 激活；官方称可连续自主编码十天以上</td></tr>
+            <tr><td><b>Kimi K3.1 Pro</b></td><td>月之暗面</td><td>2026&#8209;10</td><td>1M</td><td>Kimi API / App / 会员</td><td class="g">会员制（1M 上下文需高档位）</td>
+              <td>官方称迄今最强的 3T 级模型；<b>注意它本身就是开放权重模型</b></td></tr>
+            <tr><td><b>GLM-5.3</b></td><td>智谱 Z.ai</td><td>2026&#8209;10</td><td>1M（最大输出 128K）</td><td>Z.ai API / 编程套餐</td><td class="g">$1.4 / $4.4</td>
+              <td>与 GLM-5.2 共用 base model、提升全靠后训练；官方称 Code Bench +50%</td></tr>
+            <tr><td><b>ERNIE 5.1</b></td><td>百度</td><td>2026&#8209;05</td><td>128K</td><td>千帆 API / 文心</td><td class="g">官方未确认</td>
+              <td>官方称以可比模型 6% 的预训练成本达到领先表现（分离式全异步 RL）</td></tr>
+            <tr><td><b>Seed 2.1 / Seedance 2.5</b></td><td>字节跳动</td><td>2026&#8209;06 / 07</td><td>—</td><td>火山方舟 / 豆包 / Coze</td><td class="g">官方未确认</td>
+              <td>Seedance 2.5 一次生成 30 秒长叙事并支持多轮续写</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warn"><span class="head">「模型目录里有」不等于「这条产品线还活着」</span>
+        OpenAI 的 <b>Sora 2 与整个 Videos API 已于 2026-09-24 关停</b>，官方弃用说明写明"没有一对一的替代 API"。
+        2026 年的闭源访问其实分三层：完全公开的 API、<b>受限的 API</b>（Gemini 4 Carbon 开发者至今拿不到，
+        Claude Mythos 只对特定计划限量，GPT-6 Rosalind 需审批）、以及完全不公开的模型。
+        查模型时要看清楚自己属于哪一层。</div>
+      <div class="callout g"><span class="head">一个反直觉的趋势：闭源旗舰正在主动开源</span>
+        2026 年下半年起，Qwen3.8-Max 级别<b>首次开放权重</b>、Moonshot 的当代旗舰 Kimi K3 本身就是开放权重模型、
+        GLM-5.3 在官方平台被标注为开放权重、腾讯 Hy 系列首日即上架开源社区。
+        <b>选型时别只看「谁闭源」—— 先看这一家最近半年放了什么权重出来。</b></div>
+
       <h3 class="lvl-sub">本地可部署清单（按显存从小到大）<span class="lvl core">CORE</span></h3>
       <div class="filterrow" role="group" aria-label="按用途筛选模型">
         <button class="fbtn on" data-filter="all">★ 全部</button>

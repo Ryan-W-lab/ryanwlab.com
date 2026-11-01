@@ -105,8 +105,9 @@ for label, text, needle in (
 ):
     check(needle in text, f"{label}页缺少每日额度说明（未找到 {needle!r}）")
 
-# 7. §04 模型区：前沿表行数中英一致；中文模型墙（JS 渲染）条数 = 英文本地清单行数。
+# 7. §04 模型区：各表行数中英一致；中文模型墙（JS 渲染）条数 = 英文本地清单行数。
 #    注意：中文页的本地清单是 JS 卡片墙（没有 <table>），英文页是静态表格，两者靠条数对齐。
+#    §04 的表格顺序：前沿超大模型 → 闭源旗舰 → 本地可部署清单（仅英文有第三张表）。
 def section(text, start_marker, end_marker):
     i = text.index(start_marker)
     j = text.index(end_marker, i)
@@ -138,26 +139,31 @@ en_tables = table_bodies(en_models)
 
 check(len(zh_tables) >= 1, "中文页 §04 缺少前沿超大模型表")
 check(len(en_tables) >= 2, "英文页 §04 缺少前沿表或本地清单表")
-if zh_tables and len(en_tables) >= 2:
+
+# 前沿表、闭源表：逐个对应比较行数
+for index in range(min(len(zh_tables), len(en_tables))):
     check(
-        count_rows(zh_tables[0]) == count_rows(en_tables[0]),
-        f"前沿超大模型表行数不一致: 中文 {count_rows(zh_tables[0])}, 英文 {count_rows(en_tables[0])}",
+        count_rows(zh_tables[index]) == count_rows(en_tables[index]),
+        f"§04 第 {index + 1} 张表行数不一致: 中文 {count_rows(zh_tables[index])}, 英文 {count_rows(en_tables[index])}",
     )
-    # 中文页面板是 JS 渲染的：assets/js/main.js 里的卡片数必须等于英文本地清单的行数
+
+# 英文最后一张表是本地可部署清单，对应中文的 JS 卡片墙
+if zh_tables and len(en_tables) >= 2:
+    local_table = en_tables[-1]
     js_path = ROOT / "assets" / "js" / "main.js"
     js_source = js_path.read_text(encoding="utf-8")
     js_names = re.findall(r'\{\s*n:"([^"]+)"', js_source)
     js_cards = len(js_names)
     check(
-        js_cards == count_rows(en_tables[1]),
-        f"本地清单条数不一致: 中文卡片墙 {js_cards} 个, 英文表格 {count_rows(en_tables[1])} 行",
+        js_cards == count_rows(local_table),
+        f"本地清单条数不一致: 中文卡片墙 {js_cards} 个, 英文表格 {count_rows(local_table)} 行",
     )
 
     # 逐条比对模型标识（取含数字的型号 token），防止两边名单悄悄错位
     def tokens(name):
         return {t for t in re.findall(r"[A-Za-z][A-Za-z0-9]*(?:[-.][A-Za-z0-9]+)*", name) if any(c.isdigit() for c in t)}
 
-    en_names = re.findall(r"<td><b>([^<]+)</b></td>", en_tables[1])
+    en_names = re.findall(r"<td><b>([^<]+)</b></td>", local_table)
     js_tokens = [tokens(n) for n in js_names]
     for name in en_names:
         want = tokens(name)

@@ -98,7 +98,18 @@ print(f"模型总数 {len(entries)}｜档位分布 {dict(dist)}")
 srcs = Counter(urlparse(s).netloc for *_, s in entries)
 print("来源域名:", dict(srcs))
 
-# --- 5. 留言框相关文案仍一致 ---
+# --- 5. 首屏统计不能写死模型数量 ---
+for label, page in (("中文页", zh), ("英文页", en)):
+    check(
+        'data-count-src="models"' in page,
+        f"{label}: 首屏的模型款数没有跟随目录长度（会随改模型而过期）",
+    )
+    check(
+        not re.search(r'data-count="1[0-9]"[^>]*>0</span>款', page) or 'data-count-src="models"' in page,
+        f"{label}: 首屏模型款数是写死的数字",
+    )
+
+# --- 6. 留言框相关文案仍一致 ---
 for label, page, needle in (("中文页", zh, "每天最多提交 3 条"), ("英文页", en, "3 messages per network address")):
     check(needle in page, f"{label}: 留言额度说明丢失")
     check("message-note" in page, f"{label}: 留言额度说明 id 丢失")

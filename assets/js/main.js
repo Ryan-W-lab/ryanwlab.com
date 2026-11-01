@@ -734,6 +734,9 @@
       sizes:"facebook/MobileMoE-L / -M / -S-Base（需申请）", gpu:"1.26B Q4≈0.7GB",
       source:"https://huggingface.co/facebook/MobileMoE-L-Base" },
   ];
+  // 首屏统计里的「模型款数」直接取目录长度 —— 以后加模型不会再忘了改数字
+  $$("[data-count-src='models']").forEach((n) => { n.dataset.count = String(ARS.length); });
+
   const wall = $("#mwall");
   const stat = $("#mstat");
   const escHtml = (s) => String(s)

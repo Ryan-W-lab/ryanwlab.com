@@ -24,9 +24,29 @@
   Qwen3.8-Flash-Next（125B-A6B）、Mistral Medium 3.5（128B 稠密）、DeepSeek-V3.2、
   Nemotron 3.5 Bolt、granite4.2 / Nemotron Nano、MedGemma 1.5 / MiniCPM-V 4.6。
 - §03 硬件表从 5 档扩到 6 档，新增「48–96GB 单/双专业卡」与「96GB+ 多卡服务器」两档。
-- `scripts/check_i18n.py` 增加模型名单对齐检查：前沿表行数中英必须一致，
+- `scripts/check_i18n.py` 增加模型名单对齐检查：各表按 `id` 配对比较行数，
   中文 JS 卡片墙的条数必须等于英文本地清单行数，并按型号 token 逐条比对 ——
   防止两页名单悄悄错位（本次就是靠它发现英文表格被覆盖的失误）。
+- 新增 `scripts/gen_model_catalogue.py`：**中英两份清单改为由单一数据源生成**，
+  每个模型一条记录同时给出中英两种写法与全部字段。此前两份是手工维护，
+  正是「英文表格被覆盖」的根源。
+- §04 扩为六个板块：前沿超大模型（开放权重、单机跑不动）· 闭源旗舰（只能走 API）·
+  本地可部署清单（LLM，35 个）· 嵌入与重排 · 语音 · 视频与 3D。
+- 闭源旗舰表收录 18 个前沿模型（GPT-6 系、Claude 5.5 系、Gemini 4、Grok 4.7、
+  Muse Wonder、Mistral Large 4、DeepSeek V4、Qwen3.8-Max、Kimi K3.1 Pro、GLM-5.3、
+  ERNIE 5.1、Seed 2.1 等），并写明 2026-11-01 观测到的官方定价。
+- 垂直模型三张表补上手册一直缺的领域：嵌入/重排（Qwen3 系、jina v5、BGE-M3、
+  gte、EmbeddingGemma 2）、语音（Qwen3-ASR/TTS/Omni、GLM-ASR-Nano、Fun-ASR-Nano、
+  SenseVoice、FireRedASR2、omniASR、Voxtral）、视频与 3D（Wan2.2、HunyuanVideo-1.5、
+  LTX-2.x、TRELLIS.2）。
+- 本地清单从 21 个扩到 35 个，补入 Step 3.5/3.7 Flash、Ling 3.0/3.1、
+  Hy-SimulMT、ERNIE 4.5、Command A+、Mistral Large 4、Ministral 3、
+  Nemotron 3.5 Super/Lightning/Bolt、GLM-4.6V、MiniCPM-V 4.7、Step3-VL-10B、
+  DeepSeek-OCR-2、EXAONE 4.5、Intern-S1、SmolLM3、Devstral Small 2 等。
+- **许可一律以 Hugging Face 模型卡 API 实测为准**，不采信二手转述：实测发现
+  GLM-5.3 是 `other`（专有）而 GLM-5.3-Flash 是 `mit`；Mistral Large 4 是 `other`；
+  Qwen3.8-27B 是 Apache-2.0 而 2.4T 版是 `other`。据此修正了「GLM-5.3 属 MIT」
+  的错误说法，并纠正 Kimi K3.1 Pro「已开放权重」的表述（公开权重仓库尚未上线）。
 - §04 免责声明加上**核对日期**，首次部署建议改用当前模型。
 - §13 厂商表、时间线、11 处「现役视角」段落更新到 2026-11。
 

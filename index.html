@@ -1352,7 +1352,7 @@ model = peft.get_peft_model(base, peft.LoraConfig(
     <label for="message-text">留言内容</label>
     <textarea id="message-text" name="message" rows="6" required aria-describedby="message-count message-note" placeholder="比如：我的模型能加载，但回复特别慢，希望你做一期排查教程。"></textarea>
     <div class="message-meta"><span>1—500 个字符</span><output id="message-count" for="message-text">0 / 500</output></div>
-    <p id="message-note" class="message-note">同一网络地址每天最多提交 3 条，两次提交之间至少间隔 60 秒。</p>
+    <p id="message-note" class="message-note">同一网络地址每天最多提交 3 条，两次提交之间至少间隔 60 秒。留言仅站长可见，90 天后自动删除，不会公开也不会自动回复。</p>
     <button type="submit" class="btn btn-primary" disabled>提交留言</button>
     <p id="message-status" role="status" aria-live="polite">留言箱尚未接通，暂时无法提交。</p>
     <noscript><p>请启用 JavaScript 后提交留言。</p></noscript>
@@ -1370,7 +1370,8 @@ model = peft.get_peft_model(base, peft.LoraConfig(
     <li><b>2026-09-18</b> 修复 LICENSE 乱码、页脚字标与英文拼写。</li>
   </ul>
   <p>完整记录见 <a href="https://github.com/Ryan-W-lab/ryanwlab.com/blob/main/CHANGELOG.md" target="_blank" rel="noopener">更新日志</a> ·
-  源码与反馈 <a href="https://github.com/Ryan-W-lab/ryanwlab.com" target="_blank" rel="noopener">GitHub</a></p>
+  源码与反馈 <a href="https://github.com/Ryan-W-lab/ryanwlab.com" target="_blank" rel="noopener">GitHub</a> ·
+  下次内容复核：<b>2027-02-01</b></p>
 </aside>
 <footer>
   <div class="fwrap">

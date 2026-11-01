@@ -351,8 +351,10 @@ ollama run qwen3:1.7b</pre></div>
         <span class="tag">§04 // ARMORY</span>
         <h2 class="title">模型武器库：能本地跑的，和跑不动但该知道的</h2>
         <div class="line"></div>
-        <p class="lead">分两块看：上面是 <span class="hl">前沿超大模型</span>（能力上限，单机跑不动，本地党用同家的低激活/Flash 版或 API 平替）；
-        下面是 <b>本地可部署清单</b> —— 从 1GB 端侧到 4 张 80GB 专业卡都算，含大量 Flash 与低激活中大模型。
+        <p class="lead">分六块看：<span class="hl">前沿超大模型</span>（开放权重但单机跑不动，看趋势）·
+        <b>闭源旗舰</b>（只能走 API，看行业上限）·
+        <b>本地可部署清单</b>（LLM，从 1GB 端侧到 4 张 80GB 卡，含大量 Flash 与低激活中大模型）·
+        <b>嵌入与重排</b> · <b>语音</b> · <b>视频与 3D</b>。
         显存均按量化后估算；追求精度请直接看官方仓库与许可。</p>
       </div>
 
@@ -419,7 +421,7 @@ ollama run qwen3:1.7b</pre></div>
             <tr><td><b>Qwen3.8-Max</b></td><td>阿里 · 通义</td><td>2026&#8209;08</td><td>1,000,000</td><td>QwenCloud API / 千问 / QwenWork</td><td class="g">输入 $1.65</td>
               <td>2.4T 总参 / 95B 激活；官方称可连续自主编码十天以上</td></tr>
             <tr><td><b>Kimi K3.1 Pro</b></td><td>月之暗面</td><td>2026&#8209;10</td><td>1M</td><td>Kimi API / App / 会员</td><td class="g">会员制（1M 上下文需高档位）</td>
-              <td>官方称迄今最强的 3T 级模型；<b>注意它本身就是开放权重模型</b></td></tr>
+              <td>官方称迄今最强的 3T 级模型；官方称其开放权重，但公开权重仓库尚未上线</td></tr>
             <tr><td><b>GLM-5.3</b></td><td>智谱 Z.ai</td><td>2026&#8209;10</td><td>1M（最大输出 128K）</td><td>Z.ai API / 编程套餐</td><td class="g">$1.4 / $4.4</td>
               <td>与 GLM-5.2 共用 base model、提升全靠后训练；官方称 Code Bench +50%</td></tr>
             <tr><td><b>ERNIE 5.1</b></td><td>百度</td><td>2026&#8209;05</td><td>128K</td><td>千帆 API / 文心</td><td class="g">官方未确认</td>

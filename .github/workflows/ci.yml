@@ -1,0 +1,52 @@
+name: Site checks
+
+# 每次 push 与 PR 都跑一遍本地校验脚本。
+# 这些脚本此前只能靠人手跑，交接后最容易漏的就是这一环。
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  checks:
+    name: Repository checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Link, anchor and example-source checks
+        run: python3 scripts/check_site.py
+
+      - name: Chinese / English parity checks
+        run: python3 scripts/check_i18n.py
+
+      - name: Message backend regression tests
+        run: node --test tests/messages.test.mjs
+
+  smoke:
+    name: Production smoke test
+    runs-on: ubuntu-latest
+    # 线上不可用时单独标记，不阻断上面的代码校验结果
+    continue-on-error: true
+    steps:
+      - name: Site is reachable and the message box is wired
+        run: |
+          set -euo pipefail
+          for url in https://ryanwlab.com/ https://ryanwlab.com/en/; do
+            code=$(curl -sS -o /tmp/page.html -w '%{http_code}' --max-time 20 "$url")
+            echo "$url -> HTTP $code"
+            [ "$code" = "200" ] || { echo "non-200 for $url"; exit 1; }
+            grep -q 'name="message-api" content="https://' /tmp/page.html \
+              || { echo "message-api endpoint missing on $url"; exit 1; }
+            grep -q 'id="message-form"' /tmp/page.html \
+              || { echo "message form missing on $url"; exit 1; }
+          done

@@ -360,7 +360,7 @@ ollama run qwen3:1.7b</pre></div>
       <p class="lead" style="margin-top:10px">2025 年底至今，旗舰把总参推到 <b>千亿到万亿</b>、上下文推到 <b>1M</b>。
       它们代表能力上限，但量化后仍要数百 GB 起步 —— <b>把它们当趋势看，别当本地清单看</b>。</p>
       <div class="tbl-scroll">
-        <table class="tbl">
+        <table class="tbl" id="tbl-frontier">
           <thead><tr><th>模型</th><th>厂商</th><th>总参 / 激活</th><th>上下文</th><th>许可</th><th class="g">本地门槛（Q4 估算）</th></tr></thead>
           <tbody>
             <tr><td><b>DeepSeek-V4-Pro</b></td><td>DeepSeek</td><td>1.6T / 49B</td><td>1,048,576</td><td>MIT</td>
@@ -387,7 +387,7 @@ ollama run qwen3:1.7b</pre></div>
       <p class="lead" style="margin-top:10px">这些模型<b>没有可下载的权重</b>，本地跑不了，但值得知道它们在哪 ——
       既是能力上限的参照，也决定开源版还差多少。价格均为 2026&#8209;11-01 观测到的官方定价（每百万 token，输入/输出）。</p>
       <div class="tbl-scroll">
-        <table class="tbl">
+        <table class="tbl" id="tbl-closed">
           <thead><tr><th>旗舰</th><th>厂商</th><th>发布</th><th>上下文</th><th>访问方式</th><th class="g">价格（输入/输出）</th><th>说明</th></tr></thead>
           <tbody>
             <tr><td><b>GPT-6 Astra</b></td><td>OpenAI</td><td>2026&#8209;09</td><td>1.05M</td><td>API / ChatGPT / 企业</td><td class="g">$10 / $50</td>
@@ -458,7 +458,100 @@ ollama run qwen3:1.7b</pre></div>
         <noscript><p class="lead">请启用 JavaScript 以渲染模型卡。</p></noscript>
       </div>
 
-      <div class="callout warn"><span class="head">免责声明（重要）</span>
+            <h3 class="lvl-sub">本地可部署 · 嵌入与重排（做 RAG 必用）<span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">检索增强的「索引」和「排序」两段。参数极小、单卡轻松，
+      但**几乎所有模型都没有 Ollama 标签** —— 本地要跑得靠 llama.cpp / vLLM / TEI。</p>
+      <div class="tbl-scroll">
+        <table class="tbl" id="tbl-embed">
+          <thead><tr><th>模型</th><th>厂商</th><th>参数</th><th>最大序列</th><th>维度</th><th>许可</th><th class="g">Ollama</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>Qwen3-Embedding 0.6B / 4B / 8B</b></td><td>阿里</td><td>0.6B / 4B / 8B</td><td>32K</td><td>1024 / 2560 / 4096</td><td class="g">Apache-2.0</td>
+              <td class="g">有</td><td>官方称 8B 位居 MTEB 多语种榜首；100+ 语言含编程语言</td></tr>
+            <tr><td><b>Qwen3-Reranker 0.6B / 4B / 8B</b></td><td>阿里</td><td>0.6B / 4B / 8B</td><td>32K</td><td>—</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>与上面同尺寸配套；官方 ggml-org 有 Q8_0 GGUF</td></tr>
+            <tr><td><b>Qwen3-VL-Embedding 2B / 8B</b></td><td>阿里</td><td>2B / 8B</td><td>32K</td><td>2048 / 4096</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>文本+图像+截图+视频统一编码，维度可裁到 64–2048</td></tr>
+            <tr><td><b>Qwen3-VL-Reranker 2B / 8B</b></td><td>阿里</td><td>2B / 8B</td><td>32K</td><td>—</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>多模态重排</td></tr>
+            <tr><td><b>jina-embeddings-v5 text-nano / small</b></td><td>Jina AI</td><td>239M / 677M</td><td>8K / 32K</td><td>768 / 1024</td><td class="r">CC-BY-NC-4.0</td>
+              <td class="r">无</td><td>119+ 语言；<b>非商用许可</b>，商用需联系厂商</td></tr>
+            <tr><td><b>jina-embeddings-v5 omni</b></td><td>Jina AI</td><td>986M / 1.74B</td><td>32K</td><td>1024</td><td class="r">CC-BY-NC-4.0</td>
+              <td class="r">无</td><td>文/图/视频/音统一编码；同样非商用</td></tr>
+            <tr><td><b>jina-reranker-v3.5</b></td><td>Jina AI</td><td>597M</td><td>131K</td><td>—</td><td class="r">CC-BY-NC-4.0</td>
+              <td class="r">无</td><td>listwise 重排，支持到 131K 上下文</td></tr>
+            <tr><td><b>BGE-M3</b></td><td>BAAI</td><td>~0.6B</td><td>8K</td><td>1024</td><td class="g">MIT</td>
+              <td class="g">有</td><td>dense + sparse + ColBERT 三合一，仍是最好用的本地多语混合检索底座</td></tr>
+            <tr><td><b>gte-modernbert-base</b></td><td>阿里</td><td>149M</td><td>8K</td><td>768</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>极轻量；配 gte-reranker-modernbert-base 同尺寸</td></tr>
+            <tr><td><b>EmbeddingGemma 2</b></td><td>Google</td><td>270M / 440M / 570M / 740M</td><td>—</td><td>—</td><td class="g">Apache-2.0</td>
+              <td class="g">有</td><td>Google 新一代嵌入模型</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="lvl-sub">本地可部署 · 语音（ASR 转写 / TTS 合成）<span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">这两个方向最近变化最大：中文方言与小模型 ASR 已经追平甚至超过老牌方案，
+      语音合成则从「克隆音色」走向「可控情感」。<b>同样基本都没有 Ollama 标签</b>。</p>
+      <div class="tbl-scroll">
+        <table class="tbl" id="tbl-audio">
+          <thead><tr><th>模型</th><th>厂商</th><th>参数</th><th>做什么</th><th>许可</th><th class="g">Ollama</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>Qwen3-ASR 0.6B / 1.7B</b></td><td>阿里</td><td>0.94B / 2.35B</td><td>音 → 文</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>30 种语言 + 22 种汉语方言；流式与离线统一；官方称 1.7B 达开源 SOTA</td></tr>
+            <tr><td><b>Qwen3-ForcedAligner 0.6B</b></td><td>阿里</td><td>0.92B</td><td>音 → 时间戳</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>强制对齐，≤5 分钟语音、11 种语言，做字幕很好用</td></tr>
+            <tr><td><b>Qwen3-TTS-12Hz 0.6B / 1.7B</b></td><td>阿里</td><td>0.92B / 1.93B</td><td>文 → 语音</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>Base 版 3 秒极速音色克隆；另有 CustomVoice 与 VoiceDesign</td></tr>
+            <tr><td><b>Qwen3-Omni-30B-A3B</b></td><td>阿里</td><td>35.3B / 激活 3B</td><td>文图音视频 → 文+语音</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td><b>开源里唯一原生语音输出</b>；官方 BF16 就要 68–145GB</td></tr>
+            <tr><td><b>GLM-ASR-Nano-2512</b></td><td>智谱 Z.ai</td><td>1.5B</td><td>音 → 文</td><td class="g">MIT</td>
+              <td class="r">无</td><td>官方称优于 Whisper V3；专攻粤语与极低音量语音</td></tr>
+            <tr><td><b>GLM-TTS</b></td><td>智谱 Z.ai</td><td>—</td><td>文 → 语音</td><td class="g">MIT</td>
+              <td class="r">无</td><td>3–10 秒提示音频零样本克隆，用 RL 控制情感</td></tr>
+            <tr><td><b>MiniCPM-o-4.5</b></td><td>OpenBMB</td><td>9.37B</td><td>图音视频 → 文+语音</td><td class="g">Apache-2.0</td>
+              <td class="g">有</td><td>1Hz 频率自主决定要不要开口的全双工交互</td></tr>
+            <tr><td><b>Fun-ASR-Nano-2512</b></td><td>阿里 / FunASR</td><td>1.5B</td><td>音 → 文</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>12 语种 + 流式 + 说话人分离 + 热词；官方 GGUF 已有</td></tr>
+            <tr><td><b>SenseVoiceSmall</b></td><td>阿里 / FunASR</td><td>~0.5B</td><td>音 → 文 + 事件</td><td class="r">FunASR model-license</td>
+              <td class="r">无</td><td>多语种 + 情感识别 + 音频事件标签一体；许可非 MIT，商用需查</td></tr>
+            <tr><td><b>FireRedASR2</b></td><td>FireRedTeam</td><td>AED 轻量 / LLM 8B+</td><td>音 → 文</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>Encoder-Adapter-LLM 架构；AED 版有官方 GGUF</td></tr>
+            <tr><td><b>omniASR 1B / 3B / 7B</b></td><td>Meta</td><td>0.3B – 7B</td><td>音 → 文</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>覆盖 1600+ 语言；官方表格直接给了显存与实时因子</td></tr>
+            <tr><td><b>Voxtral-Mini-4B-Realtime</b></td><td>Mistral</td><td>4.43B</td><td>实时音 → 文</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>流式转写，官方默认上下文 131K（约 3 小时）</td></tr>
+            <tr><td><b>Voxtral-4B-TTS</b></td><td>Mistral</td><td>~4B</td><td>文 → 语音</td><td class="r">CC-BY-NC-4.0</td>
+              <td class="r">无</td><td>24kHz 输出，WAV/PCM/FLAC/MP3/AAC/Opus；<b>非商用</b></td></tr>
+            <tr><td><b>Step-Audio-R1</b></td><td>阶跃星辰</td><td>33.5B</td><td>音 → 文 + 推理</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>语音场景的推理强化版</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="lvl-sub">本地可部署 · 视频与 3D 生成<span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">生成侧这一年最大的变化是<b>参数量掉下来了</b>：8–14B 就能在消费级显卡上出片。
+      许可上要特别当心腾讯混元系<b>不适用于欧盟、英国与韩国</b>。</p>
+      <div class="tbl-scroll">
+        <table class="tbl" id="tbl-video">
+          <thead><tr><th>模型</th><th>厂商</th><th>参数</th><th>许可</th><th class="g">本地可行性</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>Wan2.2 T2V / I2V A14B</b></td><td>阿里</td><td>14B（MoE）</td><td class="g">Apache-2.0</td>
+              <td class="a">多卡或大内存</td><td>MoE 架构的视频生成主线</td></tr>
+            <tr><td><b>Wan2.2 TI2V-5B</b></td><td>阿里</td><td>5B 稠密</td><td class="g">Apache-2.0</td>
+              <td class="g">单卡可跑</td><td>16×16×4 压缩 VAE，消费级显卡可用的 Wan 路线</td></tr>
+            <tr><td><b>Wan2.2-Animate-14B</b></td><td>阿里</td><td>14B（MoE）</td><td class="g">Apache-2.0</td>
+              <td class="a">多卡或大内存</td><td>把「角色动画」与「角色替换」合成一个模型，复刻动作与表情</td></tr>
+            <tr><td><b>HunyuanVideo-1.5</b></td><td>腾讯</td><td>8.3B</td><td class="r">腾讯混元社区许可</td>
+              <td class="g">单卡可跑</td><td>参数量效率很高；<b>许可明确不适用于欧盟 / 英国 / 韩国</b></td></tr>
+            <tr><td><b>LTX-2 / 2.3 / 2.5</b></td><td>Lightricks</td><td>19B / 22B</td><td class="r">LTX-2 社区许可</td>
+              <td class="a">多卡或大内存</td><td>音视频联合生成，2.5 起含 FLI2V</td></tr>
+            <tr><td><b>TRELLIS.2-4B</b></td><td>微软</td><td>4B</td><td class="g">MIT</td>
+              <td class="a">多卡或大内存</td><td>图生 3D：O-Voxel 无场稀疏体素，能重建任意拓扑并带 PBR 材质</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+<div class="callout warn"><span class="head">免责声明（重要）</span>
         上方「显存门槛」为 <b>量化后粗略估算</b>，会因量化方法、上下文长度、KV-Cache 优化与引擎不同而浮动。
         许可名称/标签以模型发布时的官方措辞为准；部分模型社区别名与官方口径存在差异。
         <b>本页模型信息核对于 2026-11-01</b>，每张卡片底部附官方来源链接 —— 模型迭代很快，商用或商用分发前请回发布方仓库复核。</div>

@@ -342,7 +342,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
       billions and trillions, and context windows to <b>1M</b>. They set the capability ceiling, but even quantized they
       start at hundreds of gigabytes &mdash; <b>treat them as trend, not as a local shopping list</b>.</p>
       <div class="tbl-scroll">
-        <table class="tbl">
+        <table class="tbl" id="tbl-frontier">
           <thead><tr><th>Model</th><th>Vendor</th><th>Total / active</th><th>Context</th><th>Licence</th><th class="g">Local footprint (Q4 est.)</th></tr></thead>
           <tbody>
             <tr><td><b>DeepSeek-V4-Pro</b></td><td>DeepSeek</td><td>1.6T / 49B</td><td>1,048,576</td><td class="g">MIT</td>
@@ -371,7 +371,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
       locally &mdash; but they are worth tracking: they mark the capability ceiling and show how far the open-weight
       versions still have to climb. Prices are the official per-million-token rates observed on 2026&#8209;11-01 (in / out).</p>
       <div class="tbl-scroll">
-        <table class="tbl">
+        <table class="tbl" id="tbl-closed">
           <thead><tr><th>Flagship</th><th>Vendor</th><th>Released</th><th>Context</th><th>Access</th><th class="g">Price (in / out)</th><th>Notes</th></tr></thead>
           <tbody>
             <tr><td><b>GPT-6 Astra</b></td><td>OpenAI</td><td>2026&#8209;09</td><td>1.05M</td><td>API / ChatGPT / enterprise</td><td class="g">$10 / $50</td>
@@ -428,7 +428,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
       <h3 class="lvl-sub">Models you can actually run locally (by VRAM) <span class="lvl core">CORE</span></h3>
       <p class="en-note">VRAM figures are estimates after quantization. They shift with engine, context length and KV-cache settings &mdash; always trust your own <code>ollama ps</code> / <code>nvidia-smi</code>. Verify licences and parameter counts against the publisher's repository, Ollama or Hugging Face. <b>Model details on this page were verified on 2026-11-01</b>; re-check the publisher repository before commercial use.</p>
       <div class="tbl-scroll">
-        <table class="tbl">
+        <table class="tbl" id="tbl-local">
           <thead>
             <tr>
               <th>Model</th><th>Publisher</th><th>Type</th><th>Licence</th>
@@ -544,7 +544,102 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
           </tbody>
         </table>
       </div>
-      <div class="callout warn"><span class="head">Disclaimer (important)</span>
+            <h3 class="lvl-sub">Locally runnable &middot; Embeddings and rerankers (what a RAG needs) <span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">The indexing and ranking halves of retrieval. Tiny, single-card easy,
+      but <b>almost none of them have an Ollama tag</b> &mdash; locally they need llama.cpp / vLLM / TEI.</p>
+      <div class="tbl-scroll">
+        <table class="tbl" id="tbl-embed">
+          <thead><tr><th>Model</th><th>Vendor</th><th>Params</th><th>Max seq</th><th>Dim</th><th>Licence</th><th class="g">Ollama</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><b>Qwen3-Embedding 0.6B / 4B / 8B</b></td><td>Alibaba</td><td>0.6B / 4B / 8B</td><td>32K</td><td>1024 / 2560 / 4096</td><td class="g">Apache-2.0</td>
+              <td class="g">yes</td><td>Vendor places the 8B first on the multilingual MTEB board; 100+ languages including code</td></tr>
+            <tr><td><b>Qwen3-Reranker 0.6B / 4B / 8B</b></td><td>Alibaba</td><td>0.6B / 4B / 8B</td><td>32K</td><td>&mdash;</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>Pairs with the embedders at the same sizes; official ggml-org Q8_0 GGUF exists</td></tr>
+            <tr><td><b>Qwen3-VL-Embedding 2B / 8B</b></td><td>Alibaba</td><td>2B / 8B</td><td>32K</td><td>2048 / 4096</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>Text, images, screenshots and video encoded together; dim trimmable to 64&ndash;2048</td></tr>
+            <tr><td><b>Qwen3-VL-Reranker 2B / 8B</b></td><td>Alibaba</td><td>2B / 8B</td><td>32K</td><td>&mdash;</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>Multimodal reranking</td></tr>
+            <tr><td><b>jina-embeddings-v5 text-nano / small</b></td><td>Jina AI</td><td>239M / 677M</td><td>8K / 32K</td><td>768 / 1024</td><td class="r">CC-BY-NC-4.0</td>
+              <td class="r">no</td><td>119+ languages; <b>non-commercial</b> &mdash; contact the vendor for commercial use</td></tr>
+            <tr><td><b>jina-embeddings-v5 omni</b></td><td>Jina AI</td><td>986M / 1.74B</td><td>32K</td><td>1024</td><td class="r">CC-BY-NC-4.0</td>
+              <td class="r">no</td><td>Text, image, video and audio in one vector space; also non-commercial</td></tr>
+            <tr><td><b>jina-reranker-v3.5</b></td><td>Jina AI</td><td>597M</td><td>131K</td><td>&mdash;</td><td class="r">CC-BY-NC-4.0</td>
+              <td class="r">no</td><td>Listwise reranking up to 131K tokens</td></tr>
+            <tr><td><b>BGE-M3</b></td><td>BAAI</td><td>~0.6B</td><td>8K</td><td>1024</td><td class="g">MIT</td>
+              <td class="g">yes</td><td>Dense + sparse + ColBERT in one model; still the best local multilingual hybrid base</td></tr>
+            <tr><td><b>gte-modernbert-base</b></td><td>Alibaba</td><td>149M</td><td>8K</td><td>768</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>Very light; pairs with gte-reranker-modernbert-base</td></tr>
+            <tr><td><b>EmbeddingGemma 2</b></td><td>Google</td><td>270M / 440M / 570M / 740M</td><td>&mdash;</td><td>&mdash;</td><td class="g">Apache-2.0</td>
+              <td class="g">yes</td><td>Google&rsquo;s newer embedding family</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="lvl-sub">Locally runnable &middot; Speech (ASR and TTS) <span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">Both directions moved a lot: small Chinese-dialect ASR now matches or beats
+      the classics, and speech synthesis moved from cloning a voice to controlling emotion.
+      <b>Again, almost no Ollama tags.</b></p>
+      <div class="tbl-scroll">
+        <table class="tbl" id="tbl-audio">
+          <thead><tr><th>Model</th><th>Vendor</th><th>Params</th><th>Does</th><th>Licence</th><th class="g">Ollama</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><b>Qwen3-ASR 0.6B / 1.7B</b></td><td>Alibaba</td><td>0.94B / 2.35B</td><td>speech &rarr; text</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>30 languages + 22 Chinese dialects; streaming and offline in one model</td></tr>
+            <tr><td><b>Qwen3-ForcedAligner 0.6B</b></td><td>Alibaba</td><td>0.92B</td><td>speech &rarr; timestamps</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>Forced alignment, up to 5 minutes across 11 languages &mdash; handy for subtitles</td></tr>
+            <tr><td><b>Qwen3-TTS-12Hz 0.6B / 1.7B</b></td><td>Alibaba</td><td>0.92B / 1.93B</td><td>text &rarr; speech</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>Base clones a voice in 3 seconds; CustomVoice and VoiceDesign variants too</td></tr>
+            <tr><td><b>Qwen3-Omni-30B-A3B</b></td><td>Alibaba</td><td>35.3B / 3B active</td><td>text, image, audio, video &rarr; text + speech</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td><b>The only open model with native speech output</b>; 68&ndash;145 GB in BF16</td></tr>
+            <tr><td><b>GLM-ASR-Nano-2512</b></td><td>Z.ai</td><td>1.5B</td><td>speech &rarr; text</td><td class="g">MIT</td>
+              <td class="r">no</td><td>Vendor states it beats Whisper V3; strong on Cantonese and very quiet speech</td></tr>
+            <tr><td><b>GLM-TTS</b></td><td>Z.ai</td><td>&mdash;</td><td>text &rarr; speech</td><td class="g">MIT</td>
+              <td class="r">no</td><td>Zero-shot cloning from 3&ndash;10 seconds of prompt audio, RL-tuned emotion</td></tr>
+            <tr><td><b>MiniCPM-o-4.5</b></td><td>OpenBMB</td><td>9.37B</td><td>image, audio, video &rarr; text + speech</td><td class="g">Apache-2.0</td>
+              <td class="g">yes</td><td>Decides at 1 Hz whether to speak: full-duplex, proactive</td></tr>
+            <tr><td><b>Fun-ASR-Nano-2512</b></td><td>Alibaba / FunASR</td><td>1.5B</td><td>speech &rarr; text</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>12 languages, streaming, speaker diarisation and hotwords; official GGUF exists</td></tr>
+            <tr><td><b>SenseVoiceSmall</b></td><td>Alibaba / FunASR</td><td>~0.5B</td><td>speech &rarr; text + events</td><td class="r">FunASR model-license</td>
+              <td class="r">no</td><td>Language, emotion and audio-event tags in one pass; licence is not MIT</td></tr>
+            <tr><td><b>FireRedASR2</b></td><td>FireRedTeam</td><td>AED small / LLM 8B+</td><td>speech &rarr; text</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>Encoder-Adapter-LLM design; official GGUF for the AED variant</td></tr>
+            <tr><td><b>omniASR 1B / 3B / 7B</b></td><td>Meta</td><td>0.3B &ndash; 7B</td><td>speech &rarr; text</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>1600+ languages; the vendor publishes memory and real-time-factor tables</td></tr>
+            <tr><td><b>Voxtral-Mini-4B-Realtime</b></td><td>Mistral</td><td>4.43B</td><td>realtime speech &rarr; text</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>Streaming transcription; default context 131K (about three hours)</td></tr>
+            <tr><td><b>Voxtral-4B-TTS</b></td><td>Mistral</td><td>~4B</td><td>text &rarr; speech</td><td class="r">CC-BY-NC-4.0</td>
+              <td class="r">no</td><td>24 kHz output in WAV/PCM/FLAC/MP3/AAC/Opus; <b>non-commercial</b></td></tr>
+            <tr><td><b>Step-Audio-R1</b></td><td>StepFun</td><td>33.5B</td><td>speech &rarr; text + reasoning</td><td class="g">Apache-2.0</td>
+              <td class="r">no</td><td>Reasoning applied to the audio domain</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h3 class="lvl-sub">Locally runnable &middot; Video and 3D generation <span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">The big change on the generation side is <b>parameter counts coming down</b>:
+      8&ndash;14B models now produce video on consumer cards. Read the licences carefully &mdash; Tencent&rsquo;s Hunyuan
+      line <b>does not apply in the EU, the UK or South Korea</b>.</p>
+      <div class="tbl-scroll">
+        <table class="tbl" id="tbl-video">
+          <thead><tr><th>Model</th><th>Vendor</th><th>Params</th><th>Licence</th><th class="g">Local feasibility</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><b>Wan2.2 T2V / I2V A14B</b></td><td>Alibaba</td><td>14B (MoE)</td><td class="g">Apache-2.0</td>
+              <td class="a">multi-GPU or large RAM</td><td>The MoE video-generation line</td></tr>
+            <tr><td><b>Wan2.2 TI2V-5B</b></td><td>Alibaba</td><td>5B dense</td><td class="g">Apache-2.0</td>
+              <td class="g">single card</td><td>16&times;16&times;4 compressed VAE &mdash; the consumer-grade Wan route</td></tr>
+            <tr><td><b>Wan2.2-Animate-14B</b></td><td>Alibaba</td><td>14B (MoE)</td><td class="g">Apache-2.0</td>
+              <td class="a">multi-GPU or large RAM</td><td>Character animation and character replacement in one model</td></tr>
+            <tr><td><b>HunyuanVideo-1.5</b></td><td>Tencent</td><td>8.3B</td><td class="r">Tencent Hunyuan Community Licence</td>
+              <td class="g">single card</td><td>Very parameter-efficient; <b>licence excludes the EU, the UK and South Korea</b></td></tr>
+            <tr><td><b>LTX-2 / 2.3 / 2.5</b></td><td>Lightricks</td><td>19B / 22B</td><td class="r">LTX-2 Community Licence</td>
+              <td class="a">multi-GPU or large RAM</td><td>Joint audio-video generation; FLI2V from 2.5</td></tr>
+            <tr><td><b>TRELLIS.2-4B</b></td><td>Microsoft</td><td>4B</td><td class="g">MIT</td>
+              <td class="a">multi-GPU or large RAM</td><td>Image to 3D: field-free O-Voxel voxels, arbitrary topology with PBR materials</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+<div class="callout warn"><span class="head">Disclaimer (important)</span>
         The "VRAM thresholds" above are <b>rough estimates after quantization</b>. They float with the quantization
         method, context length, KV-cache optimization and engine. Licence names and labels follow the official wording
         at release time; for some models, community aliases differ from the official ones.</div>

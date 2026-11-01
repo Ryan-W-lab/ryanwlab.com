@@ -119,7 +119,7 @@ def count_rows(block):
 
 
 def table_bodies(block):
-    """返回每个 <tbody>...</tbody> 的内容。"""
+    """返回 [(table_id, tbody 内容)]，按出现顺序。"""
     bodies = []
     pos = 0
     while True:
@@ -127,29 +127,42 @@ def table_bodies(block):
         if i == -1:
             break
         j = block.index("</tbody>", i)
-        bodies.append(block[i:j])
+        head = block[:i]
+        tid = "?"
+        m = re.findall(r'<table class="tbl" id="([a-z\-]+)"', head)
+        if m:
+            tid = m[-1]
+        bodies.append((tid, block[i:j]))
         pos = j
     return bodies
 
 
 zh_models = section(zh_text, 'id="models"', '<!-- ======= 05')
 en_models = section(en_text, 'id="models"', '<!-- ======= 05')
-zh_tables = table_bodies(zh_models)
-en_tables = table_bodies(en_models)
+zh_tables = dict(table_bodies(zh_models))
+en_tables = dict(table_bodies(en_models))
 
 check(len(zh_tables) >= 1, "中文页 §04 缺少前沿超大模型表")
 check(len(en_tables) >= 2, "英文页 §04 缺少前沿表或本地清单表")
 
-# 前沿表、闭源表：逐个对应比较行数
-for index in range(min(len(zh_tables), len(en_tables))):
+# 按 table id 配对比较行数（不依赖出现顺序）
+for tid in sorted(set(zh_tables) | set(en_tables)):
+    if tid == "tbl-local":
+        continue
+    if tid not in zh_tables:
+        check(False, f"中文页 §04 缺少表 {tid}")
+        continue
+    if tid not in en_tables:
+        check(False, f"英文页 §04 缺少表 {tid}")
+        continue
     check(
-        count_rows(zh_tables[index]) == count_rows(en_tables[index]),
-        f"§04 第 {index + 1} 张表行数不一致: 中文 {count_rows(zh_tables[index])}, 英文 {count_rows(en_tables[index])}",
+        count_rows(zh_tables[tid]) == count_rows(en_tables[tid]),
+        f"§04 表 {tid} 行数不一致: 中文 {count_rows(zh_tables[tid])}, 英文 {count_rows(en_tables[tid])}",
     )
 
-# 英文最后一张表是本地可部署清单，对应中文的 JS 卡片墙
-if zh_tables and len(en_tables) >= 2:
-    local_table = en_tables[-1]
+# 英文的本地清单表对应中文的 JS 卡片墙
+if "tbl-local" in en_tables:
+    local_table = en_tables["tbl-local"]
     js_path = ROOT / "assets" / "js" / "main.js"
     js_source = js_path.read_text(encoding="utf-8")
     js_names = re.findall(r'\{\s*n:"([^"]+)"', js_source)

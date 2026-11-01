@@ -343,6 +343,15 @@ table.tbl{border-collapse:collapse;width:100%;min-width:760px;font-size:.86rem;}
 .mcards{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));}
 .mcard.hide{display:none;}
 
+/* §04 模型章：厂商 / 作者列不折行（窄屏时表格整体横向滚动） */
+#tbl-frontier td:nth-child(2),
+#tbl-closed td:nth-child(2),
+#tbl-embed td:nth-child(2),
+#tbl-ocr td:nth-child(2),
+#tbl-audio td:nth-child(2),
+#tbl-video td:nth-child(2),
+#tbl-local td:nth-child(2){white-space:nowrap;}
+
 /* 页脚 ================================================= */
 footer{margin-top:70px;border-top:1px solid var(--line);}
 footer .ascii{color:var(--txt-dim);font-size:.6rem;line-height:1;letter-spacing:0;overflow-x:auto;}

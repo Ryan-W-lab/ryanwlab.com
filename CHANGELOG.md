@@ -112,6 +112,17 @@ scripts/list-messages.sh               # 读取生产留言箱（只读 SELECT�
 
 ---
 
+## 2026-11-01 · 页面自查与内容审计
+
+新增 `scripts/audit_models.py`：检查模型目录有没有空字段、占位符、重复条目、
+来源域名异常，以及**每张表格的表头列数是否与数据行一致**。同时把它接进 CI。
+
+它当场抓出三处真错误：英文本地清单表头仍是旧的 6 列（数据已是 8 列）、
+嵌入表里 Nemotron 那行少了一列、英文导语写 "Six blocks" 却列了七块。
+另外用 `scripts/shot-section.sh` 截图修掉厂商列折行，并给窄屏加了表格横滑提示。
+
+---
+
 ## 2026-10-29 · 留言箱上线（私密留言功能首版）
 
 - 新增后端 Worker `backend/worker.mjs` + D1 迁移（`0001_messages.sql`、`0002_inbox_view.sql`）

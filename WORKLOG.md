@@ -162,7 +162,30 @@ Cloudflare 账号**（`ryan_w_lab@outlook.com`，Account ID `ed010bdbe3fc9f49c48
 
 ---
 
-## 八、遗留事项
+## 八、页面自查（2026-11-01 下午）
+
+新增 `scripts/audit_models.py` 做**内容审计**，加上 `scripts/shot-section.sh` 做**排版自检**，
+两者合起来替代"肉眼扫一遍"。这一轮它们抓出的**真错误**：
+
+| # | 问题 | 后果 | 怎么发现的 |
+|---|---|---|---|
+| 1 | 英文本地清单表的**表头还是旧的 6 列**，数据行已经是 8 列 | 英文页表格列名与内容对不上，读者完全看不懂哪列是什么 | 审计脚本比对表头 `<th>` 数与每行 `<td>` 数 |
+| 2 | 嵌入表里 Nemotron 那行**少了一列**（缺「维度」） | 该行少一格，列错位 | 同上 |
+| 3 | 英文 §04 导语写 "Six blocks"，实际列了七块 | 自相矛盾 | 审计脚本核对导语关键词与板块数 |
+| 4 | 厂商列太窄，「阿里 · 通义」被折成两行 | 排版凌乱 | 截图肉眼发现 → 加 `white-space:nowrap` |
+| 5 | 窄屏表格被硬切，看不出能横向滑 | 手机端体验差 | 手机尺寸截图 → 导语加提示 + 表格容器已有 `overflow-x:auto` |
+
+审计脚本本身也修了几处误报（`<thead>` 被当成 `<th>`、合法英文 "None" 被当占位符、`}}` 是 CSS 语法）。
+
+**教训**：中英两份手写 HTML 必然漂移。第 4、5 号错误都是"改了数据忘了改表头"或"改了文案忘了改另一份语言"造成的。
+现在的防线是三道：
+1. **单一数据源** —— `scripts/gen_model_catalogue.py` 同时生成中英两边
+2. **结构校验** —— `scripts/check_i18n.py` 按 table id 配对比对行数与型号 token
+3. **内容审计 + 截图** —— `scripts/audit_models.py` 查字段/占位符/列数，`scripts/shot-section.sh` 查排版
+
+---
+
+## 九、遗留事项
 
 | 项 | 优先级 | 状态 |
 |---|---|---|
@@ -175,13 +198,14 @@ Cloudflare 账号**（`ryan_w_lab@outlook.com`，Account ID `ed010bdbe3fc9f49c48
 
 ---
 
-## 九、验证清单（每次改动都跑）
+## 十、验证清单（每次改动都跑）
 
 ```sh
 python3 scripts/check_site.py          # 链接、锚点、示例源码一致
 python3 scripts/check_i18n.py          # 中英结构 + 文案 + 模型名单对齐
 node --check assets/js/main.js         # 模型墙数据语法
 node --test tests/messages.test.mjs    # 后端限额/冷却/幂等回归（8 项）
+python3 scripts/audit_models.py        # 模型目录内容审计（字段/占位符/列数/来源）
 git diff --check                       # 空白与行尾
 scripts/shot-section.sh models /tmp/out.png   # 排版自检（可选）
 ```

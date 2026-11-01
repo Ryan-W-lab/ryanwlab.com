@@ -330,12 +330,13 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         <span class="tag">&sect;04 // ARMORY</span>
         <h2 class="title">Model arsenal: what runs locally, and what does not</h2>
         <div class="line"></div>
-        <p class="lead">Six blocks: <span class="hl">frontier-scale models</span> (open weights, no single machine can hold them) &middot;
+        <p class="lead">Seven blocks: <span class="hl">frontier-scale models</span> (open weights, no single machine can hold them) &middot;
         <b>closed flagships</b> (API only &mdash; the capability ceiling) &middot;
         <b>models you can actually run locally</b> (LLMs, from a 1 GB edge box up to four 80 GB cards, including plenty of
         Flash and low-activation mid-size releases) &middot; <b>embeddings and rerankers</b> &middot;
         <b>documents and OCR</b> &middot; <b>speech</b> &middot; <b>video and 3D</b>.
-        VRAM is estimated after quantization; for precision, read the official repository and licence.</p>
+        VRAM is estimated after quantization; for precision, read the official repository and licence.
+        <b>Tables scroll sideways on narrow screens.</b></p>
       </div>
 
       <h3 class="lvl-sub">Frontier-scale models (not runnable locally &mdash; track the trend) <span class="lvl pro">PRO</span></h3>
@@ -455,7 +456,8 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
           <thead>
             <tr>
               <th>Model</th><th>Publisher</th><th>Type</th><th>Licence</th>
-              <th>Available sizes</th><th class="g">Rough VRAM after quant</th>
+              <th>Parameters &amp; context</th><th>Released</th>
+              <th>Available sizes &amp; VRAM after quant</th><th>Local tier</th>
             </tr>
           </thead>
           <tbody id="tbl-local-body">
@@ -982,7 +984,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
               <td class="g">yes</td><td>Dense + sparse + ColBERT in one model; still the best local multilingual hybrid base</td></tr>
             <tr><td><b>gte-modernbert-base</b></td><td>Alibaba</td><td>149M</td><td>8K</td><td>768</td><td class="g">Apache-2.0</td>
               <td class="r">no</td><td>Very light; pairs with gte-reranker-modernbert-base</td></tr>
-            <tr><td><b>Nemotron 3.5 Embed 1B / 8B &middot; Rerank 8B</b></td><td>NVIDIA</td><td>1.55B / 8.38B</td><td>32,768</td><td class="g">OpenMDW-1.1</td>
+            <tr><td><b>Nemotron 3.5 Embed 1B / 8B &middot; Rerank 8B</b></td><td>NVIDIA</td><td>1.55B / 8.38B</td><td>32,768</td><td>not published</td><td class="g">OpenMDW-1.1</td>
               <td class="r">no</td><td>NVIDIA's first natively multimodal retrieval stack (text and image)</td></tr>
             <tr><td><b>EmbeddingGemma 2</b></td><td>Google</td><td>270M / 440M / 570M / 740M</td><td>&mdash;</td><td>&mdash;</td><td class="g">Apache-2.0</td>
               <td class="g">yes</td><td>Google&rsquo;s newer embedding family</td></tr>

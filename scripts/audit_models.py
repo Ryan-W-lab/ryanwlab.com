@@ -109,7 +109,34 @@ for label, page in (("中文页", zh), ("英文页", en)):
         f"{label}: 首屏模型款数是写死的数字",
     )
 
-# --- 6. 留言框相关文案仍一致 ---
+# --- 6. 闭源表不能混入有公开权重的模型 ---
+# 这审查的是一次真实事故：GLM-5.3、DeepSeek V4-Pro/Flash、Qwen3.8-Max、
+# Mistral Large 4 的权重都在 Hugging Face 上可下载（许可证是 "other" 或自定义，
+# 不是"没有权重"），却被放进了「没有可下载权重」的闭源表。
+def table_seg(page, tid):
+    i = page.index(f'id="{tid}"')
+    return page[i:page.index("</table>", i)]
+
+OPEN_TABLES = ("tbl-frontier", "tbl-local", "tbl-embed", "tbl-ocr", "tbl-audio", "tbl-video")
+for label, page in (("中文页", zh), ("英文页", en)):
+    closed = table_seg(page, "tbl-closed")
+    body = closed[closed.index("<tbody"):]
+    closed_names = re.findall(r"<td><b>(.*?)</b></td>", body)
+    open_text = "".join(
+        table_seg(page, tid) for tid in OPEN_TABLES if f'id="{tid}"' in page
+    )
+    for name in closed_names:
+        check(
+            name not in open_text,
+            f"{label}: 「{name}」同时出现在闭源表和开源表里"
+            "（有公开权重就不该算闭源）",
+        )
+    check(
+        "huggingface.co" not in closed,
+        f"{label}: 闭源表里出现了 Hugging Face 链接，说明该模型有权重可下载",
+    )
+
+# --- 7. 留言框相关文案仍一致 ---
 for label, page, needle in (("中文页", zh, "每天最多提交 3 条"), ("英文页", en, "3 messages per network address")):
     check(needle in page, f"{label}: 留言额度说明丢失")
     check("message-note" in page, f"{label}: 留言额度说明 id 丢失")

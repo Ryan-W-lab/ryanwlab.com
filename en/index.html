@@ -157,7 +157,7 @@ ollama run qwen3:1.7b</pre></div>
         What it learned isn&rsquo;t the text itself but the <span class="hl">patterns and co-occurrence structure</span> between words.
         It&rsquo;s not a database &mdash; it&rsquo;s a statistical brain that compressed the world.</p>
       </div>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3"><span class="cmd">&gt;_</span>So what is it, really</div>
           <div class="p">Feed it a long string of tokens (chunks of text), push them through a deep neural network layer by layer,
@@ -198,7 +198,7 @@ each Token  ---> [ project to vector + pos enc ]
         </div>
       </div>
 
-      <div class="grid cards2" style="margin-top:18px">
+      <div class="grid cards2 g2" style="margin-top:18px">
         <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
           <div class="h3">Hardcore term cheat-sheet</div>
           <div class="p">
@@ -232,7 +232,7 @@ each Token  ---> [ project to vector + pos enc ]
         <p class="lead">Outsourcing every prompt to the cloud is, fundamentally, <code>streaking your thinking</code> in front of a third party.
         Going local buys back <span class="hl">sovereignty, privacy, control, and an offline freedom with no leash</span>.</p>
       </div>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
           <div class="h3"><span class="cmd">&#10003;</span>Data sovereignty &amp; privacy</div>
           <div class="p">Local inference can reduce third-party data sharing. It does not automatically ensure privacy or compliance: check telemetry, cloud models, plugins, logs and access permissions.</div>
@@ -351,11 +351,11 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
               <td class="r">Q4 &asymp; 900 GB+ (:cloud only) &mdash; out of reach for one machine</td></tr>
             <tr><td><b>Kimi K3</b></td><td>Moonshot</td><td>2.8T / 104B (16 of 896 experts)</td><td>1,048,576</td><td class="r">Proprietary (Kimi K3 License)</td>
               <td class="r">Q4 &asymp; 1.6 TB (:cloud only)</td></tr>
-            <tr><td><b>Qwen3.8 (2.4T tier)</b></td><td>Alibaba &middot; Qwen</td><td>2.4T / 95B (10 of 512 experts)</td><td>262,144 &rarr; 1,010,000</td><td class="r">Proprietary (Qwen3.8-Max License)</td>
+            <tr><td><b>Qwen3.8 (2.4T tier)</b></td><td>Alibaba &middot; Qwen</td><td>2.4T / 95B (10 of 512 experts)</td><td>262,144 &rarr; 1,010,000</td><td class="r">Custom Qwen3.8-Max licence (weights public)</td>
               <td class="r">Q4 &asymp; 1.4 TB &mdash; the locally usable one is the Apache-2.0 27B tier</td></tr>
             <tr><td><b>Kimi K2.5 / K2.6 / K2.7-Code</b></td><td>Moonshot</td><td>1T / 32B</td><td>262,144</td><td class="g">Modified MIT</td>
               <td class="r">Q4 &asymp; 560 GB+, needs a cluster</td></tr>
-            <tr><td><b>Muse-Spark-Open</b></td><td>Meta</td><td>816B / 42B</td><td>not published</td><td class="r">Proprietary (check terms)</td>
+            <tr><td><b>Muse-Spark-Open</b></td><td>Meta</td><td>816B / 42B</td><td>not published</td><td class="r">custom licence (gated; weights available)</td>
               <td class="r">Q4 &asymp; 450 GB (:cloud only)</td></tr>
             <tr><td><b>Nemotron 3 Ultra</b></td><td>NVIDIA</td><td>550B / 55B</td><td>1,048,576</td><td class="g">OpenMDW-1.1 (permissive)</td>
               <td class="r">Q4 &asymp; 302 GB, :cloud only</td></tr>
@@ -369,6 +369,8 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
               <td class="r">Q4 &asymp; 138 GB</td></tr>
             <tr><td><b>Mistral Large 3</b></td><td>Mistral AI</td><td>675B / 41B</td><td>not published</td><td class="g">Apache-2.0</td>
               <td class="r">Q4 &asymp; 371 GB</td></tr>
+            <tr><td><b>Mistral Large 4</b></td><td>Mistral AI</td><td>1T / 52B</td><td>not published</td><td class="g">custom licence (weights public)</td>
+              <td class="r">Q4 &asymp; 550 GB</td></tr>
             <tr><td><b>Command A+</b></td><td>Cohere</td><td>218.8B / 25B</td><td>131,072</td><td class="g">Apache-2.0</td>
               <td class="r">Q4 &asymp; 120 GB; Cohere's first genuinely OSI-licensed model</td></tr>
             <tr><td><b>Nemotron 3 Super</b></td><td>NVIDIA</td><td>120B / 12B (512 experts, top-22)</td><td>1,048,576</td><td class="r">NVIDIA Open Model Licence</td>
@@ -379,7 +381,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
               <td class="r">Q4 &asymp; 560 GB+, and no GGUF exists</td></tr>
             <tr><td><b>MiMo-V2.6-Pro</b></td><td>Xiaomi &middot; MiMo</td><td>1.02T / 42B (384 experts, top-8)</td><td>1,048,576</td><td class="g">MIT</td>
               <td class="r">Q4 &asymp; 560 GB, server scale</td></tr>
-            <tr><td><b>GLM-5 / 5.1 / 5.2 / 5.3</b></td><td>Z.ai</td><td>744B&ndash;754B / 40B (not published from 5.1)</td><td>202,752 &rarr; 1,048,576</td><td class="g">MIT (proprietary from 5.3)</td>
+            <tr><td><b>GLM-5 / 5.1 / 5.2 / 5.3</b></td><td>Z.ai</td><td>744B&ndash;754B / 40B (not published from 5.1)</td><td>202,752 &rarr; 1,048,576</td><td class="g">MIT &rarr; custom licence from 5.3 (weights still public)</td>
               <td class="r">Q4 &asymp; 420 GB &mdash; but the 5.x Flash exit is in the local list below</td></tr>
           </tbody>
         </table>
@@ -420,16 +422,8 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
               <td>Vendor calls it the strongest coding and knowledge-work model to date, at twice the speed and half the price</td></tr>
             <tr><td><b>Muse Wonder</b></td><td>Meta</td><td>2026&#8209;10</td><td>1,048,576</td><td>Meta Model API (still preview)</td><td class="g">$4 / $20</td>
               <td>The flagship of Meta's hosted API; a subscription-only tier sits above it</td></tr>
-            <tr><td><b>Mistral Large 4</b></td><td>Mistral</td><td>2026&#8209;10</td><td>&mdash;</td><td>Mistral Platform</td><td class="g">not confirmed</td>
-              <td>Vendor calls it the most advanced open-weight multimodal general model &mdash; but under its own restricted licence</td></tr>
-            <tr><td><b>DeepSeek V4-Pro / Flash</b></td><td>DeepSeek</td><td>2026&#8209;08 / 10</td><td>1M (384K max output)</td><td>API (OpenAI and Anthropic formats)</td><td class="g">$0.66 / $1.98 | $0.15 / $0.60</td>
-              <td>Introduces peak/off-peak pricing (UTC weekdays 01&ndash;04 and 06&ndash;10 cost double)</td></tr>
-            <tr><td><b>Qwen3.8-Max</b></td><td>Alibaba &middot; Qwen</td><td>2026&#8209;08</td><td>1,000,000</td><td>QwenCloud API / Qwen Chat / QwenWork</td><td class="g">$1.65 in</td>
-              <td>2.4T total / 95B active; vendor claims it can code autonomously for ten days straight</td></tr>
             <tr><td><b>Kimi K3.1 Pro</b></td><td>Moonshot</td><td>2026&#8209;10</td><td>1M</td><td>Kimi API / app / membership</td><td class="g">membership (1M needs a high tier)</td>
               <td>Vendor calls it the strongest 3T-class model; it is described as open-weight, though no public weight repository has landed yet</td></tr>
-            <tr><td><b>GLM-5.3</b></td><td>Z.ai</td><td>2026&#8209;10</td><td>1M (128K max output)</td><td>Z.ai API / coding plan</td><td class="g">$1.4 / $4.4</td>
-              <td>Same base model as GLM-5.2, gains from post-training only; vendor claims +50% on Code Bench</td></tr>
             <tr><td><b>ERNIE 5.1</b></td><td>Baidu</td><td>2026&#8209;05</td><td>128K</td><td>Qianfan API / Wenxin</td><td class="g">not confirmed</td>
               <td>Vendor claims leading results at 6% of comparable pretraining cost, using decoupled fully-async RL</td></tr>
             <tr><td><b>Seed 2.1 / Seedance 2.5</b></td><td>ByteDance</td><td>2026&#8209;06 / 07</td><td>&mdash;</td><td>Volcano Ark / Doubao / Coze</td><td class="g">not confirmed</td>
@@ -1164,7 +1158,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         performance and control. Four paths below, easy to hard, all spelled out.</p>
       </div>
 
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
           <div class="h3">&#9312; Ollama &mdash; the geek default</div>
           <div class="p">Smooshes llama.cpp's complexity into one sentence. Cross-platform, auto-quantizes and downloads,
@@ -1187,7 +1181,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         </div>
       </div>
 
-      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">Main path &middot; Ollama (Windows / macOS / Linux)</h3>
+      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">&#9312; Main path &middot; Ollama (Windows / macOS / Linux)</h3>
       <div class="term">
         <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
           <span>zsh ~ Win PowerShell equivalent &middot; install &amp; run</span><span class="copy">&#10697; Copy</span></div>
@@ -1224,7 +1218,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
 # e.g. (Python / OpenAI SDK): OpenAI(base_url="http://127.0.0.1:11434/v1", api_key="ollama")</span></pre>
       </div>
 
-      <div class="grid cards2" style="margin:26px 0 4px">
+      <div class="grid cards2 g2" style="margin:26px 0 4px">
         <div class="callout g" style="margin:0"><span class="head">&#9313; LM Studio (Windows / macOS GUI)</span>
           Download and install from the site &rarr; on the Models page search <code>qwen3 8b</code> or <code>deepseek r1</code> &rarr;
           pick a GGUF tag (Q4_K_M is a good default) &rarr; Download &rarr; hit Chat / <span class="hl">Local Server</span> top-right
@@ -1300,9 +1294,14 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         Ollama/llama.cpp both support it natively; don't believe the stale joke that "Macs can't do AI".
         When picking models, look for `Metal / GGML` optimizations.</div>
       <div class="callout warn"><span class="head">Three Windows landmines (fair warning)</span>
-        &#9312; You need a CUDA driver; &#9313; avoid non-ASCII characters and spaces in paths; &#9314; if the first
+        <ol class="clist">
+          <li>You need a CUDA driver;</li>
+          <li>avoid non-ASCII characters and spaces in paths;</li>
+          <li>if the first
         <code>ollama show</code> or a run is extremely slow it is probably not using the GPU &mdash;
-        check that <code>PROCESSOR</code> in <code>ollama ps</code> says GPU. Clear these before moving on.</div>
+        check that <code>PROCESSOR</code> in <code>ollama ps</code> says GPU. Clear these before moving on.</li>
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -1318,7 +1317,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         Understand the mechanics and you can plant your flag firmly between <b>size × speed × feel</b>.</p>
       </div>
 
-      <div class="grid cards2">
+            <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">What quantization is doing</div>
           <div class="p">It &ldquo;snaps&rdquo; continuous FP16/BF16 weights down to a low-bit representation
@@ -1334,24 +1333,31 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
           Q2/Q1 is &ldquo;it runs but starts babbling&rdquo;; for sensitive work prefer going back to Q6/F16 or a bigger
           base model rather than stubbornly skimping on VRAM.</div>
         </div>
-        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
-          <div class="h3">Common GGUF tiers, quick reference (llama.cpp / Ollama / LM Studio)</div>
-          <div class="p">
-          <div class="numline"><span class="n">F16 / BF16</span>&asymp;2B per weight &middot; closest to the original &middot; heaviest on VRAM</div>
-          <div class="numline"><span class="n">Q8_0</span>&asymp;1.06B &middot; essentially lossless &middot; a bit chunky</div>
-          <div class="numline"><span class="n">Q6_K</span>&asymp;0.82B &middot; high-quality floor, the &ldquo;safe sweet spot&rdquo;</div>
-          <div class="numline"><span class="n">Q5_K_M</span>&asymp;0.72B &middot; very common price/performance <b>recommendation</b></div>
-          <div class="numline"><span class="n">Q4_K_M</span>&asymp;0.61B &middot; the crowd favourite, best size/feel balance &middot; <b>newcomer default</b></div>
-          <div class="numline"><span class="n">Q3_K_S/M</span>&asymp;0.47B &middot; starts to show &middot; only tolerable on big models</div>
-          <div class="numline"><span class="n">Q2_K</span>&asymp;0.33B &middot; VRAM-extreme only &middot; high semantic risk</div>
-          </div>
-        </div>
+      </div>
+
+      <h3 class="lvl-sub">Common GGUF tiers<span class="tbl-note">llama.cpp / Ollama / LM Studio</span></h3>
+      <div class="tbl-scroll">
+        <table class="tbl" id="tbl-quant">
+          <thead><tr><th>Tier</th><th>Size (per weight)</th><th>Quality</th><th>When to pick it</th></tr></thead>
+          <tbody>
+            <tr><td><b>F16 / BF16</b></td><td>&asymp;2.0 bytes</td><td class="g">identical to source</td><td>baseline comparisons, when VRAM is plentiful</td></tr>
+            <tr><td><b>Q8_0</b></td><td>&asymp;1.06 bytes</td><td class="g">essentially lossless</td><td>only slightly smaller than the original</td></tr>
+            <tr><td><b>Q6_K</b></td><td>&asymp;0.82 bytes</td><td class="g">high quality</td><td>the safe sweet spot; floor for sensitive work</td></tr>
+            <tr><td><b>Q5_K_M</b></td><td>&asymp;0.72 bytes</td><td class="g">very good</td><td>the usual price/performance recommendation</td></tr>
+            <tr><td><b>Q4_K_M</b></td><td>&asymp;0.61 bytes</td><td class="a">good enough</td><td>best size/feel balance, the default for newcomers</td></tr>
+            <tr><td><b>Q3_K_S / M</b></td><td>&asymp;0.47 bytes</td><td class="a">starts to distort</td><td>only tolerable on very large models</td></tr>
+            <tr><td><b>Q2_K</b></td><td>&asymp;0.33 bytes</td><td class="r">high risk</td><td>last resort when VRAM is the hard limit</td></tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="callout g"><span class="head">Three &ldquo;good enough&rdquo; rules for the non-tinkerer</span>
-        &#9312; If <code>Q4_K_M</code> or <code>Q5_K_M</code> runs, use those &mdash; don&rsquo;t gamble on 2% of feel;
-        &#9313; when tight, cut context rather than bits &mdash; slimming the KV (e.g. KV-quant) is often a better trade
-        than hacking weights; &#9314; for code / long reasoning, prefer L+KV-quant or a capacity step up over Q3.</div>
+        <ol class="clist">
+          <li>If <code>Q4_K_M</code> or <code>Q5_K_M</code> runs, use those &mdash; don&rsquo;t gamble on 2% of feel.</li>
+          <li>When tight, cut context rather than bits &mdash; slimming the KV (e.g. KV-quant) is often the better trade.</li>
+          <li>For code or long reasoning, prefer L+KV-quant or a capacity step up over Q3.</li>
+        </ol>
+      </div>
       <div class="callout"><span class="head">Advanced terms (know they exist, look them up when needed)</span>
         AWQ / GPTQ (more stable group quantization), AQLM, KV cache quantization, imatrix calibration, quantization-aware
         training (QAT). CPU/Apple is smoothest through the GGUF system; NVIDIA throughput people usually pick AWQ/GPTQ
@@ -1444,7 +1450,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         <p class="lead">Deployment is only step one. Getting throughput, context and tooling to shake hands with you
         is where the real engineering starts.</p>
       </div>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">Throughput first</div>
           <div class="p">Want high <b>tokens per second</b>: enable flash-attn, raise batch, on CPU use multithreading + AVX2,
@@ -1513,7 +1519,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
       </div>
 
       <h3 class="lvl-sub">What Mixture-of-Experts means <span class="lvl core">CORE</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">Dense vs sparse: two roads</div>
           <div class="p">An ordinary model &ldquo;wakes&rdquo; all of its parameters for every token &rarr; <b>dense</b>.
@@ -1549,9 +1555,12 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         Pure-CPU folks who can tolerate a bandwidth bottleneck may find MoE a delightful &ldquo;buy intelligence cheap&rdquo; route;
         GPU folks should check whether <code>-ngl</code> can pull the router layers into VRAM too.</div>
       <div class="callout g"><span class="head">What this section solves</span>
-        &#9312; Stop being scared off by 235B &mdash; you now know why it can still fit dual cards or a big-RAM box after quantization;
-        &#9313; make &ldquo;active params&rdquo; your first-glance metric when choosing;
-        &#9314; expect <b>disk + bandwidth to be the real blockers</b> when deploying MoE.</div>
+        <ol class="clist">
+          <li>Stop being scared off by 235B &mdash; you now know why it can still fit dual cards or a big-RAM box after quantization;</li>
+          <li>make &ldquo;active params&rdquo; your first-glance metric when choosing;</li>
+          <li>expect <b>disk + bandwidth to be the real blockers</b> when deploying MoE.</li>
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -1569,7 +1578,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
       </div>
 
       <h3 class="lvl-sub">A VRAM bill that is bound to grow <span class="lvl core">CORE</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card" style="grid-column:1/-1"><span class="accent"></span>
           <div class="h3">What the KV cache actually stores</div>
           <div class="p">During inference each token produces Key/Value vectors in every attention layer; generating a new token
@@ -1603,9 +1612,12 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         <li><b>Long-document work is not &ldquo;remember everything&rdquo;</b>: RAG or a sliding window (summarization + retrieval) is often faster, more accurate and cheaper than forcing 128k.</li>
       </ul></div>
       <div class="callout g"><span class="head">Three things to just do (don&rsquo;t rush into big context)</span>
-        &#9312; Default to <code>8k / 16k</code> and use <b>chunked retrieval</b> when you genuinely need long material;
-        &#9313; turn on <code>flash-attn</code>, then squeeze VRAM further with KV quantization;
-        &#9314; both llama.cpp and Ollama let you set context explicitly via `-c` &mdash; the defaults often lie to you.</div>
+        <ol class="clist">
+          <li>Default to <code>8k / 16k</code> and use <b>chunked retrieval</b> when you genuinely need long material;</li>
+          <li>turn on <code>flash-attn</code>, then squeeze VRAM further with KV quantization;</li>
+          <li>both llama.cpp and Ollama let you set context explicitly via `-c` &mdash; the defaults often lie to you.</li>
+        </ol>
+      </div>
       <div class="callout"><span class="head">What this section solves</span>
         Read the VRAM and speed cost behind any model&rsquo;s &ldquo;maximum context&rdquo;; know that long documents want a
         &ldquo;structural capsule&rdquo; (RAG / retrieval) rather than brute force; stop tuning `context` by trial and error.</div>
@@ -1627,7 +1639,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
       </div>
 
       <h3 class="lvl-sub">Order of priority <span class="lvl core">CORE</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">top_p (nucleus sampling)</div>
           <div class="p">Sample only from the candidates whose cumulative probability covers roughly <code>p</code>:
@@ -1678,11 +1690,13 @@ You can also pass them straight through the API:
 { model, messages:[...],  "options": { "temperature":0.2, "top_p":0.9, "repeat_penalty":1.1 } }
  If you switch models or tasks, treat the recipe as a starting point, not gospel.</span></pre>
       </div>
-      <div class="callout g"><span class="head">Why you sometimes see &ldquo;the more I change, the worse it gets&rdquo;</span>
-        &#9312; First check whether <b>context is too small</b> (earlier text got truncated) &mdash; that is not sampling&rsquo;s fault;
-        &#9313; don&rsquo;t move too many knobs at once &mdash; attack the main contradiction (top_k/top_p first, then temp);
-        &#9314; &ldquo;stable&rdquo; does not mean temp=0 (argmax misses slightly-lower-probability correct words) &mdash;
-        for structured tasks prefer JSON-schema over torturing the temperature.</div>
+      <div class="callout g"><span class="head">Why it gets worse when you tweak</span>
+        <ol class="clist">
+          <li>Check whether <b>the context is too small</b> first (earlier text got cut) &mdash; not the sampler&rsquo;s fault.</li>
+          <li>Don&rsquo;t turn many knobs at once: fix <code>top_k</code>/<code>top_p</code> first, then <code>temperature</code>.</li>
+          <li>&ldquo;Stable&rdquo; is not <code>temp=0</code> (argmax misses correct-but-less-likely words); constrain structured work with JSON-schema instead of forcing the temperature down.</li>
+        </ol>
+      </div>
       <div class="callout"><span class="head">What this section solves</span>
         Stop cranking temperature and nothing else; give JSON / chat / creative / RAG each a parameter set you can justify;
         explain &ldquo;why the model repeats / goes dumb / drifts&rdquo;.</div>
@@ -1703,7 +1717,7 @@ You can also pass them straight through the API:
       </div>
 
       <h3 class="lvl-sub">Making generation &ldquo;follow the rules&rdquo;: guided decoding <span class="lvl pro">PRO</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">The idea: push grammar into every token</div>
           <div class="p">Instead of letting the model generate freely and praying it is valid, <b>restrict each step to
@@ -1755,10 +1769,13 @@ You can also pass them straight through the API:
         file writes, network access and shells unconditionally;
         never let your agent &ldquo;free-fall&rdquo; call whatever it feels like &mdash; the user is still you, and so is the blame.</div>
       <div class="callout g"><span class="head">What this section solves</span>
-        &#9312; Get local models to emit stable JSON / call schemas so app integration needs no defusing;
-        &#9313; build a local agent that actually does work with tools;
-        &#9314; understand the parent-child relation between guided decoding and sampling parameters &mdash;
-        the schema defines <i>what may be said</i>, sampling defines <i>which of those gets said</i>.</div>
+        <ol class="clist">
+          <li>Get local models to emit stable JSON / call schemas so app integration needs no defusing;</li>
+          <li>build a local agent that actually does work with tools;</li>
+          <li>understand the parent-child relation between guided decoding and sampling parameters &mdash;
+        the schema defines <i>what may be said</i>, sampling defines <i>which of those gets said</i>.</li>
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -1787,7 +1804,7 @@ You can also pass them straight through the API:
             <tr><td><b>Mistral AI</b> / Anthropic / xAI</td><td>Mistral &middot; Claude &middot; Grok</td><td class="a">Mistral mostly open / last two closed</td><td>&#9733;&#9733;&#9733;&#9734;&#9734;</td></tr>
             <tr><td rowspan="5" class="g"><b>China</b></td><td><b>DeepSeek</b></td><td>R1 / V3.2 / <b>V4 (1M context)</b></td><td class="g">Open-source pioneer, MIT</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
             <tr><td><b>Alibaba &middot; Qwen</b></td><td><b>Qwen3.5 / 3.6 / 3.8</b> &middot; VL &middot; Omni, every size</td><td class="g">Open at all scales, high heat</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
-            <tr><td><b>Zhipu Z.ai</b></td><td><b>GLM-5.x</b> (proprietary from 5.3)</td><td class="g">Important open source (some commercial)</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9734;</td></tr>
+            <tr><td><b>Zhipu Z.ai</b></td><td><b>GLM-5.x</b> (custom licence from 5.3, weights public)</td><td class="g">Important open source (some commercial)</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9734;</td></tr>
             <tr><td><b>Shanghai AI Lab</b></td><td>InternLM series</td><td class="g">Fully open pipeline</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9734;</td></tr>
             <tr><td><b>Moonshot Kimi / MiniMax / Baidu / ByteDance</b></td><td>Kimi K3 &middot; MiniMax M3 &middot; Ernie &middot; Doubao &hellip;</td><td class="r">Open weights, but licences tightening</td><td class="r">&#9733;&#9733;&#9734;&#9734;&#9734;</td></tr>
           </tbody>
@@ -1806,7 +1823,7 @@ You can also pass them straight through the API:
         <div class="tl-item"><span class="tl-year">2025.01</span><div class="tl-main"><b>DeepSeek-R1 open-sources reasoning</b>, targeting the o1 approach and sharply lowering the bar for deep reasoning; DeepSeek-V3/R1 soon topped charts &mdash; the local crowd finally got &ldquo;thinks + open + reasonable weight&rdquo; in one package.</div></div>
         <div class="tl-item"><span class="tl-year">2025.09&ndash;2025.12</span><div class="tl-main"><b>Sparse attention and ultra-sparse MoE land</b>: DeepSeek-V3.2-Exp ships DSA, Qwen3-Next-80B-A3B runs 80B on 3B active, Qwen3-VL pushes vision down to 2B, MiniMax-M2 arrives with 10B active. Shared signal: <b>activated parameters matter more than total parameters</b>.</div></div>
         <div class="tl-item"><span class="tl-year">2026 H1</span><div class="tl-main"><b>1M context becomes the flagship default</b>: DeepSeek-V4, GLM-5.2, Kimi K2.5 and MiniMax-M3 all reach a million-token window; Qwen3.5/3.6 cover every size under Apache-2.0 and go natively multimodal, while GLM-5 uses sparse attention to cut deployment cost.</div></div>
-        <div class="tl-item"><span class="tl-year">2026 H2</span><div class="tl-main"><b>Licences start to fork</b>: GLM-5.3, MiniMax-M2.7, Kimi K3 and the 2.4T tier of Qwen3.8 move to proprietary or non-commercial terms, while Gemma 4 and Meta&rsquo;s Muse-Glimmer-30B go Apache-2.0. <b>Read the licence before the parameter count</b>.</div></div>
+        <div class="tl-item"><span class="tl-year">2026 H2</span><div class="tl-main"><b>Licences start to fork</b>: GLM-5.3, MiniMax-M2.7, Kimi K3 and the 2.4T tier of Qwen3.8 move to custom or non-commercial terms (<b>weights stay public</b>, but read the commercial clauses), while Gemma 4 and Meta&rsquo;s Muse-Glimmer-30B go Apache-2.0. <b>Read the licence before the parameter count</b>.</div></div>
         <div class="tl-item"><span class="tl-year">2026 to now</span><div class="tl-main"><b>Agents &middot; long context &middot; tug-of-war over open weights</b>: what runs locally is now defined by engineering facts such as &ldquo;a 27B model fits in a 24 GB card&rdquo;,
           while the OpenAI and Anthropic flagships stay mostly closed. For local users the dividend is visible: just watch the players who <i>give away weights</i> &mdash; DeepSeek, Qwen, Meta, Zhipu, MiniMax.</div></div>
       </div>
@@ -1922,7 +1939,7 @@ You can also pass them straight through the API:
       <p><b>Neutral verdict</b>: strengths &mdash; full size coverage, generous licensing (mostly Apache-2.0 or its own permissive terms), mature tool calling and Chinese agent ecosystem,
       and the broadest compatibility stack (a familiar face in Ollama/LM Studio); limits &mdash; data and review follow domestic delivery policy (check first for some overseas or authority-sensitive deployments),
       and the strongest flagship versions are often not fully opened, so self-hosting requires weighing capability against licence.</p>
-      <p class="cm">Live (2026-11 view): locally prefer the <b>27B&ndash;35B tiers of Qwen3.5 / 3.6 / 3.8</b> (Apache-2.0, they fit a single 24 GB card), with 0.8B&ndash;9B covering edge and entry use and 122b-A10B and up reserved for multi-GPU rigs; note that <b>the 2.4T tier of Qwen3.8 switched to the proprietary Qwen3.8-Max licence</b>;
+      <p class="cm">Live (2026-11 view): locally prefer the <b>27B&ndash;35B tiers of Qwen3.5 / 3.6 / 3.8</b> (Apache-2.0, they fit a single 24 GB card), with 0.8B&ndash;9B covering edge and entry use and 122b-A10B and up reserved for multi-GPU rigs; note that <b>the 2.4T tier of Qwen3.8 switched to the custom Qwen3.8-Max licence (weights public)</b>;
       channels: qwenlm.github.io / github.com/QwenLM / Ollama &ldquo;qwen*&rdquo;; licence and review terms follow its release announcements.</p>
     </div>
   </details>
@@ -1936,7 +1953,7 @@ You can also pass them straight through the API:
       pushed &ldquo;long-horizon code and tool agents + vision in the coding loop&rdquo; as selling points; community licensing (weights or MIT, see its repos) makes it a new locally-runnable face.</p>
       <p><b>Neutral verdict</b>: strengths &mdash; strong Chinese-native ability, a developer-community reputation for agents and tool calling, and a Flash tier whose &ldquo;small activation, high throughput&rdquo; fits personal workstations;
       limits &mdash; some top tiers are &ldquo;commercial closed or licensed&rdquo;, the long-tail ecosystem and international plugins still trail Qwen/Llama, and deployment likewise requires reading licence and review terms.</p>
-      <p class="cm">Live (2026-11 view): locally you can get new weights from the official repo or HF &ldquo;zai-org/GLM-*&rdquo;; the GLM-5.x line is around 753B with 1M context, but <b>5.3 moved to a proprietary licence</b> &mdash; the MIT exits that stay local-friendly are <code>GLM-4.7-Flash</code> (30B-A3B, Q4 &asymp; 19 GB) and <code>GLM-5.3-Flash</code> (320B-A18B, natively multimodal);
+      <p class="cm">Live (2026-11 view): locally you can get new weights from the official repo or HF &ldquo;zai-org/GLM-*&rdquo;; the GLM-5.x line is around 753B with 1M context, but <b>5.3 moved to a custom licence (weights still public)</b> &mdash; the MIT exits that stay local-friendly are <code>GLM-4.7-Flash</code> (30B-A3B, Q4 &asymp; 19 GB) and <code>GLM-5.3-Flash</code> (320B-A18B, natively multimodal);
       channels: z.ai / github.com/zai-org / huggingface.</p>
     </div>
   </details>
@@ -1982,7 +1999,7 @@ You can also pass them straight through the API:
       ▼
   An answer with citations</pre>
 
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">Why this &ldquo;treats&rdquo; some hallucination</div>
           <div class="p">Put reliable source text directly into context and the model only has to <b>rephrase and integrate</b> rather than <b>recall from thin air</b>.
@@ -1997,10 +2014,12 @@ You can also pass them straight through the API:
         </div>
         <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
           <div class="h3">Chunking and retrieval are the real sorcery</div>
-          <div class="p">&#9312; Don&rsquo;t cut on a fixed character count: prefer <b>title/section/semantic</b> boundaries with overlap;
-          &#9313; retrieval granularity should not be too fine: usually pair <b>parent/child</b> (match a small sentence, feed back the larger block), which greatly improves coherence;
-          &#9314; don&rsquo;t settle for top-1: take top-3~5 and let the model synthesise, adding <b>rerank</b> when needed;
-          &#9315; when question and document languages differ, an English embedding is not ideal for Chinese &mdash; use a Chinese embedding for a Chinese corpus.</div>
+          <ol class="clist">
+            <li>Don&rsquo;t cut on a fixed character count: prefer <b>title/section/semantic</b> boundaries with overlap.</li>
+            <li>Retrieval granularity should not be too fine: usually pair <b>parent/child</b> (match a small sentence, feed back the larger block).</li>
+            <li>Don&rsquo;t settle for top-1: take top-3~5 and let the model synthesise, adding <b>rerank</b> when needed.</li>
+            <li>When question and document languages differ, an English embedding is not ideal for Chinese &mdash; use a Chinese embedding for a Chinese corpus.</li>
+          </ol>
         </div>
       </div>
 
@@ -2088,9 +2107,12 @@ if __name__ == &quot;__main__&quot;:
         Set &ldquo;if you cannot find it, say you don&rsquo;t know&rdquo;, keep <b>source citations</b> and verify afterwards;
         treat RAG as an <i>accuracy amplifier</i>, not an <i>absolute truth guarantor</i>.</div>
       <div class="callout g"><span class="head">What you take away</span>
-        &#9312; A deployable pipeline of &ldquo;documents &rarr; vectors &rarr; retrieval &rarr; assembly &rarr; generation&rdquo;;
-        &#9313; the knowledge that chunking / embedding / rerank are where tuning actually happens;
-        &#9314; the ability to wire private documents into a local model using local embeddings, never leaving the machine.</div>
+        <ol class="clist">
+          <li>A deployable pipeline of &ldquo;documents &rarr; vectors &rarr; retrieval &rarr; assembly &rarr; generation&rdquo;;</li>
+          <li>the knowledge that chunking / embedding / rerank are where tuning actually happens;</li>
+          <li>the ability to wire private documents into a local model using local embeddings, never leaving the machine.</li>
+        </ol>
+      </div>
     </div>
   </section>
 
@@ -2108,7 +2130,7 @@ if __name__ == &quot;__main__&quot;:
       </div>
 
       <h3 class="lvl-sub">What LoRA actually is <span class="lvl core">CORE</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">Don&rsquo;t move the mountain, just carve fine lines</div>
           <div class="p">Freeze all original weights and insert tiny <b>low-rank</b> incremental matrices into attention at each layer;
@@ -2154,9 +2176,12 @@ model = peft.get_peft_model(base, peft.LoraConfig(
 <span class="cm"># After training, merge and export: model.save_pretrained("adapter") → merge back to base weights → quantize to GGUF → run in ollama (see §05)</span></pre>
       </div>
       <div class="callout g"><span class="head">Three practical tips that save tuition</span>
-        &#9312; Data quality &gt; quantity: 300 carefully curated examples beat 3,000 with bad ones;
-        &#9313; start at 3 epochs and keep a separate validation set &mdash; watching only training loss is self-anaesthesia;<br>
-        &#9314; for Ollama compatibility use <code>pip install unsloth</code> or llama.cpp&rsquo;s gguf-merge for the quantized export, so you can run locally and roll back painlessly.</div>
+        <ol class="clist">
+          <li>Data quality &gt; quantity: 300 carefully curated examples beat 3,000 with bad ones;</li>
+          <li>start at 3 epochs and keep a separate validation set &mdash; watching only training loss is self-anaesthesia;</li>
+          <li>for Ollama compatibility use <code>pip install unsloth</code> or llama.cpp&rsquo;s gguf-merge for the quantized export, so you can run locally and roll back painlessly.</li>
+        </ol>
+      </div>
       <div class="callout warn"><span class="head">Licence red line &amp; don&rsquo;t forget common sense</span>
         Check the base model&rsquo;s licence before fine-tuning (Llama/Qwen/GLM differ; some forbid commercial use, some require attribution); AI-generated data needs human review to avoid recursive contamination.
         And don&rsquo;t expect fine-tuning to &ldquo;add knowledge it never had&rdquo;.</div>

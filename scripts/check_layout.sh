@@ -37,7 +37,7 @@ probe = """
 <script>
 window.addEventListener('load', function(){ setTimeout(function(){
   function W(el){ return el ? Math.round(el.getBoundingClientRect().width) : 0; }
-  var out = {vw: innerWidth, docW: document.documentElement.scrollWidth, leads: [], tables: [], wrapped: []};
+  var out = {vw: innerWidth, docW: document.documentElement.scrollWidth, leads: [], tables: [], wrapped: [], grids: []};
   document.querySelectorAll('.lead').forEach(function(el){
     var p = el.parentElement, cs = getComputedStyle(p);
     var avail = Math.round(p.getBoundingClientRect().width
@@ -48,6 +48,18 @@ window.addEventListener('load', function(){ setTimeout(function(){
     var t = c.querySelector('table'); if (!t) return;
     var over = c.scrollWidth - c.clientWidth;
     if (over > 2) out.tables.push((t.id || '(no id)') + ' +' + over + 'px');
+  });
+  // 卡片网格不能留下空列：排除整行卡片后，卡片数应是列数的整数倍
+  document.querySelectorAll('.grid').forEach(function(g){
+    var cols = getComputedStyle(g).gridTemplateColumns.split(' ').length;
+    var n = 0, span = 0;
+    Array.prototype.forEach.call(g.children, function(c){
+      // 整行卡片（grid-column:1/-1）计算值是 -1，普通卡片是 auto
+      if (getComputedStyle(c).gridColumnEnd !== 'auto') span++;
+      else n++;
+    });
+    if (n && (n < cols || (span && n % cols !== 0)))
+      out.grids.push((g.closest('section') || {}).id + ': ' + n + ' 张卡片排进 ' + cols + ' 列，最后一行空着');
   });
   ['tbl-frontier','tbl-closed','tbl-embed','tbl-ocr','tbl-audio','tbl-video'].forEach(function(id){
     var t = document.getElementById(id); if (!t) return;
@@ -101,6 +113,8 @@ if d['tables']:
     bad.append('表格溢出容器：' + ', '.join(d['tables'][:4]))
 if d['wrapped']:
     bad.append('厂商列折行：' + ', '.join(d['wrapped'][:3]))
+if d['grids']:
+    bad.append('卡片网格留空列：' + ', '.join(d['grids'][:3]))
 if bad:
     print('  ✗ ${label} @${w}px：' + ' | '.join(bad)); sys.exit(1)
 print('  ✓ ${label} @${w}px')

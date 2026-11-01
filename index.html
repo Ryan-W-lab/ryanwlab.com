@@ -194,7 +194,7 @@ ollama run qwen3:1.7b</pre></div>
         <p class="lead">一句话：大模型是一台被千亿级文本「喂」出来的概率机器，
         学会的不是记课文，而是词语之间的<span class="hl">规律与共现结构</span>。它不是数据库，而是「压缩了世界的统计大脑」。</p>
       </div>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3"><span class="cmd">&gt;_</span>它到底是什么</div>
           <div class="p">输入一长串 Token（被切成小块的文本），经深度神经网络逐层变换，
@@ -231,7 +231,7 @@ ollama run qwen3:1.7b</pre></div>
         </div>
       </div>
 
-      <div class="grid cards2" style="margin-top:18px">
+      <div class="grid cards2 g2" style="margin-top:18px">
         <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
           <div class="h3">硬核术语快查</div>
           <div class="p">
@@ -263,7 +263,7 @@ ollama run qwen3:1.7b</pre></div>
         <p class="lead">把每一次 Prompt 都外包给云端，本质上是在向第三方<code>裸奔你的思考</code>。
         本地部署换回的，是<span class="hl">主权、隐私、可控与一条不牵线的离线自由</span>。</p>
       </div>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
           <div class="h3"><span class="cmd">✓</span>数据主权 &amp; 隐私</div>
           <div class="p">本地推理可减少向第三方发送原始资料。<b>本地部署不会自动保证隐私或合规</b>：仍需检查遥测、插件、云模型、联网工具、日志和访问权限。</div>
@@ -369,11 +369,11 @@ ollama run qwen3:1.7b</pre></div>
               <td class="r">Q4 约 900GB+（仅 :cloud），单机无望</td></tr>
             <tr><td><b>Kimi K3</b></td><td>月之暗面</td><td>2.8T / 104B（896 专家取 16）</td><td>1,048,576</td><td class="r">Kimi K3 License（专有）</td>
               <td class="r">Q4 约 1.6TB（仅 :cloud）</td></tr>
-            <tr><td><b>Qwen3.8（2.4T 版）</b></td><td>阿里 · 通义</td><td>2.4T / 95B（512 专家取 10）</td><td>262,144 → 1,010,000</td><td class="r">Qwen3.8-Max License（专有）</td>
+            <tr><td><b>Qwen3.8（2.4T 版）</b></td><td>阿里 · 通义</td><td>2.4T / 95B（512 专家取 10）</td><td>262,144 → 1,010,000</td><td class="r">Qwen3.8-Max 自定义许可（权重公开）</td>
               <td class="r">Q4 约 1.4TB；本地实际可用的是 27B Apache-2.0 档</td></tr>
             <tr><td><b>Kimi K2.5 / K2.6 / K2.7-Code</b></td><td>月之暗面</td><td>1T / 32B</td><td>262,144</td><td class="g">Modified MIT</td>
               <td class="r">Q4 约 560GB+，需多卡集群</td></tr>
-            <tr><td><b>Muse-Spark-Open</b></td><td>Meta</td><td>816B / 42B</td><td>未公开</td><td class="r">专有（条款需核验）</td>
+            <tr><td><b>Muse-Spark-Open</b></td><td>Meta</td><td>816B / 42B</td><td>未公开</td><td class="r">自定义许可（需申请，权重可得）</td>
               <td class="r">Q4 约 450GB（仅 :cloud）</td></tr>
             <tr><td><b>Nemotron 3 Ultra</b></td><td>NVIDIA</td><td>550B / 55B</td><td>1,048,576</td><td class="g">OpenMDW-1.1（宽松）</td>
               <td class="r">Q4 约 302GB，仅 :cloud</td></tr>
@@ -387,6 +387,8 @@ ollama run qwen3:1.7b</pre></div>
               <td class="r">Q4 约 138GB</td></tr>
             <tr><td><b>Mistral Large 3</b></td><td>Mistral AI</td><td>675B / 41B</td><td>未公开</td><td class="g">Apache-2.0</td>
               <td class="r">Q4 约 371GB</td></tr>
+            <tr><td><b>Mistral Large 4</b></td><td>Mistral AI</td><td>1T / 52B</td><td>未公开</td><td class="g">自定义许可（权重公开）</td>
+              <td class="r">Q4 约 550GB</td></tr>
             <tr><td><b>Command A+</b></td><td>Cohere</td><td>218.8B / 25B</td><td>131,072</td><td class="g">Apache-2.0</td>
               <td class="r">Q4 约 120GB；Cohere 首个真正 OSI 许可的模型</td></tr>
             <tr><td><b>Nemotron 3 Super</b></td><td>NVIDIA</td><td>120B / 12B（512 专家取 22）</td><td>1,048,576</td><td class="r">NVIDIA 开放模型许可</td>
@@ -397,15 +399,20 @@ ollama run qwen3:1.7b</pre></div>
               <td class="r">Q4 约 560GB+，且无 GGUF</td></tr>
             <tr><td><b>MiMo-V2.6-Pro</b></td><td>小米 · MiMo</td><td>1.02T / 42B（384 专家取 8）</td><td>1,048,576</td><td class="g">MIT</td>
               <td class="r">Q4 约 560GB，服务端量级</td></tr>
-            <tr><td><b>GLM-5 / 5.1 / 5.2 / 5.3</b></td><td>智谱 Z.ai</td><td>744B–754B / 40B（5.1 起未公开）</td><td>202,752 → 1,048,576</td><td class="g">MIT（5.3 起专有）</td>
+            <tr><td><b>GLM-5 / 5.1 / 5.2 / 5.3</b></td><td>智谱 Z.ai</td><td>744B–754B / 40B（5.1 起未公开）</td><td>202,752 → 1,048,576</td><td class="g">MIT → 5.3 起自定义许可（权重公开）</td>
               <td class="r">Q4 约 420GB；5.x 有 Flash 出口见下表</td></tr>
           </tbody>
         </table>
       </div>
       <div class="callout warn"><span class="head">为什么它们不在下面那块「本地可部署」里</span>
-        分界线就一条：<b>本地清单 = 4 张 80GB 级专业卡以内（Q4 约 320GB 以内）</b>；
-        再往上就是数据中心量级，进不了这一档。想在本地拿到同等能力，路径是：① 找同家的低激活 / Flash 版（GLM-5.3-Flash、MiniMax M3.1-Flash、DeepSeek-V4.1-Flash，见下表）；
-        ② 用社区量化 + CPU offload 硬扛；③ 或者直接用厂商 API。</div>
+        <p>分界线就一条：<b>本地清单 = 4 张 80GB 级专业卡以内（Q4 约 320GB 以内）</b>；
+        再往上就是数据中心量级，进不了这一档。想在本地拿到同等能力，路径是：</p>
+        <ol class="clist">
+          <li>找同家的低激活 / Flash 版（GLM-5.3-Flash、MiniMax M3.1-Flash、DeepSeek-V4.1-Flash，见下表）；</li>
+          <li>用社区量化 + CPU offload 硬扛；</li>
+          <li>或者直接用厂商 API。</li>
+        </ol>
+      </div>
 
       <h3 class="lvl-sub">闭源旗舰（只能走 API / 订阅，看行业上限）<span class="lvl pro">PRO</span></h3>
       <p class="lead" style="margin-top:10px">这些模型<b>没有可下载的权重</b>，本地跑不了，但值得知道它们在哪 ——
@@ -436,16 +443,8 @@ ollama run qwen3:1.7b</pre></div>
               <td>官方称迄今最强编码与知识工作模型，速度翻倍、价格减半</td></tr>
             <tr><td><b>Muse Wonder</b></td><td>Meta</td><td>2026&#8209;10</td><td>1,048,576</td><td>Meta Model API（仍为 preview）</td><td class="g">$4 / $20</td>
               <td>Meta 托管 API 的旗舰；另有一档仅订阅制</td></tr>
-            <tr><td><b>Mistral Large 4</b></td><td>Mistral</td><td>2026&#8209;10</td><td>—</td><td>Mistral Platform</td><td class="g">官方未确认</td>
-              <td>官方称最先进的开放权重通用多模态模型，但用的是自有限制许可</td></tr>
-            <tr><td><b>DeepSeek V4-Pro / Flash</b></td><td>DeepSeek</td><td>2026&#8209;08 / 10</td><td>1M（最大输出 384K）</td><td>API（OpenAI 与 Anthropic 两种格式）</td><td class="g">$0.66 / $1.98 ｜ $0.15 / $0.60</td>
-              <td>引入了峰时/离峰双价制（UTC 工作日 01–04、06–10 为峰时翻倍）</td></tr>
-            <tr><td><b>Qwen3.8-Max</b></td><td>阿里 · 通义</td><td>2026&#8209;08</td><td>1,000,000</td><td>QwenCloud API / 千问 / QwenWork</td><td class="g">输入 $1.65</td>
-              <td>2.4T 总参 / 95B 激活；官方称可连续自主编码十天以上</td></tr>
             <tr><td><b>Kimi K3.1 Pro</b></td><td>月之暗面</td><td>2026&#8209;10</td><td>1M</td><td>Kimi API / App / 会员</td><td class="g">会员制（1M 上下文需高档位）</td>
               <td>官方称迄今最强的 3T 级模型；官方称其开放权重，但公开权重仓库尚未上线</td></tr>
-            <tr><td><b>GLM-5.3</b></td><td>智谱 Z.ai</td><td>2026&#8209;10</td><td>1M（最大输出 128K）</td><td>Z.ai API / 编程套餐</td><td class="g">$1.4 / $4.4</td>
-              <td>与 GLM-5.2 共用 base model、提升全靠后训练；官方称 Code Bench +50%</td></tr>
             <tr><td><b>ERNIE 5.1</b></td><td>百度</td><td>2026&#8209;05</td><td>128K</td><td>千帆 API / 文心</td><td class="g">官方未确认</td>
               <td>官方称以可比模型 6% 的预训练成本达到领先表现（分离式全异步 RL）</td></tr>
             <tr><td><b>Seed 2.1 / Seedance 2.5</b></td><td>字节跳动</td><td>2026&#8209;06 / 07</td><td>—</td><td>火山方舟 / 豆包 / Coze</td><td class="g">官方未确认</td>
@@ -673,7 +672,7 @@ ollama run qwen3:1.7b</pre></div>
         下面四套，由易到难，都讲透。</p>
       </div>
 
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent" style="background:linear-gradient(180deg,var(--green),transparent)"></span>
           <div class="h3">① Ollama —— 极客入门首选</div>
           <div class="p">把 llama.cpp 的复杂度揉成一句话。跨平台，自动量化/下载，自带 OpenAI 兼容端点，支持模型切换与 Modelfile 微调参数。</div>
@@ -692,7 +691,7 @@ ollama run qwen3:1.7b</pre></div>
         </div>
       </div>
 
-      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">主链路 · Ollama（Win / macOS / Linux）</h3>
+      <h3 class="title" style="font-size:1.4rem;margin:26px 0 6px">① 主链路 · Ollama（Win / macOS / Linux）</h3>
       <div class="term">
         <div class="bar"><span class="dots"><span></span><span></span><span></span></span>
           <span>zsh ~ Win PowerShell 同构 · install &amp; run</span><span class="copy">⧉ 复制</span></div>
@@ -729,7 +728,7 @@ ollama run qwen3:1.7b</pre></div>
 # 例（Python/OpenAI SDK）：OpenAI(base_url="http://127.0.0.1:11434/v1", api_key="ollama")</span></pre>
       </div>
 
-      <div class="grid cards2" style="margin:26px 0 4px">
+      <div class="grid cards2 g2" style="margin:26px 0 4px">
         <div class="callout g" style="margin:0"><span class="head">② LM Studio（Windows / macOS 图形化）</span>
           官网下载安装 → Models 页搜 <code>qwen3 8b</code> 或 <code>deepseek r1</code> →
           挑一个 GGUF 标签（喜欢 Q4_K_M）→ Download → 点 Chat / 右上角 <span class="hl">Local Server</span>
@@ -801,8 +800,13 @@ ollama run qwen3:1.7b</pre></div>
         内存共享即「显存」！M 系 16GB 起步 + <code>Metal</code>，跑 8B 又快又省电。
         Ollama/llama.cpp 均已原生支持；别听信「Mac 不能跑 AI」的过时笑话。选模型记得看 `Metal / GGML` 优化。</div>
       <div class="callout warn"><span class="head">Windows 三件坑（先说为敬）</span>
-        ① 驱动得用 CUDA 驱动；② 路径别带中文别带空格；③ 首次 <code>ollama show</code> 或运行极慢多半是没走 GPU——
-        确认 <code>ollama ps</code> 里的 PROCESSOR 是 GPU。逐项排了再往下。</div>
+        <ol class="clist">
+          <li>驱动得用 CUDA 驱动；</li>
+          <li>路径别带中文别带空格；</li>
+          <li>首次 <code>ollama show</code> 或运行极慢多半是没走 GPU——
+        确认 <code>ollama ps</code> 里的 PROCESSOR 是 GPU。逐项排了再往下。</li>
+        </ol>
+      </div>
     </div>
   </section>
   <!-- ======= 06 量化深水区 ======= -->
@@ -816,7 +820,7 @@ ollama run qwen3:1.7b</pre></div>
         搞清楚原理，你就能在 <b>体积 × 速度 × 手感</b> 之间站稳自己的支点。</p>
       </div>
 
-      <div class="grid cards2">
+            <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">量化在做什么</div>
           <div class="p">把连续的 FP16/BF16 权重「对齐」到少比特表示（Q4=4bit/权重）。神经网络对此异常宽容：
@@ -828,23 +832,31 @@ ollama run qwen3:1.7b</pre></div>
           <div class="p">比特越低，长程依赖、数学多步、JSON/代码补全的「精确尾巴」越容易被咬掉。
           Q2/Q1 属于「能跑但开始胡言」；敏感任务宁愿回 Q6/F16 甚至换更大基座，也别硬抠省显存。</div>
         </div>
-        <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--cyan),transparent)"></span>
-          <div class="h3">GGUF 常见档位速查（llama.cpp / Ollama / LM Studio 通用）</div>
-          <div class="p">
-          <div class="numline"><span class="n">F16 / BF16</span>≈2B每权重 · 最接近原版 · 最吃显存</div>
-          <div class="numline"><span class="n">Q8_0</span>≈1.06B · 几乎无损 · 略肥</div>
-          <div class="numline"><span class="n">Q6_K</span>≈0.82B · 高质量下线，我愿称之为「甜点安全线」</div>
-          <div class="numline"><span class="n">Q5_K_M</span>≈0.72B · 很常见的性价比 <b>推荐</b></div>
-          <div class="numline"><span class="n">Q4_K_M</span>≈0.61B ·「大众情人」，体积/手感最均衡 <b>新手默认选它</b></div>
-          <div class="numline"><span class="n">Q3_K_S/M</span>≈0.47B · 开始露馅 · 大模型才勉强用</div>
-          <div class="numline"><span class="n">Q2_K</span>≈0.33B · 显存极限才玩 · 语义风险高</div>
-          </div>
-        </div>
+      </div>
+
+      <h3 class="lvl-sub">GGUF 常见档位速查<span class="tbl-note">llama.cpp / Ollama / LM Studio 通用</span></h3>
+      <div class="tbl-scroll">
+        <table class="tbl" id="tbl-quant">
+          <thead><tr><th>档位</th><th>体积（每权重）</th><th>品质</th><th>什么时候选它</th></tr></thead>
+          <tbody>
+            <tr><td><b>F16 / BF16</b></td><td>≈2.0 字节</td><td class="g">与原始权重一致</td><td>做基准对照；显存最宽裕时</td></tr>
+            <tr><td><b>Q8_0</b></td><td>≈1.06 字节</td><td class="g">几乎无损</td><td>只比原版略小，收益有限</td></tr>
+            <tr><td><b>Q6_K</b></td><td>≈0.82 字节</td><td class="g">高质量</td><td>「甜点安全线」，敏感任务的下限</td></tr>
+            <tr><td><b>Q5_K_M</b></td><td>≈0.72 字节</td><td class="g">很好</td><td>性价比高，常见推荐</td></tr>
+            <tr><td><b>Q4_K_M</b></td><td>≈0.61 字节</td><td class="a">够用</td><td>体积与手感最均衡，新手默认</td></tr>
+            <tr><td><b>Q3_K_S / M</b></td><td>≈0.47 字节</td><td class="a">开始走样</td><td>只有大模型勉强可用</td></tr>
+            <tr><td><b>Q2_K</b></td><td>≈0.33 字节</td><td class="r">风险高</td><td>显存极限才考虑</td></tr>
+          </tbody>
+        </table>
       </div>
 
       <div class="callout g"><span class="head">给不折腾党的三条「够用原则」</span>
-        ①能用 <code>Q4_K_M</code> 或 <code>Q5_K_M</code> 就跑这些，别为 2% 手感赌脸；②吃紧就降上下文而非降比特——KV 瘦身(如 KV-quant)
-        常比砍权重更划算；③代码/长推理要求高时，宁可用 L+KV-quant 或升一档容量，也别 Q3。</div>
+        <ol class="clist">
+          <li>能用 <code>Q4_K_M</code> 或 <code>Q5_K_M</code> 就跑这些，别为 2% 手感赌脸。</li>
+          <li>吃紧就降上下文而非降比特 —— KV 瘦身（如 KV-quant）常比砍权重更划算。</li>
+          <li>代码/长推理要求高时，宁可用 L+KV-quant 或升一档容量，也别 Q3。</li>
+        </ol>
+      </div>
       <div class="callout"><span class="head">进阶名词（认识即可，用时可查）</span>
         AWQ / GPTQ（更稳的分组量化）、AQLM、KV Cache 量化、XMX(imatrix)校准、感知量化(QAT)。
         CPU/Apple 走 GGUF 体系最顺；N 卡生产者吞吐党常选 AWQ/GPTQ + vLLM 原生化体验。</div>
@@ -933,7 +945,7 @@ ollama run qwen3:1.7b</pre></div>
         <div class="line"></div>
         <p class="lead">部署只是第一步。让吞吐、上下文、工具链与自己握手，才是持续工程的开始。</p>
       </div>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">吞吐优先</div>
           <div class="p">要大<b>每秒 token</b>：开 flash-attn、加 batch、CPU 党多线程+AVX2、llama.cpp 用 Metal/CUDA 后端；
@@ -995,7 +1007,7 @@ ollama run qwen3:1.7b</pre></div>
       </div>
 
       <h3 class="lvl-sub">什么是「专家混合」Mixture-of-Experts <span class="lvl core">CORE</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">稠密 vs 稀疏：两条路</div>
           <div class="p">普通模型每个 token 都「唤醒」全部参数 → <b>稠密(dense)</b>。
@@ -1024,7 +1036,12 @@ ollama run qwen3:1.7b</pre></div>
         MoE 文件偏大 → <b>磁盘要足够</b>；显存吃「总参数（量化后）+ 路由开销」而非仅激活参。<br>
         纯 CPU 玩家若能接受带宽瓶颈，MoE 反而是「少钱买智商」的惊喜路线；GPU 玩家看 <code>-ngl</code> 能否把路由层也装入显存。</div>
       <div class="callout g"><span class="head">「读完能解决什么」</span>
-        ① 不再被 235B 吓退，知道它量化后为何仍可能塞进双卡/大内存机；② 选型时把「激活参」当第一眼指标；③ 部署 MoE 时预判「磁盘+带宽才是拦路虎」。</div>
+        <ol class="clist">
+          <li>不再被 235B 吓退，知道它量化后为何仍可能塞进双卡/大内存机；</li>
+          <li>选型时把「激活参」当第一眼指标；</li>
+          <li>部署 MoE 时预判「磁盘+带宽才是拦路虎」。</li>
+        </ol>
+      </div>
     </div>
   </section>
   <!-- ======= §10 KV-Cache ======= -->
@@ -1040,7 +1057,7 @@ ollama run qwen3:1.7b</pre></div>
       </div>
 
       <h3 class="lvl-sub">一笔注定增长的显存 <span class="lvl core">CORE</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card" style="grid-column:1/-1"><span class="accent"></span>
           <div class="h3">KV-Cache 到底存了什么</div>
           <div class="p">推理时每个 token 在每层注意力里都产出 Key/Value 向量；生成新 token 要用<b>所有历史 K/V</b>做匹配。
@@ -1070,7 +1087,12 @@ ollama run qwen3:1.7b</pre></div>
         <li><b>长文做题不是“全记住”</b>：RAG 或滑动窗口(summarization+retrieval) 往往比硬塞 128k 又快又准又便宜。</li>
       </ul></div>
       <div class="callout g"><span class="head">照做的三条（先别急着开大上下文）</span>
-        ① 默认 <code>8k / 16k</code>，真需要长资料再 <b>分段检索</b>；② 开 <code>flash-attn</code>，再用 KV 量化抠显存；③ llama.cpp / Ollama 都留 `-c` 显式设上下文，默认值常常骗你。</div>
+        <ol class="clist">
+          <li>默认 <code>8k / 16k</code>，真需要长资料再 <b>分段检索</b>；</li>
+          <li>开 <code>flash-attn</code>，再用 KV 量化抠显存；</li>
+          <li>llama.cpp / Ollama 都留 `-c` 显式设上下文，默认值常常骗你。</li>
+        </ol>
+      </div>
       <div class="callout"><span class="head">读完能解决</span>
         看懂任意模型“最大上下文”背后的显存与速度代价；知道长文该用“结构方舱”（RAG/检索）而非“硬塞”；调 `context` 不再靠撞运气。</div>
     </div>
@@ -1088,7 +1110,7 @@ ollama run qwen3:1.7b</pre></div>
       </div>
 
       <h3 class="lvl-sub">先排个优先级 <span class="lvl core">CORE</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">top_p（核采样）</div>
           <div class="p">只在累计概率约覆盖 <code>p</code> 的那堆候选里抽：CPU 上按总概率堆叠，砍掉“跑偏的尾巴”。
@@ -1137,9 +1159,12 @@ ollama run qwen3:1.7b</pre></div>
  若换了模型/任务，把配方当起点当刻度，别当真理。</span></pre>
       </div>
       <div class="callout g"><span class="head">为什么你会看到“越改越差”</span>
-        ① 先检查<b>上下文是否太小</b>（前文被截）——不是采样的锅；
-        ② 别一次动太多旋钮，抓主要矛盾（先 top_k/top_p，再 temp）；
-        ③ “稳定”不等于 temp=0（argmax 会错过概率略低的正确词），给结构化任务建议 JSON-schema 而非硬凑温度。</div>
+        <ol class="clist">
+          <li>先检查<b>上下文是否太小</b>（前文被截）—— 不是采样的锅。</li>
+          <li>别一次动太多旋钮，抓主要矛盾：先 <code>top_k</code>/<code>top_p</code>，再 <code>temperature</code>。</li>
+          <li>「稳定」不等于 <code>temp=0</code>（argmax 会错过概率略低的正确词）；结构化任务用 JSON-schema 约束，而不是硬凑温度。</li>
+        </ol>
+      </div>
       <div class="callout"><span class="head">读完能解决</span>
         不再对着 temperature 一门心思猛拧；能给 JSON/对话/创意/RAG 各配一组说得出口的参数；能解释“为什么模型复读/变傻/爱跑偏”。</div>
     </div>
@@ -1157,7 +1182,7 @@ ollama run qwen3:1.7b</pre></div>
       </div>
 
       <h3 class="lvl-sub">让生成「按规矩来」：guided decoding <span class="lvl pro">PRO</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">思路：把语法塞进每个 token</div>
           <div class="p">与其让模型先自由生成再祈祷它合法，不如<b>限制每一步只能输出「符合语法的下一个字符」</b>。
@@ -1201,8 +1226,12 @@ ollama run qwen3:1.7b</pre></div>
         Function-Calling 给了 AI 一把“钥匙”。只暴露<b>白名单且可审计的工具</b>；文件写、联网、shell 一律加权限 gate；
         别让你的 Agent “自由落体”地调用一切它想调的东西 —— 用的人还是你，背锅的也是你。</div>
       <div class="callout g"><span class="head">读完能解决</span>
-        ① 让本地模型稳定吐 JSON/调 schema，程序对接零拆弹；② 用 tools 做出“会动手干活的本地 Agent”；
-        ③ 理解 guided decoding 与采样参数的“父子关系” —— schema 定“能说什么”，采样定“在能说里挑哪句”。</div>
+        <ol class="clist">
+          <li>让本地模型稳定吐 JSON/调 schema，程序对接零拆弹；</li>
+          <li>用 tools 做出“会动手干活的本地 Agent”；</li>
+          <li>理解 guided decoding 与采样参数的“父子关系” —— schema 定“能说什么”，采样定“在能说里挑哪句”。</li>
+        </ol>
+      </div>
     </div>
   </section>
   <!-- ======= §13 玩家通鉴 & 编年 ======= -->
@@ -1228,7 +1257,7 @@ ollama run qwen3:1.7b</pre></div>
             <tr><td><b>Mistral AI</b> / Anthropic / xAI</td><td>Mistral 系 · Claude · Grok</td><td class="a">Mistral 开源多 / 后两者闭源</td><td>★★★☆☆</td></tr>
             <tr><td rowspan="5" class="g"><b>国内</b></td><td><b>DeepSeek（深度求索）</b></td><td>R1 / V3.2 / <b>V4（1M 上下文）</b></td><td class="g">开源先锋，MIT</td><td class="g">★★★★★</td></tr>
             <tr><td><b>阿里 · 通义(Qwen)</b></td><td><b>Qwen3.5 / 3.6 / 3.8</b> · VL · Omni 全档位</td><td class="g">全规模高热度开源</td><td class="g">★★★★★</td></tr>
-            <tr><td><b>智谱 Z.ai</b></td><td><b>GLM-5.x</b>（5.3 起转专有许可）</td><td class="g">重要开源（部分商业）</td><td class="g">★★★★☆</td></tr>
+            <tr><td><b>智谱 Z.ai</b></td><td><b>GLM-5.x</b>（5.3 起转自定义许可，权重公开）</td><td class="g">重要开源（部分商业）</td><td class="g">★★★★☆</td></tr>
             <tr><td><b>上海AI Lab</b></td><td>InternLM 系列</td><td class="g">开源全链</td><td class="g">★★★★☆</td></tr>
             <tr><td><b>月之暗面Kimi / MiniMax / 百度 / 字节</b></td><td>Kimi K3 · MiniMax M3 · 文心 · 豆包…</td><td class="r">开放权重但许可趋紧</td><td class="r">★★☆☆☆</td></tr>
           </tbody>
@@ -1247,7 +1276,7 @@ ollama run qwen3:1.7b</pre></div>
         <div class="tl-item"><span class="tl-year">2025.01</span><div class="tl-main"><b>DeepSeek-R1 开源推理模型</b>对标 o1 思路，大幅拉低深度推理门槛；稍后 DeepSeek-V3/R1 系霸榜——本地党终于能用上“会思考 + 开源 + 重量合理”的组合。</div></div>
         <div class="tl-item"><span class="tl-year">2025.09–2025.12</span><div class="tl-main"><b>稀疏注意力与超稀疏 MoE 落地</b>：DeepSeek-V3.2-Exp 首发 DSA、Qwen3-Next-80B-A3B 用 3B 激活跑 80B、Qwen3-VL 把视觉下探到 2B、MiniMax-M2 以 10B 激活上榜。共同信号：<b>激活参数比总参数更该看</b>。</div></div>
         <div class="tl-item"><span class="tl-year">2026 上半年</span><div class="tl-main"><b>1M 上下文成为旗舰标配</b>：DeepSeek-V4、GLM-5.2、Kimi K2.5、MiniMax-M3 齐步进入百万上下文；Qwen3.5/3.6 全尺寸 Apache-2.0 并原生多模态，GLM-5 用稀疏注意力把部署成本压下来。</div></div>
-        <div class="tl-item"><span class="tl-year">2026 下半年</span><div class="tl-main"><b>许可证开始分叉</b>：GLM-5.3、MiniMax-M2.7、Kimi K3、Qwen3.8 的 2.4T 版先后改用专有或禁商用许可；与此同时 Gemma 4、Meta Muse-Glimmer-30B 走 Apache-2.0。<b>选型先看许可，再看参数</b>。</div></div>
+        <div class="tl-item"><span class="tl-year">2026 下半年</span><div class="tl-main"><b>许可证开始分叉</b>：GLM-5.3、MiniMax-M2.7、Kimi K3、Qwen3.8 的 2.4T 版先后改用自定义或禁商用许可（<b>权重仍公开</b>，但商用条款要逐条读）；与此同时 Gemma 4、Meta Muse-Glimmer-30B 走 Apache-2.0。<b>选型先看许可，再看参数</b>。</div></div>
         <div class="tl-item"><span class="tl-year">2026 至今</span><div class="tl-main"><b>Agent · 长文 · 开源霸权拉锯</b>：本地可跑的上限被「27B 装进 24GB 卡」这类工程事实重新定义；
           而 OpenAI、Anthropic 旗舰仍多走闭源。对本地：红利期肉眼可见 —— 关注 DeepSeek、Qwen、Meta、智谱、MiniMax 这类"给权重"的玩家，并逐版核对许可证。</div></div>
       </div>
@@ -1346,7 +1375,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：出自阿里云研究线，Qwen 家族以“从小到大几乎每个档位都给开源权重 + 多语言 + 原生中文强”刷出极高使用率，是本地党在华语区最常见到的默认选项之一。</p>
           <p><b>关键节点</b>：从 Qwen(1.5/2.5，0.x~72B 全覆盖) → Qwen-Coder（编码专用多尺寸）→ Qwen3(0.6B–235B、含 MoE，加入 thinking 档与工具)→ <b>2026 继续到 Qwen3.5/3.8(3.8-27B 等 + 更小/多模态与“flash‑next”前瞻档)</b>；节奏之密基本是当季“部署量最快上新”的开源线之一。</p>
           <p><b>中立点评</b>：优势 —— 档位全、许可宽敞（多为 Apache-2.0 或其官方宽松条款）、工具调用与中文 Agent 生态成熟，兼容栈最广（Ollama/LMC 老熟脸）；局限 —— 数据/审查按境内交付策略处理（部分海外/要实权部署场景要先核），旗舰往往闭源“更强”版本不完全开放，自部署需要在能力与许可间自己核对。</p>
-          <p class="cm">现役（2026-11 视角）：本地优先看 <b>Qwen3.5 / 3.6 / 3.8 的 27B–35B 档</b>（Apache-2.0，单张 24GB 可跑）；0.8B–9B 覆盖端侧与入门，122B-A10B 及以上给多卡机器。注意 <b>3.8 的 2.4T 版换成了 Qwen3.8-Max 专有许可</b>，2.4T 也不是本地机器能碰的体量。渠道：qwenlm.github.io / github.com/QwenLM / Ollama「qwen*」。</p>
+          <p class="cm">现役（2026-11 视角）：本地优先看 <b>Qwen3.5 / 3.6 / 3.8 的 27B–35B 档</b>（Apache-2.0，单张 24GB 可跑）；0.8B–9B 覆盖端侧与入门，122B-A10B 及以上给多卡机器。注意 <b>3.8 的 2.4T 版换成了 Qwen3.8-Max 自定义许可（权重公开）</b>，2.4T 也不是本地机器能碰的体量。渠道：qwenlm.github.io / github.com/QwenLM / Ollama「qwen*」。</p>
         </div>
       </details>
 
@@ -1356,7 +1385,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：脱胎清华系研究积累（智谱/GLM 一路有学术长期线），主打“以中文与代码 Agent 见长的自然形态”。一路从 ChatGLM → GLM 系，2025 年后开始按“开源核心 + 更强的商用版”双轨发行。</p>
           <p><b>关键节点</b>：GLM-4.x 时代已有中文 Agent/多模态布局，<b>到 2026 的 GLM-5.3 家族（含 GLM-5.3-Flash：总约 320B / 激活约 18B 的多模态、1M token 上下文、已开源权重）</b>进一步把“长程代码/工具 Agent + 视觉进编码环”做成卖点；许可给到社区（权重或 MIT 见其仓）让它成为本地可尝试的新面孔。</p>
           <p><b>中立点评</b>：优势 —— 中文原生强、Agent 与工具调用被开发群口碑、Flash 档以“激活小、吞吐高”贴近个人工作站；局限 —— 部分最强档做“商用闭源或授权制”、长尾生态与国际插件仍比不过 Qwen/Llama，落地同样需看清许可与审查条款。</p>
-          <p class="cm">现役（2026-11 视角）：本地可在官方 repo/HF「zai-org/GLM-*」拿到新权重；<b>GLM-5.x 主线已到约 753B / 1M 上下文，但 5.3 起换成专有许可</b>，能放心本地用的出口是仍为 MIT 的 <code>GLM-4.7-Flash</code>（30B-A3B，Q4≈19GB）与 <code>GLM-5.3-Flash</code>（320B-A18B，原生多模态）。渠道：z.ai / github.com/zai-org / huggingface。</p>
+          <p class="cm">现役（2026-11 视角）：本地可在官方 repo/HF「zai-org/GLM-*」拿到新权重；<b>GLM-5.x 主线已到约 753B / 1M 上下文，但 5.3 起换成自定义许可（权重公开）</b>，能放心本地用的出口是仍为 MIT 的 <code>GLM-4.7-Flash</code>（30B-A3B，Q4≈19GB）与 <code>GLM-5.3-Flash</code>（320B-A18B，原生多模态）。渠道：z.ai / github.com/zai-org / huggingface。</p>
         </div>
       </details>
 
@@ -1398,7 +1427,7 @@ ollama run qwen3:1.7b</pre></div>
       ▼
   输出带引用的回答</pre>
 
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">为什么这么做能“治”一部分幻觉</div>
           <div class="p">把可靠的原文直接放进上下文，模型只需<b>转述/整合</b>而非<b>凭空回忆</b>。
@@ -1412,9 +1441,12 @@ ollama run qwen3:1.7b</pre></div>
         </div>
         <div class="card" style="grid-column:1/-1"><span class="accent" style="background:linear-gradient(180deg,var(--amber),transparent)"></span>
           <div class="h3">切块跟检索，才是真正的“法术”</div>
-          <div class="p">① 别硬按固定字数硬切：优先<b>按标题/章节/语义</b>切片并带重叠；② 检索粒度别太小：常配
-          <b>parent/child</b>（搜到小句、喂回大块），能大幅提升连贯；③ 别满足于 top-1：取 top-3~5 再让模型综合，
-          必要时加<b>rerank</b>把最贴的顶上去；④ 提问与文档语言不一致时，英文 embedding 对中文并不理想，中文库用中文 embedding。</div>
+          <ol class="clist">
+            <li>别硬按固定字数硬切：优先<b>按标题/章节/语义</b>切片并带重叠。</li>
+            <li>检索粒度别太小：常配 <b>parent/child</b>（搜到小句、喂回大块），能大幅提升连贯。</li>
+            <li>别满足于 top-1：取 top-3~5 再让模型综合，必要时加 <b>rerank</b> 把最贴的顶上去。</li>
+            <li>提问与文档语言不一致时，英文 embedding 对中文并不理想，中文库用中文 embedding。</li>
+          </ol>
         </div>
       </div>
 
@@ -1501,8 +1533,12 @@ if __name__ == &quot;__main__&quot;:
         RAG <b>不能保证不幻觉</b>——检索可能漏了、切块太碎、或模型仍脑补。要设“找不到就答不知道”，
         保留<b>来源引用</b>和事后核验；只把 RAG 当“提准率放大器”，而不是“绝对真值保证人”。</div>
       <div class="callout g"><span class="head">读完能带走</span>
-        ① 一条“文档→向量→检索→拼接生成”的可落地流水线；② 知道切块/embedding/rerank 才是调优重点；
-        ③ 用三条演示资料跑通检索、生成与来源展示；扩展到真实文档前再加入解析、向量检索和权限管理。</div>
+        <ol class="clist">
+          <li>一条“文档→向量→检索→拼接生成”的可落地流水线；</li>
+          <li>知道切块/embedding/rerank 才是调优重点；</li>
+          <li>用三条演示资料跑通检索、生成与来源展示；扩展到真实文档前再加入解析、向量检索和权限管理。</li>
+        </ol>
+      </div>
     </div>
   </section>
   <!-- ======= §15 LoRA 微调 ======= -->
@@ -1518,7 +1554,7 @@ if __name__ == &quot;__main__&quot;:
       </div>
 
       <h3 class="lvl-sub">LoRA 到底是什么 <span class="lvl core">CORE</span></h3>
-      <div class="grid cards2">
+      <div class="grid cards2 g2">
         <div class="card"><span class="accent"></span>
           <div class="h3">不动大山，只凿细纹</div>
           <div class="p">冻结原模型全部权重，只在每层中插入极小的<b>低秩(rank)</b>增量矩阵到注意力上；
@@ -1562,9 +1598,12 @@ model = peft.get_peft_model(base, peft.LoraConfig(
 <span class="cm"># 训练完合并导出：model.save_pretrained("adapter")→ 用 merge 回原权重 → GGUF 量化 → ollama 直跑（见 §05）</span></pre>
       </div>
       <div class="callout g"><span class="head">实操给三条省学费的</span>
-        ① 数据质量 &gt; 数量：宁可 300 条精心整理，别 3000 条含错样本；
-        ② 3 epoch 起、验证集分开，只看训练集 loss 会自我麻醉；<br>
-        ③ 兼容 Ollama 的做法是 <code>pip install unsloth / 使用 llama.cpp 的 gguf-merge</code> 做 量化导出，本地直跑无痛回滚。</div>
+        <ol class="clist">
+          <li>数据质量 &gt; 数量：宁可 300 条精心整理，别 3000 条含错样本；</li>
+          <li>3 epoch 起、验证集分开，只看训练集 loss 会自我麻醉；</li>
+          <li>兼容 Ollama 的做法是 <code>pip install unsloth / 使用 llama.cpp 的 gguf-merge</code> 做 量化导出，本地直跑无痛回滚。</li>
+        </ol>
+      </div>
       <div class="callout warn"><span class="head">许可红线 & 别忘常识</span>
         微调前查基底模型许可（Llama/Qwen/GLM 各不相同，部分不可商用、部分要求署名）；AI 生成数据要人工复核，避免污染递归。别指望微调“补上不知道的知识”。</div>
     </div>

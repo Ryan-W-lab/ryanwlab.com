@@ -324,7 +324,7 @@ pre,code{text-align:left;text-justify:auto;}
 .callout.warn{border-color:var(--amber);background:rgba(255,180,84,.06);}
 .callout.g{border-color:var(--green);background:rgba(51,255,140,.05);}
 .callout .head{font-weight:700;color:var(--cyan);display:block;margin-bottom:4px;}
-.callout p,.callout li{text-align:justify;text-justify:inter-ideograph;}
+.callout,.callout p,.callout li{text-align:justify;text-justify:inter-ideograph;}
 .callout.warn .head{color:var(--amber);}
 .callout.g .head{color:var(--green);}
 
@@ -352,6 +352,18 @@ pre,code{text-align:left;text-justify:auto;}
 .mcard .tier.t3{color:var(--txt-dim);border-color:var(--line-bright);}
 .mcards{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));}
 .mcard.hide{display:none;}
+
+/* 恰好 N 张卡片时用两列，避免 auto-fit 在右边留一个空列 */
+.grid.g2{grid-template-columns:repeat(2,minmax(0,1fr));}
+@media(max-width:880px){.grid.g2{grid-template-columns:1fr;}}
+
+/* 提示框里的编号清单（原来是 ①②③ 硬挤成一段话） */
+.clist{margin:8px 0 0;padding-left:22px;color:var(--txt-mut);font-size:.9rem;line-height:1.85;}
+.clist li{margin:4px 0;}
+.clist li::marker{color:var(--green);font-weight:700;}
+
+/* 小节标题后面的补充说明（如「llama.cpp / Ollama / LM Studio 通用」） */
+.tbl-note{color:var(--txt-dim);font-size:.72rem;font-weight:400;letter-spacing:.4px;margin-left:10px;}
 
 /* §04 模型章：厂商 / 作者列不折行（窄屏时表格整体横向滚动） */
 #tbl-frontier td:nth-child(2),

@@ -112,6 +112,25 @@ scripts/list-messages.sh               # 读取生产留言箱（只读 SELECT�
 
 ---
 
+## 2026-11-01 · 推理框架补齐（Strata / FreeToken / SGLang / MLX / FastLLM）
+
+部署章原本的引擎对比表只有 5 行（Ollama / LM Studio / llama.cpp / vLLM / Docker），
+漏掉了两个今年很值得看的新引擎，也没有 SGLang。补进 5 行，表从 5 行变 10 行：
+
+| 框架 | 定位 | Mac 能跑 | 许可 |
+|---|---|---|---|
+| MLX / mlx-lm | Apple 官方框架，统一内存利用率高 | ✅ 仅 Apple Silicon | MIT |
+| **Strata** | MoE 专家按需流式调度，125B 级模型上消费级机器，OpenAI/Anthropic 双接口 | ✅ Apple Silicon M1+（另有 Win/Linux + NVIDIA/AMD） | MIT |
+| SGLang | 前缀缓存、结构化生成，vLLM 的主要对手 | ❌ 需 NVIDIA/AMD | Apache-2.0 |
+| **FreeToken** | 边缘 MoE 服务，把 GPU/CPU/内存当一个池子调度，单机跑 290B+ | ❌ 仅 Win/Linux + RTX 30/40/50 | Apache-2.0 |
+| FastLLM | C++ 实现、不依赖 PyTorch，CPU/NUMA/磁盘混合推理 | ⚠️ 需源码编译 | Apache-2.0 |
+
+全部按官方仓库核对（Strata 的 Mac 支持见其 README 硬件表与 `macos-arm64.dmg` 安装包），
+表格下补了核对日期与来源链接。注意 `stratallm.org` 是社区文档站，官方事实以
+`github.com/Niko1221/Strata` 为准，这一点写进了来源行。
+
+---
+
 ## 2026-11-01 · 闭源表纠错：4 个有公开权重的模型被错放
 
 用户指出 GLM-5.3 与 DeepSeek-V4.1-Flash 不该出现在「没有可下载权重」的闭源表里。

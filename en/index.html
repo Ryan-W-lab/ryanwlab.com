@@ -1277,17 +1277,23 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
       </div>
 
       <div class="tbl-scroll" style="margin-top:26px">
-        <table class="tbl">
+        <table class="tbl" id="tbl-frameworks">
           <thead><tr><th>Engine</th><th>Learning curve</th><th>Strength</th><th>Who it's for</th><th>Platform notes</th></tr></thead>
           <tbody>
             <tr><td class="g"><b>Ollama</b></td><td>&#9733; minimal</td><td>Minimal commands &middot; auto-quantize &middot; broad ecosystem</td><td>Beginners / the default for 80% of cases</td><td class="g">Native Win/mac/Linux</td></tr>
             <tr><td class="g"><b>LM Studio</b></td><td>&#9733; GUI</td><td>Visual model testing &middot; one-click endpoint</td><td>Desktop folks / demos</td><td class="g">Win/macOS</td></tr>
             <tr><td><b>llama.cpp</b></td><td>&#9733;&#9733;&#9733;</td><td>Low-level GGUF control &middot; best CPU compatibility</td><td>Deep customization / old machines</td><td class="a">Win needs Git/CMake</td></tr>
             <tr><td><b>vLLM</b></td><td>&#9733;&#9733;&#9733;&#9733;</td><td>High-throughput batching &middot; OpenAI serving</td><td>Production / small multi-user service</td><td class="a">Prefer CUDA / WSL2</td></tr>
+            <tr><td><b>MLX / mlx-lm</b></td><td>&#9733;&#9733;</td><td>Apple&rsquo;s own framework &middot; makes the most of unified memory</td><td>Mac power users who want the metal</td><td class="g">Apple Silicon only</td></tr>
+            <tr><td class="g"><b>Strata</b></td><td>&#9733;&#9733;</td><td>Streams MoE experts on demand &middot; 125B-class models on consumer machines &middot; OpenAI and Anthropic APIs</td><td>Small VRAM, large MoE</td><td class="g">Win/Linux + NVIDIA/AMD; Apple Silicon M1+</td></tr>
+            <tr><td><b>SGLang</b></td><td>&#9733;&#9733;&#9733;&#9733;</td><td>Prefix caching &middot; structured generation &middot; vLLM&rsquo;s main rival</td><td>Serving / multi-GPU</td><td class="a">NVIDIA / AMD required</td></tr>
+            <tr><td><b>FreeToken</b></td><td>&#9733;&#9733;&#9733;</td><td>Edge MoE serving &middot; treats GPU, CPU and host memory as one pool</td><td>290B+ MoE on one box</td><td class="a">Windows/Linux + RTX 30/40/50 only</td></tr>
+            <tr><td><b>FastLLM</b></td><td>&#9733;&#9733;&#9733;</td><td>C++ runtime with no PyTorch dependency &middot; CPU/NUMA/disk hybrid inference</td><td>Domestic stack / machines without a dGPU</td><td class="a">Build from source on Linux/Windows</td></tr>
             <tr><td class="a"><b>Docker (jetson etc.)</b></td><td>&#9733;&#9733;</td><td>Environment isolation &middot; GPU passthrough</td><td>Zero-setup machine swaps / trying images</td><td class="a">Win uses WSL2 backend</td></tr>
           </tbody>
         </table>
       </div>
+      <p class="cm">Checked 2026-11-01. Licences and platforms taken from each project&rsquo;s official repository: <a href="https://github.com/Niko1221/Strata">Strata</a> &middot; <a href="https://github.com/FlashML-org/FreeToken">FreeToken</a> &middot; <a href="https://github.com/ztxz16/fastllm">FastLLM</a> &middot; <a href="https://github.com/sgl-project/sglang">SGLang</a> &middot; <a href="https://github.com/ml-explore/mlx">MLX</a>.</p>
 
       <div class="callout"><span class="head">Apple Silicon / macOS users, this way</span>
         Unified memory <i>is</i> "VRAM". An M-series with 16GB+ and <code>Metal</code> runs 8B fast and cool.

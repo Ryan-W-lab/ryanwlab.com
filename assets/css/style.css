@@ -373,6 +373,9 @@ pre,code{text-align:left;text-justify:auto;}
 #tbl-audio td:nth-child(2),
 #tbl-video td:nth-child(2){white-space:nowrap;}
 
+/* 框架对比表：「上手」列里的 ★极低 会被拆成两行，锁一行 */
+#tbl-frameworks td:nth-child(2){white-space:nowrap;}
+
 /* 英文本地清单表：8 列自然宽度约 1457px，容器只有 1052px，会把「本地档位」
    整列推出屏幕。让表头和厂商列允许换行、表内允许断长词，先看能压到多窄。 */
 #tbl-local th,#tbl-local td{padding-left:11px;padding-right:11px;}

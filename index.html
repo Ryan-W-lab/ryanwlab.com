@@ -784,17 +784,23 @@ ollama run qwen3:1.7b</pre></div>
 <span class="cm"># 进阶组合拳： batch(packing) 超长 ctx / 前缀缓存 / speculative decoding / tensor-parallel=2 多卡</span></pre>
       </div>
       <div class="tbl-scroll" style="margin-top:26px">
-        <table class="tbl">
+        <table class="tbl" id="tbl-frameworks">
           <thead><tr><th>引擎</th><th>上手</th><th>强项</th><th>适合谁</th><th>平台注意</th></tr></thead>
           <tbody>
             <tr><td class="g"><b>Ollama</b></td><td>★极低</td><td>命令端极简 · 自动量化 · 生态广</td><td>新手 / 80% 场景默认解</td><td class="g">Win/mac/Linux 原生</td></tr>
             <tr><td class="g"><b>LM Studio</b></td><td>★GUI</td><td>可视化试模型 · 端点一键起</td><td>桌面党 / 演示</td><td class="g">Win/macOS</td></tr>
             <tr><td><b>llama.cpp</b></td><td>★★★</td><td>GGUF 底层控制 · CPU 兼容最佳</td><td>深度定制 / 老机器</td><td class="a">Win 需 Git/CMake</td></tr>
             <tr><td><b>vLLM</b></td><td>★★★★</td><td>高吞吐批量 · OpenAI 服务化</td><td>生产 / 多人小服务</td><td class="a">建议 CUDA / WSL2</td></tr>
+            <tr><td><b>MLX / mlx-lm</b></td><td>★★</td><td>Apple 官方框架 · 统一内存利用率高</td><td>只想深挖 Mac 的进阶用户</td><td class="g">仅 Apple Silicon</td></tr>
+            <tr><td class="g"><b>Strata</b></td><td>★★</td><td>MoE 专家按需流式调度 · 125B 级模型塞进消费级机器 · OpenAI/Anthropic 双接口</td><td>显存不大、想跑大 MoE</td><td class="g">Win/Linux/NVIDIA·AMD、Apple Silicon M1+</td></tr>
+            <tr><td><b>SGLang</b></td><td>★★★★</td><td>前缀缓存 · 结构化生成 · vLLM 的主要对手</td><td>服务端 / 多卡部署</td><td class="a">需 NVIDIA / AMD</td></tr>
+            <tr><td><b>FreeToken</b></td><td>★★★</td><td>边缘 MoE 服务 · 把 GPU/CPU/内存当一个池子调度</td><td>单机跑 290B+ MoE</td><td class="a">仅 Win/Linux + RTX 30/40/50</td></tr>
+            <tr><td><b>FastLLM</b></td><td>★★★</td><td>C++ 实现、不依赖 PyTorch · CPU/NUMA/磁盘混合推理</td><td>国产栈 / 无独显机器</td><td class="a">Linux·Windows 源码编译</td></tr>
             <tr><td class="a"><b>Docker(jetson 等)</b></td><td>★★</td><td>环境隔离 · GPU passthrough</td><td>换机免折腾 / 试玩镜像</td><td class="a">Win 走 WSL2 backend</td></tr>
           </tbody>
         </table>
       </div>
+      <p class="cm">核对日期 2026-11-01。许可与平台来自各自官方仓库：<a href="https://github.com/Niko1221/Strata">Strata</a> · <a href="https://github.com/FlashML-org/FreeToken">FreeToken</a> · <a href="https://github.com/ztxz16/fastllm">FastLLM</a> · <a href="https://github.com/sgl-project/sglang">SGLang</a> · <a href="https://github.com/ml-explore/mlx">MLX</a>。</p>
 
       <div class="callout"><span class="head">Apple Silicon / macOS 用户专线</span>
         内存共享即「显存」！M 系 16GB 起步 + <code>Metal</code>，跑 8B 又快又省电。

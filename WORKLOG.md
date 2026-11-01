@@ -235,7 +235,26 @@ Cloudflare 账号**（`ryan_w_lab@outlook.com`，Account ID `ed010bdbe3fc9f49c48
 
 ---
 
-## 十一、遗留事项
+## 十一、推理框架表（同日第四次）
+
+用户点名要加 Strata、FreeToken、SGLang、FastLLM。我先查了官方仓库才动笔：
+
+| 框架 | 关键事实 | 来源 |
+|---|---|---|
+| Strata | MIT；MoE 专家按需流式进显存；**Apple Silicon M1+ 有官方 dmg 和安装脚本** | github.com/Niko1221/Strata |
+| FreeToken | Apache-2.0；伯克利 FlashML；GPU/CPU/内存统一调度；桌面端只发 Windows/Linux | github.com/FlashML-org/FreeToken |
+| FastLLM | Apache-2.0；C++ 不依赖 PyTorch；CPU/NUMA/磁盘混合 | github.com/ztxz16/fastllm |
+
+**差点写错的地方**：`stratallm.org` 看起来像官网，页面底部写着
+「Unofficial Community Documentation」——它是社区文档站。Mac 支持这种硬事实必须回到
+GitHub README 的硬件表去核（那里明确列了 Apple Silicon M1+ 与 `macos-arm64.dmg`）。
+
+表里保留了「Mac 能不能跑」这一列：Strata 和 MLX 是 ✅，SGLang / FreeToken 是 ❌，
+FastLLM 标 ⚠️（源码编译）。不把「跑不了」写成「跑得了」，是这个站的基本盘。
+
+---
+
+## 十二、遗留事项
 
 | 项 | 优先级 | 状态 |
 |---|---|---|
@@ -248,7 +267,7 @@ Cloudflare 账号**（`ryan_w_lab@outlook.com`，Account ID `ed010bdbe3fc9f49c48
 
 ---
 
-## 十二、验证清单（每次改动都跑）
+## 十三、验证清单（每次改动都跑）
 
 ```sh
 python3 scripts/check_site.py          # 链接、锚点、示例源码一致

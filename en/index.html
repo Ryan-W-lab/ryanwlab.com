@@ -306,11 +306,11 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         <table class="tbl">
           <thead><tr><th>Your VRAM (roughly)</th><th>Sweet-spot models (after Q4)</th><th>Notes</th></tr></thead>
           <tbody>
-            <tr><td>&lt; 6GB (iGPU / old card)</td><td><b>1B&ndash;4B</b>: Qwen3-1.7B/4B, Llama3.2-3B, Phi-4-mini, Gemma-2B</td><td>Pure CPU also fine &mdash; for fun / edge</td></tr>
-            <tr><td class="g">8&ndash;12GB (2060/3060/RX6xxx)</td><td class="g"><b>7B&ndash;8B</b>: Qwen3-8B, DeepSeek-R1-7B/8B, qwen coder 7B</td><td class="g">The entry sweet spot. Punches hard</td></tr>
-            <tr><td class="g">16&ndash;24GB (4060Ti-16/4070Ti/4080/4090)</td><td class="g"><b>14B&ndash;34B</b>: Qwen3-14B/32B, R1-14B/32B, Gemma3-27B</td><td class="g">One card, sideways. Nice</td></tr>
-            <tr><td class="a">24&ndash;48GB (check actual usable VRAM)</td><td class="a"><b>Qwen3-30B-A3B / R1-32B; budget larger models separately</b></td><td class="a">Workstation watershed; start agents/RAG</td></tr>
-            <tr><td class="r">&ge; 2×24GB or big multi-GPU</td><td class="r"><b>70B-class Q4 or MoE-Large</b> (R1-70B, LLaMA3.3-70B, Qwen3-235B neighbours)</td><td class="r">Multi-GPU tensor split; hobbyist small-server territory</td></tr>
+            <tr><td>&lt; 6GB (iGPU / old card)</td><td><b>0.8B&ndash;4B</b>: qwen3.5:0.8b/2b/4b, lfm3:1.7b (1.1 GB but 256K context), granite4.2:3b, gemma4:e2b</td><td>Pure CPU also fine &mdash; for fun / edge</td></tr>
+            <tr><td class="g">8&ndash;12GB (2060/3060/RX6xxx)</td><td class="g"><b>4B&ndash;12B</b>: qwen3.5:9b (6.6 GB), qwen3-vl:8b, gemma4:e4b (audio input), gemma4:12b</td><td class="g">The entry sweet spot. Punches hard</td></tr>
+            <tr><td class="g">16&ndash;24GB (4060Ti-16/4070Ti/4080/4090)</td><td class="g"><b>27B tier</b>: qwen3.6:27b (18&ndash;19 GB), qwen3.8:27b, gemma4:26b-a4b (18 GB), muse-glimmer:30b (18 GB)</td><td class="g">One card, sideways. Nice</td></tr>
+            <tr><td class="a">24&ndash;48GB (check actual usable VRAM)</td><td class="a"><b>qwen3.5:35b-a3b (only 3B active), nemotron-3.5-bolt-74b-a9b (NVIDIA built it for a 24 GB card)</b></td><td class="a">Workstation watershed; start agents/RAG</td></tr>
+            <tr><td class="r">&ge; 2×24GB or big multi-GPU</td><td class="r"><b>80B-class ultra-sparse MoE</b>: qwen3-next:80b (Q4 &asymp; 50 GB), qwen3-coder-next:80b, gpt-oss:120b (65 GB)</td><td class="r">Multi-GPU tensor split; hobbyist small-server territory</td></tr>
           </tbody>
         </table>
       </div>
@@ -333,7 +333,7 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         with open lineage and a solid reputation. VRAM is estimated after quantization;
         for precision, read the official repository and licence.</p>
       </div>
-      <p class="en-note">VRAM figures are estimates after quantization. They shift with engine, context length and KV-cache settings &mdash; always trust your own <code>ollama ps</code> / <code>nvidia-smi</code>. Verify licences and parameter counts against the publisher's repository, Ollama or Hugging Face.</p>
+      <p class="en-note">VRAM figures are estimates after quantization. They shift with engine, context length and KV-cache settings &mdash; always trust your own <code>ollama ps</code> / <code>nvidia-smi</code>. Verify licences and parameter counts against the publisher's repository, Ollama or Hugging Face. <b>Model details on this page were verified on 2026-11-01</b>; re-check the publisher repository before commercial use.</p>
       <div class="tbl-scroll">
         <table class="tbl">
           <thead>
@@ -344,64 +344,84 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
           </thead>
           <tbody>
             <tr>
-              <td><b>DeepSeek-R1</b></td><td>DeepSeek &middot; China</td><td>Reasoning</td><td>MIT</td>
-              <td>1.5b &middot; 7b &middot; 8b &middot; 14b &middot; 32b &middot; 70b &middot; 671b</td>
-              <td class="g">7B quant &asymp; 4&ndash;6 GB &middot; 32B &asymp; 20 GB+ &middot; one of the most-run local reasoners</td>
+              <td><b>Qwen3.6 / Qwen3.8 (27B tier)</b></td><td>Alibaba &middot; Qwen</td><td>General &middot; chat &middot; code</td><td>Apache-2.0</td>
+              <td>27b dense &middot; 35b-A3B (+ coding / MTP variants)</td>
+              <td class="g">27B Q4 &asymp; 18&ndash;19 GB, fits one 24 GB card &middot; 35B-A3B &asymp; 23 GB (3B active, tiny KV cache)</td>
             </tr>
             <tr>
-              <td><b>DeepSeek-V3 family</b></td><td>DeepSeek &middot; China</td><td>General &middot; chat</td><td>MIT</td>
-              <td>671B-A37B (smaller recipes also open)</td>
-              <td class="a">Needs multi-GPU &middot; Q4 still ~380 GB+ &middot; small rigs should use R1 distills or an API</td>
+              <td><b>Qwen3.5 family</b></td><td>Alibaba &middot; Qwen</td><td>General &middot; chat &middot; vision &middot; edge</td><td>Apache-2.0</td>
+              <td>0.8b &middot; 2b &middot; 4b &middot; 9b &middot; 27b &middot; 35b-A3B &middot; 122b-A10B &middot; 397b-A17B</td>
+              <td class="g">0.8B &asymp; 1.2 GB up to 122b-A10B &asymp; 81 GB (multi-GPU) &middot; native multimodal</td>
             </tr>
             <tr>
-              <td><b>Qwen3</b></td><td>Alibaba &middot; open</td><td>General &middot; chat &middot; reasoning</td><td>Check exact version</td>
-              <td>0.6b &middot; 1.7b &middot; 4b &middot; 8b &middot; 14b &middot; 30b &middot; 32b (A3B MoE) &middot; 235b</td>
-              <td class="g">8B/14B quant 8&ndash;12 GB, smooth &middot; MoE 32B is even lighter</td>
+              <td><b>Qwen3-VL / Qwen3-Omni</b></td><td>Alibaba &middot; Qwen</td><td>Vision &middot; multimodal</td><td>Apache-2.0 (VL) &middot; check (Omni)</td>
+              <td>VL: 2b &middot; 4b &middot; 8b &middot; 30b-A3B &middot; 32b &middot; 235b-A22B | Omni: 30b-A3B</td>
+              <td class="g">VL 8B &asymp; 6.2 GB, 32B &asymp; 21 GB &middot; Omni Q4 &asymp; 21&ndash;23 GB, community GGUF only</td>
             </tr>
             <tr>
-              <td><b>Qwen2.5-Coder</b></td><td>Alibaba &middot; open</td><td>Code</td><td>Check exact version</td>
-              <td>0.5b &middot; 1.5b &middot; 3b &middot; 7b &middot; 14b &middot; 32b</td>
-              <td class="g">7B/14B quant 6&ndash;12 GB &middot; pairs beautifully with a local IDE</td>
+              <td><b>Qwen3-Next-80B-A3B / Coder-Next</b></td><td>Alibaba &middot; Qwen</td><td>Code &middot; general</td><td>Apache-2.0</td>
+              <td>qwen3-next:80b &middot; qwen3-coder-next:80b</td>
+              <td class="g">Q4 &asymp; 50&ndash;52 GB &middot; 80B total but only 3B active</td>
             </tr>
             <tr>
-              <td><b>Llama 3.2 / 3.3</b></td><td>Meta</td><td>General &middot; edge</td><td>Llama 3</td>
-              <td>3.2: 1b &middot; 3b &nbsp;|&nbsp; 3.3: 70b</td>
-              <td class="g">3B runs on pure CPU &middot; 1B is phone-class &middot; 70B Q4 &asymp; 45 GB</td>
+              <td><b>Gemma 4</b></td><td>Google DeepMind</td><td>General &middot; vision &middot; edge</td><td>Apache-2.0</td>
+              <td>e2b &middot; e4b &middot; 12b &middot; 26b-A4B &middot; 31b</td>
+              <td class="g">E2B &asymp; 4.6 GB &middot; E4B &asymp; 6.6 GB &middot; 12B &asymp; 8 GB &middot; 26b-A4B &asymp; 18 GB &middot; 31B &asymp; 20 GB</td>
             </tr>
             <tr>
-              <td><b>Gemma 3</b></td><td>Google DeepMind</td><td>General &middot; vision &middot; edge</td><td>Gemma</td>
-              <td>1b &middot; 4b &middot; 12b &middot; 27b</td>
-              <td class="g">4B/12B quant 4&ndash;10 GB</td>
+              <td><b>Muse-Glimmer-30B</b></td><td>Meta</td><td>General &middot; vision</td><td>Apache-2.0</td>
+              <td>30b (incl. ~1.8B vision encoder)</td>
+              <td class="g">Q4 &asymp; 18 GB &middot; first Apache-2.0 native-multimodal release from Meta</td>
             </tr>
             <tr>
-              <td><b>Phi-4 / Phi-4-mini</b></td><td>Microsoft</td><td>Chat &middot; general</td><td>MIT</td>
-              <td>3.8b &middot; 14b</td>
-              <td class="g">3.8B &asymp; 3 GB &middot; drops straight into an edge box or phone</td>
+              <td><b>GLM-5.3-Flash / GLM-4.7-Flash</b></td><td>Z.ai</td><td>General &middot; chat &middot; code</td><td>MIT</td>
+              <td>GLM-4.7-Flash: 30b-A3B | GLM-5.3-Flash: 320b-A18b</td>
+              <td class="g">4.7-Flash Q4 &asymp; 19 GB, single card &middot; 5.3-Flash is :cloud only</td>
             </tr>
             <tr>
-              <td><b>GLM-4-9B family</b></td><td>Zhipu Z.ai</td><td>General &middot; chat</td><td>MIT</td>
-              <td>9b (plus long-context, vision and air variants)</td>
-              <td class="g">Q4 &asymp; 5&ndash;6 GB &middot; excellent for Chinese-language work</td>
+              <td><b>DeepSeek-V4.1-Flash / V4</b></td><td>DeepSeek</td><td>General &middot; reasoning</td><td>MIT</td>
+              <td>V4-Pro: 1.6T-A49B | V4-Flash: 284b-A13b | V4.1-Flash: 552b-A8~16b</td>
+              <td class="a">V4-Flash Q4 &asymp; 160&ndash;170 GB &middot; V4-Pro &asymp; 900 GB+ &mdash; 1M context, but Ollama ships :cloud only</td>
             </tr>
             <tr>
-              <td><b>InternLM3-8B</b></td><td>Shanghai AI Lab</td><td>Chat &middot; general</td><td>Check exact version</td>
-              <td>8b</td>
-              <td class="g">8&ndash;10 GB comfortably</td>
+              <td><b>MiniMax-M2.7 / M3</b></td><td>MiniMax</td><td>General &middot; code</td><td>Non-commercial (M2.7) &middot; Community (M3)</td>
+              <td>M2.x: 229b-A10b | M3: 428b-A23b</td>
+              <td class="r">M2.7 Q4 &asymp; 130 GB &middot; licence tightened three times in a year &mdash; read before use</td>
             </tr>
             <tr>
-              <td><b>Mistral / Nemo</b></td><td>Mistral AI</td><td>General &middot; edge</td><td>Check exact version</td>
-              <td>7b &middot; 12b (Nemo)</td>
-              <td class="g">7B &asymp; 6 GB and up</td>
+              <td><b>Kimi K3 / K2.5</b></td><td>Moonshot</td><td>General &middot; code &middot; vision</td><td>Proprietary (K3) &middot; Modified MIT (K2.5)</td>
+              <td>K2.5: 1T-A32b | K3: 2.8T-A104b</td>
+              <td class="a">K2.5 Q4 &asymp; 560 GB+ &middot; K3 is the first open 3T-class model, but proprietary and :cloud only</td>
             </tr>
             <tr>
-              <td><b>gpt-oss-20b</b></td><td>OpenAI</td><td>Reasoning &middot; code</td><td>Check exact version</td>
-              <td>20b &middot; 120b (MoE)</td>
-              <td class="g">20B (GPT-OSS-20B-A4B) Q4 &asymp; 11 GB</td>
+              <td><b>gpt-oss-20b / 120b</b></td><td>OpenAI</td><td>Reasoning &middot; code</td><td>Apache-2.0</td>
+              <td>20b (3.6B active) &middot; 120b (5.1B active)</td>
+              <td class="g">20B Q4 &asymp; 14 GB &middot; 120B &asymp; 65 GB &middot; still OpenAI&rsquo;s only open-weight line</td>
             </tr>
             <tr>
-              <td><b>Qwen3-Coder / frontier preview</b></td><td>Alibaba / multi-source</td><td>Code &middot; general</td><td>Check exact version</td>
-              <td>30b-A3B (agent variants too)</td>
-              <td class="g">Q3/Q4 &asymp; 12&ndash;16 GB</td>
+              <td><b>Nemotron 3.5 Bolt</b></td><td>NVIDIA</td><td>General &middot; code</td><td>Check (NVIDIA Open Model License)</td>
+              <td>74b-A9b-24GB &middot; 30b-A3b (Lightning) &middot; E4B-4GB</td>
+              <td class="g">Bolt&rsquo;s 24 GB tier is built for a single 24 GB card, official GGUF included</td>
+            </tr>
+            <tr>
+              <td><b>Mistral Medium 3.5</b></td><td>Mistral AI</td><td>General &middot; code</td><td>Modified MIT</td>
+              <td>128b dense</td>
+              <td class="a">Q4 &asymp; 80 GB &middot; a rare dense 128B open-weight flagship with 256K context</td>
+            </tr>
+            <tr>
+              <td><b>granite4.2</b></td><td>IBM</td><td>General &middot; chat</td><td>Apache-2.0</td>
+              <td>3b &middot; 8b &middot; 30b</td>
+              <td class="g">3B &asymp; 2.2 GB &middot; 8B &asymp; 5.3 GB &middot; 30B &asymp; 18 GB</td>
+            </tr>
+            <tr>
+              <td><b>LFM3-1.7B</b></td><td>Liquid AI</td><td>Edge &middot; chat</td><td>LFM Open License v1.0</td>
+              <td>1.7b</td>
+              <td class="g">Q4 &asymp; 1.1 GB &mdash; and still 256K context</td>
+            </tr>
+            <tr>
+              <td><b>DeepSeek-R1 (distills, still in service)</b></td><td>DeepSeek</td><td>Reasoning</td><td>MIT</td>
+              <td>1.5b &middot; 7b &middot; 8b &middot; 14b &middot; 32b &middot; 70b</td>
+              <td class="g">7B quant &asymp; 6&ndash;9 GB &middot; 32B &asymp; 20 GB+ &middot; no new R1 weights in the last year</td>
             </tr>
           </tbody>
         </table>
@@ -412,10 +432,10 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         at release time; for some models, community aliases differ from the official ones.</div>
 
       <div class="callout g"><span class="head">If this is your first deployment (read this)</span>
-        For Chinese / general work start with <b>Qwen3-8B</b>; want some visible thinking, pick <b>DeepSeek-R1-7B/8B</b>;
-        code only &rarr; <b>Qwen2.5-Coder-7B</b> or <b>R1-14B (distill)</b>; tiny machine and just curious &rarr;
-        <b>Qwen3-1.7B or Llama3.2-3B</b>. Small first, big later. Get the whole flow working in Ollama before
-        chasing extremes.</div>
+        For general work start with <b>qwen3.6:27b</b> (Apache-2.0, fits a single 24 GB card); want multimodal &rarr;
+        <b>qwen3.5:9b</b> or <b>gemma4:e4b</b> (audio input as well); code only &rarr; <b>qwen3.6:27b-coding</b> or
+        <b>gpt-oss:20b</b>; tiny machine and just curious &rarr; <b>qwen3.5:0.8b</b> or <b>lfm3:1.7b</b> (1.1 GB, still 256K
+        context). Small first, big later. Get the whole flow working in Ollama before chasing extremes.</div>
     </div>
   </section>
 
@@ -1048,15 +1068,15 @@ You can also pass them straight through the API:
         <table class="tbl">
           <thead><tr><th>Camp</th><th>Vendor / team</th><th>Representative models</th><th>Open-source stance</th><th>Local friendliness</th></tr></thead>
           <tbody>
-            <tr><td rowspan="4" class="g"><b>Overseas</b></td><td><b>Meta</b></td><td>Llama 2/3/3.2/4</td><td class="g">Open-source mainstay</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
-            <tr><td><b>Google DeepMind</b></td><td>Gemini family + open Gemma</td><td class="a">Gemini closed / Gemma open</td><td class="g">&#9733;&#9733;&#9733;&#9734;&#9734;</td></tr>
+            <tr><td rowspan="4" class="g"><b>Overseas</b></td><td><b>Meta</b></td><td>Llama 4 / <b>Muse-Glimmer-30B</b></td><td class="g">Open-source mainstay</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
+            <tr><td><b>Google DeepMind</b></td><td>Gemini family + <b>Gemma 4</b> (all Apache-2.0)</td><td class="a">Gemini closed / Gemma open</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9734;</td></tr>
             <tr><td><b>OpenAI</b></td><td>GPT / o series / gpt-oss (weights)</td><td class="a">Mostly closed; gpt-oss opened</td><td>&#9733;&#9733;&#9734;&#9734;&#9734;</td></tr>
             <tr><td><b>Mistral AI</b> / Anthropic / xAI</td><td>Mistral &middot; Claude &middot; Grok</td><td class="a">Mistral mostly open / last two closed</td><td>&#9733;&#9733;&#9733;&#9734;&#9734;</td></tr>
-            <tr><td rowspan="5" class="g"><b>China</b></td><td><b>DeepSeek</b></td><td>R1 / V3 (671B-A37B)</td><td class="g">Open-source pioneer, MIT</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
-            <tr><td><b>Alibaba &middot; Qwen</b></td><td>Qwen2.5/3/3-Coder &hellip; every size</td><td class="g">Open at all scales, high heat</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
-            <tr><td><b>Zhipu Z.ai</b></td><td>ChatGLM / GLM-4-9B, GLM5 etc.</td><td class="g">Important open source (some commercial)</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9734;</td></tr>
+            <tr><td rowspan="5" class="g"><b>China</b></td><td><b>DeepSeek</b></td><td>R1 / V3.2 / <b>V4 (1M context)</b></td><td class="g">Open-source pioneer, MIT</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
+            <tr><td><b>Alibaba &middot; Qwen</b></td><td><b>Qwen3.5 / 3.6 / 3.8</b> &middot; VL &middot; Omni, every size</td><td class="g">Open at all scales, high heat</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9733;</td></tr>
+            <tr><td><b>Zhipu Z.ai</b></td><td><b>GLM-5.x</b> (proprietary from 5.3)</td><td class="g">Important open source (some commercial)</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9734;</td></tr>
             <tr><td><b>Shanghai AI Lab</b></td><td>InternLM series</td><td class="g">Fully open pipeline</td><td class="g">&#9733;&#9733;&#9733;&#9733;&#9734;</td></tr>
-            <tr><td><b>Moonshot Kimi / MiniMax / Baidu / ByteDance</b></td><td>Kimi &middot; MiniMax &middot; Ernie &middot; Doubao &hellip;</td><td class="r">Mostly closed API / a little open</td><td class="r">&#9733;&#9734;&#9734;&#9734;&#9734;</td></tr>
+            <tr><td><b>Moonshot Kimi / MiniMax / Baidu / ByteDance</b></td><td>Kimi K3 &middot; MiniMax M3 &middot; Ernie &middot; Doubao &hellip;</td><td class="r">Open weights, but licences tightening</td><td class="r">&#9733;&#9733;&#9734;&#9734;&#9734;</td></tr>
           </tbody>
         </table>
       </div>
@@ -1071,8 +1091,11 @@ You can also pass them straight through the API:
         <div class="tl-item"><span class="tl-year">2023</span><div class="tl-main"><b>The year open source began</b>: Meta&rsquo;s Llama family pushed community self-hosting; Alibaba Qwen, GLM, InternLM and MiniMax raced to catch up with a faster open-source cadence.</div></div>
         <div class="tl-item"><span class="tl-year">2024</span><div class="tl-main"><b>Efficiency and sparsity take off</b>: Mixtral, DeepSeek-MoE and others put MoE/open source on the table; Qwen/Llama-3/Gemma/Phi kept arriving, making 7&ndash;35B on a single card real.</div></div>
         <div class="tl-item"><span class="tl-year">2025.01</span><div class="tl-main"><b>DeepSeek-R1 open-sources reasoning</b>, targeting the o1 approach and sharply lowering the bar for deep reasoning; DeepSeek-V3/R1 soon topped charts &mdash; the local crowd finally got &ldquo;thinks + open + reasonable weight&rdquo; in one package.</div></div>
-        <div class="tl-item"><span class="tl-year">2025 to now</span><div class="tl-main"><b>Agents &middot; long context &middot; tug-of-war over open weights</b>: Qwen3 / Llama / GPT-OSS / Gemma3 keep approaching flagships at smaller size,
-          while the OpenAI and Anthropic flagships stay mostly closed. For local users the dividend is visible: just watch the players who <i>give away weights</i> &mdash; DeepSeek, Qwen, Meta, Zhipu.</div></div>
+        <div class="tl-item"><span class="tl-year">2025.09&ndash;2025.12</span><div class="tl-main"><b>Sparse attention and ultra-sparse MoE land</b>: DeepSeek-V3.2-Exp ships DSA, Qwen3-Next-80B-A3B runs 80B on 3B active, Qwen3-VL pushes vision down to 2B, MiniMax-M2 arrives with 10B active. Shared signal: <b>activated parameters matter more than total parameters</b>.</div></div>
+        <div class="tl-item"><span class="tl-year">2026 H1</span><div class="tl-main"><b>1M context becomes the flagship default</b>: DeepSeek-V4, GLM-5.2, Kimi K2.5 and MiniMax-M3 all reach a million-token window; Qwen3.5/3.6 cover every size under Apache-2.0 and go natively multimodal, while GLM-5 uses sparse attention to cut deployment cost.</div></div>
+        <div class="tl-item"><span class="tl-year">2026 H2</span><div class="tl-main"><b>Licences start to fork</b>: GLM-5.3, MiniMax-M2.7, Kimi K3 and the 2.4T tier of Qwen3.8 move to proprietary or non-commercial terms, while Gemma 4 and Meta&rsquo;s Muse-Glimmer-30B go Apache-2.0. <b>Read the licence before the parameter count</b>.</div></div>
+        <div class="tl-item"><span class="tl-year">2026 to now</span><div class="tl-main"><b>Agents &middot; long context &middot; tug-of-war over open weights</b>: what runs locally is now defined by engineering facts such as &ldquo;a 27B model fits in a 24 GB card&rdquo;,
+          while the OpenAI and Anthropic flagships stay mostly closed. For local users the dividend is visible: just watch the players who <i>give away weights</i> &mdash; DeepSeek, Qwen, Meta, Zhipu, MiniMax.</div></div>
       </div>
 
       <h3 class="lvl-sub" style="font-size:1.05rem">The deep dive &middot; how to write one entry</h3>
@@ -1094,7 +1117,7 @@ You can also pass them straight through the API:
       <p><b>Neutral verdict</b>: strengths &mdash; long the reference choice for &ldquo;engineering integration + productisation + ecosystem&rdquo;, with system prompts/tooling/evals that are de facto baselines;
       limits and criticism &mdash; transparency, data provenance and copyright, moderation boundaries, and military use plus safety-guardrail disputes have all made headlines; it still treats closed lock-in as its monetisation core,
       with open weights as a &ldquo;fill-in&rdquo;. Both sides have public sources; avoid single-sided emotion.</p>
-      <p class="cm">Live (2026-09 view): GPT- and o-series flagships remain API-only; what you can actually deploy locally is the open-weight <code>gpt-oss-20b &middot; gpt-oss-120b (MoE; the 20B-class quant suits workstations)</code>.
+      <p class="cm">Live (2026-11 view): GPT- and o-series flagships remain API-only; what you can actually deploy locally is still the open-weight <code>gpt-oss-20b &middot; gpt-oss-120b (MoE; the 20B-class quant suits workstations)</code> &mdash; as of 2026-11-01 OpenAI has shipped no new open weights (there is no gpt-oss-2), plus <code>gpt-oss-safeguard-20b/120b</code> for local safety classification.
       Sources and channels: openai.com; Hugging Face repo `openai/gpt-oss*`; Ollama `gpt-oss`: 20b / 120b.</p>
     </div>
   </details>
@@ -1110,7 +1133,7 @@ You can also pass them straight through the API:
       with the resulting &ldquo;guardrails vs authorisation boundaries&rdquo; debate appearing repeatedly in public reporting.</p>
       <p><b>Neutral verdict</b>: strengths &mdash; an alignment narrative plus a strong real-world reputation on code and long documents, and product language naturally close to developers;
       limits &mdash; entirely closed (no local weights), dependent on API/subscription monetisation, and &ldquo;how tight is the safety limit, and is it applied correctly&rdquo; has always been the same knife that cuts both ways.</p>
-      <p class="cm">Live (2026-09 view): API / app via Claude subscriptions; <b>cannot be self-hosted locally</b> (a fundamental dividing line from the open-source camp &mdash; settle this before choosing).
+      <p class="cm">Live (2026-11 view): API / app via Claude subscriptions; <b>cannot be self-hosted locally</b> (a fundamental dividing line from the open-source camp &mdash; settle this before choosing).
       Channels: anthropic.com / api.anthropic.com.</p>
     </div>
   </details>
@@ -1125,7 +1148,7 @@ You can also pass them straight through the API:
       it also shipped the open Gemma family (small and mid-size weights you can run locally) &mdash; a compromise footnote to the &ldquo;open about technology but not fully open flagship&rdquo; route.</p>
       <p><b>Neutral verdict</b>: strengths &mdash; deep platform integration, strong multimodal foundations, and compute plus a big-client ecosystem;
       limits &mdash; the Gemini flagship is closed and its services live mostly in its own ecosystem, making it &ldquo;tweakable but uncontrollable&rdquo; for third-party developers, and what it opens (Gemma, aimed at edge and small-mid tier) is far from flagship scale.</p>
-      <p class="cm">Live (2026-09 view): the flagship runs via Gemini API; <b>what you can run locally is the Gemma line (4B/12B/27B etc.)</b> and its coding/multimodal derivatives.
+      <p class="cm">Live (2026-11 view): the flagship runs via Gemini API; <b>what you can run locally is Gemma 4</b> (E2B/E4B/12B/26B-A4B/31B, all Apache-2.0, with the E tiers taking audio input), shipped as official QAT GGUF.
       Channels: deepmind.google / aistudio.google.com / Ollama &ldquo;gemma&rdquo;.</p>
     </div>
   </details>
@@ -1141,7 +1164,7 @@ You can also pass them straight through the API:
       <p><b>Neutral verdict</b>: strengths &mdash; relatively permissive licensing and the community/inference stack (llama.cpp/Ollama supported it earliest and most completely), making it the local crowd&rsquo;s natural default;
       limits and controversy &mdash; licence terms have tightened version by version (commercial and MAU thresholds), the early &ldquo;open &ne; freely commercial or attribution-free&rdquo; boundary was pulled back and forth by the community,
       and Chinese ability usually trails Chinese-native models like Qwen/GLM.</p>
-      <p class="cm">Live (2026-09 view): local mainstay via quantized Llama sizes; channels: llama.com / Ollama &ldquo;llama*&rdquo;; check each generation&rsquo;s actual licence.</p>
+      <p class="cm">Live (2026-11 view): after Llama 4 (2025-04) Meta&rsquo;s open-weight line moved to the <b>Muse</b> brand &mdash; <code>Muse-Glimmer-30B</code> (Apache-2.0, natively multimodal) and <code>Muse-Spark-Open-816B-A42B</code>; <b>there are no open Llama 5 weights</b>. Channels: huggingface.co/meta-models.</p>
     </div>
   </details>
 
@@ -1154,7 +1177,7 @@ You can also pass them straight through the API:
       and has headlined both for mouthy outputs backfiring and for a reported military contract. By 2026 the commercial closed-source tone remains dominant, with little official local weight.</p>
       <p><b>Neutral verdict</b>: strengths &mdash; X ecosystem data and distribution plus heavy compute investment, with a differentiated, down-to-earth style;
       limits &mdash; maturity plus multimodal and long-document ability still trail the leaders, and &ldquo;saying whatever it wants&rdquo; is both a selling point and a liability for commercial compliance; local self-hosting is essentially unavailable, a hard constraint for many enterprise buyers.</p>
-      <p class="cm">Live (2026-09 view): used mainly through X / API; <b>no official open local weights is the normal state &mdash; check the official page before planning a deployment</b>. Channel: x.ai</p>
+      <p class="cm">Live (2026-11 view): used mainly through X / API; <b>no official open local weights is the normal state &mdash; check the official page before planning a deployment</b>. Channel: x.ai</p>
     </div>
   </details>
   <h4 class="lvl-sub" style="font-size:1.05rem">China section (same template &middot; main open-source players first, others to follow)</h4>
@@ -1166,12 +1189,12 @@ You can also pass them straight through the API:
       it first made &ldquo;spend less compute, score high&rdquo; a mainstream play with the V/R series, and in early 2025 R1&rsquo;s open reasoning plus V3&rsquo;s MoE architecture made
       &ldquo;a Chinese lab can open weights and still top the charts&rdquo; a headline.</p>
       <p><b>Milestones</b>: DeepSeek-R1 (2025, open reasoning line) and V3 (late 2024, MoE 671B-A37B) &rarr; the V3.1 family&rsquo;s &ldquo;thinking / direct answer hybrid&rdquo; &rarr;
-      to the <b>2026-09 V4 preview (e.g. V4-Flash: MoE, 284B total / 13B active, aimed at 1M-token context)</b>, continuing to prove that
+      to the <b>V4 line (V4-Pro: 1.6T total / 49B active; V4-Flash: MoE, 284B total / 13B active; V4.1-Flash: 552B / 8&ndash;16B active, 1M-token context)</b>, continuing to prove that
       &ldquo;sparse activation &times; long context&rdquo; can fit large capacity into efficient local and edge deployments.</p>
       <p><b>Neutral verdict</b>: strengths &mdash; MIT-style (for most weights) open-source freedom, a strong reputation in Chinese general, long-document and reasoning work,
       and a stance of generously releasing research output that developers appreciate; limits &mdash; training and launch resources are tight, international compliance and some modality depth are less developed,
       and some &ldquo;hit waves&rdquo; see occasional queues. Check the official documentation for licence and stability before commercial use.</p>
-      <p class="cm">Live (2026-09 view): quantized tiers of the R1/V3-* series <b>run directly on a single machine or workstation</b>;
+      <p class="cm">Live (2026-11 view): quantized tiers of the R1/V3.2 series <b>run directly on a single machine or workstation</b>; the V4 line (Pro 1.6T-A49B / Flash 284B-A13B / V4.1-Flash 552B-A8~16B, all MIT with 1M context) makes a million-token window the default, but <b>Ollama ships :cloud tags only</b> &mdash; running it locally means self-hosting vLLM;
       to try the V4 previews, look for official weights and quantized copies first (locally it needs a lot of RAM/VRAM). Channels: deepseek.com / github.com/deepseek-ai / the official HF repos (mind the version date stamps).</p>
     </div>
   </details>
@@ -1186,7 +1209,7 @@ You can also pass them straight through the API:
       <p><b>Neutral verdict</b>: strengths &mdash; full size coverage, generous licensing (mostly Apache-2.0 or its own permissive terms), mature tool calling and Chinese agent ecosystem,
       and the broadest compatibility stack (a familiar face in Ollama/LM Studio); limits &mdash; data and review follow domestic delivery policy (check first for some overseas or authority-sensitive deployments),
       and the strongest flagship versions are often not fully opened, so self-hosting requires weighing capability against licence.</p>
-      <p class="cm">Live (2026-09 view): locally prefer official Qwen quantizations at various sizes (1&ndash;27B suits mainstream home and workstation use, 36B+ MoE for bigger machines);
+      <p class="cm">Live (2026-11 view): locally prefer the <b>27B&ndash;35B tiers of Qwen3.5 / 3.6 / 3.8</b> (Apache-2.0, they fit a single 24 GB card), with 0.8B&ndash;9B covering edge and entry use and 122b-A10B and up reserved for multi-GPU rigs; note that <b>the 2.4T tier of Qwen3.8 switched to the proprietary Qwen3.8-Max licence</b>;
       channels: qwenlm.github.io / github.com/QwenLM / Ollama &ldquo;qwen*&rdquo;; licence and review terms follow its release announcements.</p>
     </div>
   </details>
@@ -1200,7 +1223,7 @@ You can also pass them straight through the API:
       pushed &ldquo;long-horizon code and tool agents + vision in the coding loop&rdquo; as selling points; community licensing (weights or MIT, see its repos) makes it a new locally-runnable face.</p>
       <p><b>Neutral verdict</b>: strengths &mdash; strong Chinese-native ability, a developer-community reputation for agents and tool calling, and a Flash tier whose &ldquo;small activation, high throughput&rdquo; fits personal workstations;
       limits &mdash; some top tiers are &ldquo;commercial closed or licensed&rdquo;, the long-tail ecosystem and international plugins still trail Qwen/Llama, and deployment likewise requires reading licence and review terms.</p>
-      <p class="cm">Live (2026-09 view): locally you can get new weights from the official repo or HF &ldquo;zai-org/GLM-*&rdquo;, and smaller tiers can be tried on mid-range hardware via quantization;
+      <p class="cm">Live (2026-11 view): locally you can get new weights from the official repo or HF &ldquo;zai-org/GLM-*&rdquo;; the GLM-5.x line is around 753B with 1M context, but <b>5.3 moved to a proprietary licence</b> &mdash; the MIT exits that stay local-friendly are <code>GLM-4.7-Flash</code> (30B-A3B, Q4 &asymp; 19 GB) and <code>GLM-5.3-Flash</code> (320B-A18B, natively multimodal);
       channels: z.ai / github.com/zai-org / huggingface.</p>
     </div>
   </details>
@@ -1209,7 +1232,7 @@ You can also pass them straight through the API:
     To stay forever in the advanced-and-free pool, keep an eye on: <b>DeepSeek (performance / reasoning) &middot; Alibaba Qwen (all sizes / Chinese / code)
     &middot; Meta Llama (ecosystem) &middot; Zhipu GLM &amp; InternLM (Chinese agents)</b> &mdash; every release is worth refreshing your local setup.</div>
   <div class="callout warn"><span class="head">Remember to date-stamp the &ldquo;history book&rdquo;</span>
-    Release dates, parameter counts and open-source licences iterate fast; the above is a synthesis from a &ldquo;2026-09 perspective&rdquo;.
+    Release dates, parameter counts and open-source licences iterate fast; the above is a synthesis from a <b>2026-11-01</b> perspective (each entry checked against the publisher&rsquo;s repository, official release notes and the Ollama model page).
     Check the publisher&rsquo;s official repository and date pages before acting. History is accelerating, and this chapter will age too.</div>
     </div>
   </section>
@@ -1503,7 +1526,7 @@ model = peft.get_peft_model(base, peft.LoraConfig(
   <h2>Sources and verification scope</h2>
   <p>Revision: <b>2026-11-01</b>. The documents and tags below were checked; historical chapters are not individually benchmarked.
   Verify behavior against your installed versions. Parameters, context lengths and licenses change between releases — check the publisher's repository.</p>
-  <p><a href="https://qwenlm.github.io/blog/qwen3/">Qwen3</a> · <a href="https://docs.ollama.com/context-length">Ollama context</a> · <a href="https://docs.ollama.com/modelfile">Modelfile</a> · <a href="https://huggingface.co/Qwen/Qwen3-8B-GGUF">Qwen3 GGUF</a></p>
+  <p><a href="https://huggingface.co/Qwen/Qwen3.6-27B">Qwen3.6</a> · <a href="https://huggingface.co/Qwen/Qwen3.5-35B-A3B">Qwen3.5</a> · <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4">Gemma 4</a> · <a href="https://huggingface.co/meta-models/Muse-Glimmer-30B">Muse-Glimmer-30B</a> · <a href="https://huggingface.co/zai-org/GLM-5.3-Flash">GLM-5.3-Flash</a> · <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash">DeepSeek-V4.1-Flash</a> · <a href="https://huggingface.co/MiniMaxAI/MiniMax-M2.7">MiniMax-M2.7</a> · <a href="https://huggingface.co/moonshotai/Kimi-K3">Kimi K3</a> · <a href="https://huggingface.co/openai/gpt-oss-20b">gpt-oss-20b</a> · <a href="https://docs.ollama.com/context-length">Ollama context</a> · <a href="https://docs.ollama.com/modelfile">Modelfile</a></p>
   <h2>Recent updates</h2>
   <ul>
     <li><b>2026-11-01</b> Added a handover handbook and a changelog; trimmed the message box to “1–500 characters” plus a quota note; added CI checks, a Chinese/English parity check, and scripts to read and back up the inbox.</li>

@@ -329,11 +329,11 @@ ollama run qwen3:1.7b</pre></div>
         <table class="tbl">
           <thead><tr><th>你的显存（大致）</th><th>甜点区模型（Q4 量化后）</th><th>说明</th></tr></thead>
           <tbody>
-            <tr><td>&lt; 6GB（核显/旧卡）</td><td><b>1B–4B</b>：Qwen3-1.7B/4B、Llama3.2-3B、Phi-4-mini、Gemma-2B</td><td>纯 CPU 也行，图一乐 / 端侧</td></tr>
-            <tr><td class="g">8–12GB（2060/3060/RX6xxx）</td><td class="g"><b>7B–8B</b>，Qwen3-8B、DeepSeek-R1-7B/8B、qwen coder 7B</td><td class="g">入门甜点。很能打了</td></tr>
-            <tr><td class="g">16–24GB（4060Ti-16/4070Ti/4080/4090）</td><td class="g"><b>14B–34B</b>：Qwen3-14B/32B、R1-14B/32B、Gemma3-27B</td><td class="g">先核算权重、KV 缓存与运行开销</td></tr>
-            <tr><td class="a">24–48GB（按实际可用显存核算）</td><td class="a"><b>Qwen3-30B-A3B / R1-32B；更大模型需单独核算</b></td><td class="a">工作站分水岭；启 Agent/RAG</td></tr>
-            <tr><td class="r">≥ 2×24GB 或多卡大显存</td><td class="r"><b>70B 级 Q4 或 MoE-Large</b>（R1-70B、LLaMA3.3-70B、Qwen3-235B 邻居）</td><td class="r">多卡支持、分片与速度取决于推理引擎</td></tr>
+            <tr><td>&lt; 6GB（核显/旧卡）</td><td><b>0.8B–4B</b>：qwen3.5:0.8b/2b/4b、lfm3:1.7b（1.1GB 却有 256K 上下文）、granite4.2:3b、gemma4:e2b</td><td>纯 CPU 也行，图一乐 / 端侧</td></tr>
+            <tr><td class="g">8–12GB（2060/3060/RX6xxx）</td><td class="g"><b>4B–12B</b>：qwen3.5:9b（6.6GB）、qwen3-vl:8b、gemma4:e4b（带音频输入）、gemma4:12b</td><td class="g">入门甜点。很能打了</td></tr>
+            <tr><td class="g">16–24GB（4060Ti-16/4070Ti/4080/4090）</td><td class="g"><b>27B 档</b>：qwen3.6:27b（18–19GB）、qwen3.8:27b、gemma4:26b-a4b（18GB）、muse-glimmer:30b（18GB）</td><td class="g">先核算权重、KV 缓存与运行开销</td></tr>
+            <tr><td class="a">24–48GB（按实际可用显存核算）</td><td class="a"><b>qwen3.5:35b-a3b（激活仅 3B）、nemotron-3.5-bolt-74b-a9b（NVIDIA 官方为 24GB 卡量身定制）</b></td><td class="a">工作站分水岭；启 Agent/RAG</td></tr>
+            <tr><td class="r">≥ 2×24GB 或多卡大显存</td><td class="r"><b>80B 级超稀疏 MoE</b>：qwen3-next:80b（Q4≈50GB）、qwen3-coder-next:80b、gpt-oss:120b（65GB）</td><td class="r">多卡支持、分片与速度取决于推理引擎</td></tr>
           </tbody>
         </table>
       </div>
@@ -371,11 +371,12 @@ ollama run qwen3:1.7b</pre></div>
 
       <div class="callout warn"><span class="head">免责声明（重要）</span>
         上方「显存门槛」为 <b>量化后粗略估算</b>，会因量化方法、上下文长度、KV-Cache 优化与引擎不同而浮动。
-        许可名称/标签以模型发布时的官方措辞为准；部分模型社区别名与官方口径存在差异。</div>
+        许可名称/标签以模型发布时的官方措辞为准；部分模型社区别名与官方口径存在差异。
+        <b>本页模型信息核对于 2026-11-01</b>，每张卡片底部附官方来源链接 —— 模型迭代很快，商用或商用分发前请回发布方仓库复核。</div>
 
       <div class="callout g"><span class="head">如果你第一次部署的建议（看这里）</span>
-        中文/通用首推 <b>Qwen3-8B</b>；要一点思考秀选 <b>DeepSeek-R1-7B/8B</b>；
-        只跑代码 <b>Qwen2.5-Coder-7B</b> 或 <b>R1-14B(distill)</b>；机器很小又想体验 <b>Qwen3-1.7B 或 Llama3.2-3B</b>。
+        通用/中文首推 <b>qwen3.6:27b</b>（Apache-2.0，单张 24GB 刚好装下）；要多模态选 <b>qwen3.5:9b</b> 或 <b>gemma4:e4b</b>（带音频输入）；
+        只跑代码选 <b>qwen3.6:27b-coding</b> 或 <b>gpt-oss:20b</b>；机器很小又想体验 <b>qwen3.5:0.8b</b> 或 <b>lfm3:1.7b</b>（1.1GB 却有 256K 上下文）。
         先小后大，先用 Ollama 把流程跑通，再谈极致。</div>
     </div>
   </section>
@@ -940,15 +941,15 @@ ollama run qwen3:1.7b</pre></div>
         <table class="tbl">
           <thead><tr><th>阵营</th><th>厂商/团队</th><th>代表模型</th><th>开源 stance</th><th>本地友好度</th></tr></thead>
           <tbody>
-            <tr><td rowspan="4" class="g"><b>海外</b></td><td><b>Meta</b></td><td>Llama 2/3/3.2/4</td><td class="g">主力开源</td><td class="g">★★★★★</td></tr>
-            <tr><td><b>Google DeepMind</b></td><td>Gemini 系列 + Gemma 开源</td><td class="a">Gemini 闭源 / Gemma 开源</td><td class="g">★★★☆☆</td></tr>
+            <tr><td rowspan="4" class="g"><b>海外</b></td><td><b>Meta</b></td><td>Llama 4 / <b>Muse-Glimmer-30B</b></td><td class="g">主力开源</td><td class="g">★★★★★</td></tr>
+            <tr><td><b>Google DeepMind</b></td><td>Gemini 系列 + <b>Gemma 4</b>（全 Apache-2.0）</td><td class="a">Gemini 闭源 / Gemma 开源</td><td class="g">★★★★☆</td></tr>
             <tr><td><b>OpenAI</b></td><td>GPT / o 系列 / gpt-oss(权重)</td><td class="a">闭源为主，开放 gpt-oss</td><td>★★☆☆☆</td></tr>
             <tr><td><b>Mistral AI</b> / Anthropic / xAI</td><td>Mistral 系 · Claude · Grok</td><td class="a">Mistral 开源多 / 后两者闭源</td><td>★★★☆☆</td></tr>
-            <tr><td rowspan="5" class="g"><b>国内</b></td><td><b>DeepSeek（深度求索）</b></td><td>R1 / V3(671B-A37B)</td><td class="g">开源先锋，MIT</td><td class="g">★★★★★</td></tr>
-            <tr><td><b>阿里 · 通义(Qwen)</b></td><td>Qwen2.5/3/3-Coder… 全档位</td><td class="g">全规模高热度开源</td><td class="g">★★★★★</td></tr>
-            <tr><td><b>智谱 Z.ai</b></td><td>ChatGLM / GLM-4-9B ※GLM5 等</td><td class="g">重要开源（部分商业）</td><td class="g">★★★★☆</td></tr>
+            <tr><td rowspan="5" class="g"><b>国内</b></td><td><b>DeepSeek（深度求索）</b></td><td>R1 / V3.2 / <b>V4（1M 上下文）</b></td><td class="g">开源先锋，MIT</td><td class="g">★★★★★</td></tr>
+            <tr><td><b>阿里 · 通义(Qwen)</b></td><td><b>Qwen3.5 / 3.6 / 3.8</b> · VL · Omni 全档位</td><td class="g">全规模高热度开源</td><td class="g">★★★★★</td></tr>
+            <tr><td><b>智谱 Z.ai</b></td><td><b>GLM-5.x</b>（5.3 起转专有许可）</td><td class="g">重要开源（部分商业）</td><td class="g">★★★★☆</td></tr>
             <tr><td><b>上海AI Lab</b></td><td>InternLM 系列</td><td class="g">开源全链</td><td class="g">★★★★☆</td></tr>
-            <tr><td><b>月之暗面Kimi / MiniMax / 百度 / 字节</b></td><td>Kimi · MiniMax · 文心 · 豆包…</td><td class="r">以闭源 API 为主 / 少量开放</td><td class="r">★☆☆☆☆</td></tr>
+            <tr><td><b>月之暗面Kimi / MiniMax / 百度 / 字节</b></td><td>Kimi K3 · MiniMax M3 · 文心 · 豆包…</td><td class="r">开放权重但许可趋紧</td><td class="r">★★☆☆☆</td></tr>
           </tbody>
         </table>
       </div>
@@ -963,8 +964,11 @@ ollama run qwen3:1.7b</pre></div>
         <div class="tl-item"><span class="tl-year">2023</span><div class="tl-main"><b>开源元年</b>：Meta Llama 家族亮相带动社区自部署；国内通义、GLM、InternLM、MiniMax 等密集追赶、开源节奏加快。</div></div>
         <div class="tl-item"><span class="tl-year">2024</span><div class="tl-main"><b>效率与稀疏技术起飞</b>：Mixtral、DeepSeek-MoE 等把“MoE/开源”搬上桌；Qwen/Llama-3/Gemma/Phi 各路强者层出不穷，单卡跑 7–35B 成为可能。</div></div>
         <div class="tl-item"><span class="tl-year">2025.01</span><div class="tl-main"><b>DeepSeek-R1 开源推理模型</b>对标 o1 思路，大幅拉低深度推理门槛；稍后 DeepSeek-V3/R1 系霸榜——本地党终于能用上“会思考 + 开源 + 重量合理”的组合。</div></div>
-        <div class="tl-item"><span class="tl-year">2025 至今</span><div class="tl-main"><b>Agent · 长文 · 开源霸权拉锯</b>：Qwen3 / Llama / GPT-OSS / Gemma3 等继续以更小体量逼近旗舰；
-          而 OpenAI、Anthropic 旗舰仍多走闭源。对本地：红利期肉眼可见 —— 关注 DeepSeek、Qwen、Meta、智谱这类“给权重”的玩家即可。</div></div>
+        <div class="tl-item"><span class="tl-year">2025.09–2025.12</span><div class="tl-main"><b>稀疏注意力与超稀疏 MoE 落地</b>：DeepSeek-V3.2-Exp 首发 DSA、Qwen3-Next-80B-A3B 用 3B 激活跑 80B、Qwen3-VL 把视觉下探到 2B、MiniMax-M2 以 10B 激活上榜。共同信号：<b>激活参数比总参数更该看</b>。</div></div>
+        <div class="tl-item"><span class="tl-year">2026 上半年</span><div class="tl-main"><b>1M 上下文成为旗舰标配</b>：DeepSeek-V4、GLM-5.2、Kimi K2.5、MiniMax-M3 齐步进入百万上下文；Qwen3.5/3.6 全尺寸 Apache-2.0 并原生多模态，GLM-5 用稀疏注意力把部署成本压下来。</div></div>
+        <div class="tl-item"><span class="tl-year">2026 下半年</span><div class="tl-main"><b>许可证开始分叉</b>：GLM-5.3、MiniMax-M2.7、Kimi K3、Qwen3.8 的 2.4T 版先后改用专有或禁商用许可；与此同时 Gemma 4、Meta Muse-Glimmer-30B 走 Apache-2.0。<b>选型先看许可，再看参数</b>。</div></div>
+        <div class="tl-item"><span class="tl-year">2026 至今</span><div class="tl-main"><b>Agent · 长文 · 开源霸权拉锯</b>：本地可跑的上限被「27B 装进 24GB 卡」这类工程事实重新定义；
+          而 OpenAI、Anthropic 旗舰仍多走闭源。对本地：红利期肉眼可见 —— 关注 DeepSeek、Qwen、Meta、智谱、MiniMax 这类"给权重"的玩家，并逐版核对许可证。</div></div>
       </div>
 
       <h3 class="lvl-sub">细说大厂 · 海外篇</h3>
@@ -979,7 +983,7 @@ ollama run qwen3:1.7b</pre></div>
           2023/11 董事会突然罢免 CEO 奥特曼又四天内请他回归，是它与“AI 安全派”路线冲突的公开一幕；
           随后几年它以 GPT-4 / o 系推理 / 各类旗舰走「闭源高性能 + 付费 API」主线，同时 2024–25 推出能本地部署、开放权重的 <code>gpt-oss-20b/120b</code>（MIT/Apache–社区可跑），也被许多人解读为“被开源族逼着回应”。</p>
           <p><b>中立点评</b>：优势 —— 长期是“工程整合 + 产品化 + 生态”的行标式选择，其系统提示/工具链/评测常常是事实上的对照基准；局限/被批 —— 透明度、数据来源与版权、内容审核边界、军事应用与安全护栏争议多次见报；同时它仍以闭源加锁为变现核心，开放权重尚数“补位”。是非都有公开来源可查（下方出处），慎勿单方情绪。</p>
-          <p class="cm">现役（2026-09 视角）：GPT 系 / o 系旗舰仍走 API；本地能实际部署的是 open-weight 的 <code>gpt-oss-20b · gpt-oss-120b（MoE，20B 级量化适合工作站）</code>。
+          <p class="cm">现役（2026-11 视角）：GPT 系 / o 系旗舰仍走 API；本地能实际部署的仍是 open-weight 的 <code>gpt-oss-20b · gpt-oss-120b（MoE，20B 级量化适合工作站）</code> —— 截至 2026-11-01 OpenAI 未再发布新的开放权重（没有 gpt-oss-2），另有 <code>gpt-oss-safeguard-20b/120b</code> 可做本地安全分类。
           出处与渠道：OpenAI 官网 openai.com；Hugging Face 仓库 `openai/gpt-oss*`（可拉取权重与卡页）；Ollama `gpt-oss`：20b / 120b。</p>
         </div>
       </details>
@@ -989,7 +993,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：2021 年由前 OpenAI 高管 Amodei 兄妹等核心成员成立，方向从一开始就有鲜明立场——把 AI 的<b>可解释与对齐（Alignment）</b>置于优先级。团队用「宪法式 AI（Constitutional AI）」，用一套价值观再约束 AI 自我训练，这是它与主流“刷榜为主”厂牌最大的差异点。</p>
           <p><b>关键节点</b>：以 Claude 系列迭代（Sunset 的 Obus/Sonnet/Haiku 档次命名沿用至今）。它较早重视超长上下文与“代码/科研工作流”，被不少开发者当主力；到 2025–26，Claude 也不断进入代码 Agent 与一些政军领域的高频使用，随之而来的「安全护栏 vs 授权边界」争论多次登上公开报道（白宫/国防部口径的存在两面，正反都有新闻源）。</p>
           <p><b>中立点评</b>：优势 —— 对齐叙事 + 代码/长文档实测口碑好，产品语言天然接近开发者；受限 —— 全系闭源（无本地权重），依赖 API/订阅变现，且“安全极限到底守多紧、执行对不对”一直是它招黑与招赞的同一刀。</p>
-          <p class="cm">现役（2026-09 视角）：API / App 按 Claude 系列订阅使用；<b>无法本地自部署</b>（这是它与开源族的根本分界，选型时先想清）。渠道：anthropic.com / api.anthropic.com Gemini 亦同需看是否给了开源体。</p>
+          <p class="cm">现役（2026-11 视角）：API / App 按 Claude 系列订阅使用；<b>无法本地自部署</b>（这是它与开源族的根本分界，选型时先想清）。渠道：anthropic.com / api.anthropic.com Gemini 亦同需看是否给了开源体。</p>
         </div>
       </details>
 
@@ -999,7 +1003,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：Google 的人工智能研究长期分“学术顶会派（Google Brain）”与“深度强化学习怪才 DeepMind”；2023 年二者合并成 Google DeepMind，又为大模型产品线披上 Gemini。同年以一局 AlphaGo(2016) 先把公众胆量拉满、又靠着 Transformer 论文的团队基因，堪称大模型时代的“原股东”。</p>
           <p><b>关键节点</b>：Gemini 系列以多模态与“全线产品再造（Workspace/搜索/Agent 工具如深度研究）”铺开，2024–2026 迭代到多代、长期占据评测头部；同时发布开源 Gemma 家族（给了可本地运行的小型与中型权重），是对“技术开放但没有全开放旗舰”路线的一个折衷注脚。</p>
           <p><b>中立点评</b>：优势 —— 深度平台整合、多模态底子厚、算力与 To Big-Client 生态；局限 —— Gemini 旗舰闭源、服务多在它自家生态，成第三方开发者“可调但不可控”，开源给到的量级远未到旗舰（Gemma 主打在端侧/中小档）。</p>
-          <p class="cm">现役（2026-09 视角）：旗舰走 Gemini API；<b>本地可跑的是 Gemma 系（如 4B/12B/27B 等档）</b>及其编码/多模态衍生。渠道：deepmind.google / aistudio.google.com / Ollama「gemma」。</p>
+          <p class="cm">现役（2026-11 视角）：旗舰走 Gemini API；<b>本地可跑的是 Gemma 4 系（E2B/E4B/12B/26B-A4B/31B，全部 Apache-2.0，E 档还支持音频输入）</b>，官方 GGUF 用 QAT 量化。渠道：deepmind.google / aistudio.google.com / Ollama「gemma」。</p>
         </div>
       </details>
 
@@ -1009,7 +1013,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：Meta（前 Facebook）本不是第一眼的“模型厂”，却在 2023 年靠 Llama 一战成了<b>开源大模型的引擎</b>。它长期以来想攒的是“社区 + 生态 + AI 基建话语权”——通过放权重换取开发者长期粘性与行业标准位置，这是它与“卖 API”派截然相反的打法。</p>
           <p><b>关键节点</b>：Llama(研究用)→ Llama 2(2023 对商用放宽) → Llama 3/3.x(2024–25 多尺寸、堆生态)→ 到 2026 的后续迭代仍延续“开放但自家 Meta AI 闭源体并行”的混合姿态；可以说“最懂怎么把开源做成流量入口”的非 Google 即 Meta。</p>
           <p><b>中立点评</b>：优势 —— 授权相对宽松、社区/推理栈（llama.cpp/Ollama 对它支持最早最全），是本地党的天然默认；局限/争议 —— 许可条款逐版收紧（商用与月活门槛版本互拼），早期“开放≠可随意商用/署名”的边界反复被社区拉锯；中文能力往往不如 Qwen/GLM 这类以中文原生训练。</p>
-          <p class="cm">现役（2026-09 视角）：本地主力走 Llama 系列各尺寸量化；渠道：llama.com / Ollama「llama*」；需留意每代实际许可。</p>
+          <p class="cm">现役（2026-11 视角）：Llama 4（2025-04）之后 Meta 的开放权重路线改用 <b>Muse</b> 品牌 —— <code>Muse-Glimmer-30B</code>（Apache-2.0、原生多模态）与 <code>Muse-Spark-Open-816B-A42B</code>；<b>并不存在 Llama 5 的开放权重</b>。渠道：huggingface.co/meta-models。</p>
         </div>
       </details>
 
@@ -1019,7 +1023,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：马斯克 2023 年创立 xAI，主力产品 Grok 一出生就与 X（原 Twitter）账号生态深度绑定、边训练边借社交数据与流量起量；主张是“探索宇宙本质”，落地却更常以“少设限的风格 + 大数据量 + 竞技算力”的旗帜出现。</p>
           <p><b>关键节点</b>：Grok 初代以“毒舌/快速接入 X”刷脸，后续转入正经大模型军备（含推理与多模态主线），也曾在公开报道里因“嘴替式输出翻车 + 并入某 $200M 军事合同”双双占据头条 —— 两头都是它的舆论画像。到 2026 仍是商业闭源为主要基调，本地少有官方权重。</p>
           <p><b>中立点评</b>：优势 —— 有 X 生态数据/分发与算力大投入，风格差异化还接地气；局限 —— 成熟度与多模态/长文档仍不如头部，且“口无遮拦”在商用合规上既是卖点也是雷，本地基本不可自托管是它和很多企业客户的硬约束。</p>
-          <p class="cm">现役（2026-09 视角）：以 X / API 内使用为主；<b>暂无官方开源本地权重是常态，部署前请按官方页判断</b>。渠道：x.ai</p>
+          <p class="cm">现役（2026-11 视角）：以 X / API 内使用为主；<b>暂无官方开源本地权重是常态，部署前请按官方页判断</b>。渠道：x.ai</p>
         </div>
       </details>
 
@@ -1029,7 +1033,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：2023 年成立于巴黎，创始团队多人出身 Google DeepMind 与 Meta，是“欧洲要自己做大模型主权”这一诉求的代言人：既发可研究的社区权重，也做商用云 API（数据中心在欧盟合规利好），双轨并行很典型。</p>
           <p><b>关键节点</b>：从一颗 7B 起家、到 Mistral 7B/8x7B 与 Mixtral MoE 高分上榜/惊艳“小模型也能 MoE”，再到深度使用本地化的小型与中型开源档；编程向 Codestral、助手 Le Chat 也都贴开发人群。它是比 Meta 更“极客亲开源”的非美国代表之一。</p>
           <p><b>中立点评</b>：优势 —— 开源与许可相对干净、欧美数据中心合规、受本地与法务都买账；局限 —— 体量/生态仍无法与美系头部拼旗舰，中文、工具链与多模态覆盖也不如主战场全。</p>
-          <p class="cm">现役（2026-09 视角）：开源文档看 mistral.ai/blog 与见 Ollama「mistral」；云走 Le Chat API，托管地偏欧。部署难度：7B 起步，单卡友好。</p>
+          <p class="cm">现役（2026-11 视角）：开源文档看 mistral.ai/blog 与见 Ollama「mistral」；新一线是 <code>Mistral Medium 3.5</code>（稠密 128B、256K 上下文、Modified MIT、Q4≈80GB）。云走 Le Chat API，托管地偏欧。</p>
         </div>
       </details>
 
@@ -1039,7 +1043,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：微软用“投 OpenAI + 把 AI 铺进 Azure/Office 全家桶”占据全栈身位，同时又在边缘端另起灶做 <b>Phi 族“小模型”</b>（给落不了大卡的场景当甜点），是“巨人里最贴开源小模型的稀有者”。</p>
           <p><b>关键节点</b>：实际落点集中在 Phi-3 / Phi-4 系列（2024–） 以小参数量在低算力本地甚至 NPU/CPU 上可用，主打“够用、快、省”；背后仍是与 OpenAI 的独家合作与自研两手抓，既保障云旗舰也守住 edge。</p>
           <p><b>中立点评</b>：优势 —— 双生态弹药与分发、小模型工程功底明显；局限 —— Phi 偏“字面质量实验”，复杂推理/长文档/中文相对 Qwen/Gemma 有差距，语言与许可也要各自核对；它并不会把“主干旗舰”开源。</p>
-          <p class="cm">现役（2026-09 视角）：本地部署走 Phi 体积档 + Azure 收费旗舰，互不矛盾；渠道：azure.microsoft.com / huggingface 微软官仓 / Ollama「phi」。自研旗舰尺度小于别家是常态，匹配时看需求上限。</p>
+          <p class="cm">现役（2026-11 视角）：本地部署走 Phi 体积档 + Azure 收费旗舰，互不矛盾；渠道：azure.microsoft.com / huggingface 微软官仓 / Ollama「phi」。自研旗舰尺度小于别家是常态，匹配时看需求上限。</p>
         </div>
       </details>
 
@@ -1051,7 +1055,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：源于背靠量化交易资金的深度求索，被业界当作“开源里的性价比/效率党”：先以 V/R 系列把“分算力/酷炫成本拿高分”演成主流打法，2025 年初 R1 的开放式推理 + V3 的 MoE 架构让“国产也开权重、还能打榜”刷屏。</p>
           <p><b>关键节点</b>：DeepSeek-R1(2025 开源推理线)与 V3(2024末 MoE 671B-A37B)→ V3.1 系“思考/直答混合”→ 到 <b>2026-09 的 V4 预览(如 V4-Flash：MoE、总参 284B / 激活 13B、面向 1M token 上下文)</b>，继续证明“稀疏激活 × 长上下文”能把大容量做进高效的本地/边缘化部署。</p>
           <p><b>中立点评</b>：优势 —— MIT（大部分权重）式的开源自由度 + 中文通用/长文/推理口碑 + 把研究产物大方放出的姿态得到开发者认可；局限 —— 训练/首发资源紧张、国际合规与个别模态积累不深，部分“爆款波次”服务偶有排队，商用前请以官方文档口径复核许可以及稳定性。</p>
-          <p class="cm">现役（2026-09 视角）：R1/V3-* 系列各档量化<b>可单机/工作站直跑</b>；V4 系预览如需跑，优先看官方权重与量化副本（本地需较大内存/显存）。渠道：deepseek.com / github.com/deepseek-ai / HF 官方 repo（注意版本日戳）。</p>
+          <p class="cm">现役（2026-11 视角）：R1/V3.2 各档量化<b>可单机/工作站直跑</b>；V4 系（Pro 1.6T-A49B / Flash 284B-A13B / V4.1-Flash 552B-A8~16B，全部 MIT、1M 上下文）已把百万上下文做成默认，但 <b>Ollama 只有 :cloud 标签，没有本地权重分发</b>，要本地跑需自建 vLLM。渠道：deepseek.com / github.com/deepseek-ai / HF 官方 repo（注意版本日戳）。</p>
         </div>
       </details>
 
@@ -1061,7 +1065,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：出自阿里云研究线，Qwen 家族以“从小到大几乎每个档位都给开源权重 + 多语言 + 原生中文强”刷出极高使用率，是本地党在华语区最常见到的默认选项之一。</p>
           <p><b>关键节点</b>：从 Qwen(1.5/2.5，0.x~72B 全覆盖) → Qwen-Coder（编码专用多尺寸）→ Qwen3(0.6B–235B、含 MoE，加入 thinking 档与工具)→ <b>2026 继续到 Qwen3.5/3.8(3.8-27B 等 + 更小/多模态与“flash‑next”前瞻档)</b>；节奏之密基本是当季“部署量最快上新”的开源线之一。</p>
           <p><b>中立点评</b>：优势 —— 档位全、许可宽敞（多为 Apache-2.0 或其官方宽松条款）、工具调用与中文 Agent 生态成熟，兼容栈最广（Ollama/LMC 老熟脸）；局限 —— 数据/审查按境内交付策略处理（部分海外/要实权部署场景要先核），旗舰往往闭源“更强”版本不完全开放，自部署需要在能力与许可间自己核对。</p>
-          <p class="cm">现役（2026-09 视角）：本地优先看 Qwen 官方各尺寸量化（1–27B 适合主流居家/工作站，36B+MoE 给更大机器）；渠道：qwenlm.github.io / github.com/QwenLM / Ollama「qwen*」；许可与审查口径以其发布公告为准。</p>
+          <p class="cm">现役（2026-11 视角）：本地优先看 <b>Qwen3.5 / 3.6 / 3.8 的 27B–35B 档</b>（Apache-2.0，单张 24GB 可跑）；0.8B–9B 覆盖端侧与入门，122B-A10B 及以上给多卡机器。注意 <b>3.8 的 2.4T 版换成了 Qwen3.8-Max 专有许可</b>，2.4T 也不是本地机器能碰的体量。渠道：qwenlm.github.io / github.com/QwenLM / Ollama「qwen*」。</p>
         </div>
       </details>
 
@@ -1071,7 +1075,7 @@ ollama run qwen3:1.7b</pre></div>
           <p><b>来龙</b>：脱胎清华系研究积累（智谱/GLM 一路有学术长期线），主打“以中文与代码 Agent 见长的自然形态”。一路从 ChatGLM → GLM 系，2025 年后开始按“开源核心 + 更强的商用版”双轨发行。</p>
           <p><b>关键节点</b>：GLM-4.x 时代已有中文 Agent/多模态布局，<b>到 2026 的 GLM-5.3 家族（含 GLM-5.3-Flash：总约 320B / 激活约 18B 的多模态、1M token 上下文、已开源权重）</b>进一步把“长程代码/工具 Agent + 视觉进编码环”做成卖点；许可给到社区（权重或 MIT 见其仓）让它成为本地可尝试的新面孔。</p>
           <p><b>中立点评</b>：优势 —— 中文原生强、Agent 与工具调用被开发群口碑、Flash 档以“激活小、吞吐高”贴近个人工作站；局限 —— 部分最强档做“商用闭源或授权制”、长尾生态与国际插件仍比不过 Qwen/Llama，落地同样需看清许可与审查条款。</p>
-          <p class="cm">现役（2026-09 视角）：本地可在官方 repo/HF「zai-org/GLM-*」拿到新权重，小档也能借量化在中等配置上试；渠道：z.ai / github.com/zai-org / huggingface。</p>
+          <p class="cm">现役（2026-11 视角）：本地可在官方 repo/HF「zai-org/GLM-*」拿到新权重；<b>GLM-5.x 主线已到约 753B / 1M 上下文，但 5.3 起换成专有许可</b>，能放心本地用的出口是仍为 MIT 的 <code>GLM-4.7-Flash</code>（30B-A3B，Q4≈19GB）与 <code>GLM-5.3-Flash</code>（320B-A18B，原生多模态）。渠道：z.ai / github.com/zai-org / huggingface。</p>
         </div>
       </details>
 
@@ -1079,7 +1083,7 @@ ollama run qwen3:1.7b</pre></div>
         关注模型更新时，可查看这些发布方：<b>DeepSeek（性能/推理）· 阿里 Qwen（全尺寸/中文/代码）
         · Meta Llama（生态）· 智谱 GLM & InternLM（中文 Agent）</b>——它们每一次发布，都值得你回本地刷新一次。</div>
       <div class="callout warn"><span class="head">别忘给“史书”标注保质期</span>
-        模型发布日期 / 参数量 / 开源许可常快速迭代；上面为以「2026-09 视角」综合梳理，动手前请以发布方官方仓库与日期页为准。历史在加速，本章也会老去。</div>
+        模型发布日期 / 参数量 / 开源许可常快速迭代；上面为以「<b>2026-11-01</b> 视角」综合梳理（逐条核对了发布方仓库、官方 release notes 与 Ollama 模型页），动手前请以发布方官方仓库与日期页为准。历史在加速，本章也会老去 —— 我们每季度复核一次，下次：<b>2027-02-01</b>。</div>
     </div>
   </section>
   <!-- ======= §14 RAG ======= -->
@@ -1362,7 +1366,7 @@ model = peft.get_peft_model(base, peft.LoraConfig(
   <h2>来源与校验范围</h2>
   <p>本次修订：<b>2026-11-01</b>。已核对下列文档和标签；其余历史章节不是逐条实测报告。运行结果需结合本机版本验证。
   模型参数、上下文长度与许可证会随版本变动，请以训练/发布方仓库为准。</p>
-  <p><a href="https://qwenlm.github.io/blog/qwen3/">Qwen3</a> · <a href="https://docs.ollama.com/context-length">Ollama context</a> · <a href="https://docs.ollama.com/modelfile">Modelfile</a> · <a href="https://huggingface.co/Qwen/Qwen3-8B-GGUF">Qwen3 GGUF</a></p>
+  <p><a href="https://huggingface.co/Qwen/Qwen3.6-27B">Qwen3.6</a> · <a href="https://huggingface.co/Qwen/Qwen3.5-35B-A3B">Qwen3.5</a> · <a href="https://blog.google/innovation-and-ai/technology/developers-tools/gemma-4">Gemma 4</a> · <a href="https://huggingface.co/meta-models/Muse-Glimmer-30B">Muse-Glimmer-30B</a> · <a href="https://huggingface.co/zai-org/GLM-5.3-Flash">GLM-5.3-Flash</a> · <a href="https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash">DeepSeek-V4.1-Flash</a> · <a href="https://huggingface.co/MiniMaxAI/MiniMax-M2.7">MiniMax-M2.7</a> · <a href="https://huggingface.co/moonshotai/Kimi-K3">Kimi K3</a> · <a href="https://huggingface.co/openai/gpt-oss-20b">gpt-oss-20b</a> · <a href="https://docs.ollama.com/context-length">Ollama context</a> · <a href="https://docs.ollama.com/modelfile">Modelfile</a></p>
   <h2>最近更新</h2>
   <ul>
     <li><b>2026-11-01</b> 新增交接手册与更新日志；留言框提示精简为「1—500 个字符」+ 额度说明；加入 CI 自动巡检、中英一致性校验，以及终端查看与备份留言的脚本。</li>

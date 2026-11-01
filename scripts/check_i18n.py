@@ -105,6 +105,65 @@ for label, text, needle in (
 ):
     check(needle in text, f"{label}页缺少每日额度说明（未找到 {needle!r}）")
 
+# 7. §04 模型区：前沿表行数中英一致；中文模型墙（JS 渲染）条数 = 英文本地清单行数。
+#    注意：中文页的本地清单是 JS 卡片墙（没有 <table>），英文页是静态表格，两者靠条数对齐。
+def section(text, start_marker, end_marker):
+    i = text.index(start_marker)
+    j = text.index(end_marker, i)
+    return text[i:j]
+
+
+def count_rows(block):
+    return len(re.findall(r"<tr>", block))
+
+
+def table_bodies(block):
+    """返回每个 <tbody>...</tbody> 的内容。"""
+    bodies = []
+    pos = 0
+    while True:
+        i = block.find("<tbody>", pos)
+        if i == -1:
+            break
+        j = block.index("</tbody>", i)
+        bodies.append(block[i:j])
+        pos = j
+    return bodies
+
+
+zh_models = section(zh_text, 'id="models"', '<!-- ======= 05')
+en_models = section(en_text, 'id="models"', '<!-- ======= 05')
+zh_tables = table_bodies(zh_models)
+en_tables = table_bodies(en_models)
+
+check(len(zh_tables) >= 1, "中文页 §04 缺少前沿超大模型表")
+check(len(en_tables) >= 2, "英文页 §04 缺少前沿表或本地清单表")
+if zh_tables and len(en_tables) >= 2:
+    check(
+        count_rows(zh_tables[0]) == count_rows(en_tables[0]),
+        f"前沿超大模型表行数不一致: 中文 {count_rows(zh_tables[0])}, 英文 {count_rows(en_tables[0])}",
+    )
+    # 中文页面板是 JS 渲染的：assets/js/main.js 里的卡片数必须等于英文本地清单的行数
+    js_path = ROOT / "assets" / "js" / "main.js"
+    js_source = js_path.read_text(encoding="utf-8")
+    js_names = re.findall(r'\{\s*n:"([^"]+)"', js_source)
+    js_cards = len(js_names)
+    check(
+        js_cards == count_rows(en_tables[1]),
+        f"本地清单条数不一致: 中文卡片墙 {js_cards} 个, 英文表格 {count_rows(en_tables[1])} 行",
+    )
+
+    # 逐条比对模型标识（取含数字的型号 token），防止两边名单悄悄错位
+    def tokens(name):
+        return {t for t in re.findall(r"[A-Za-z][A-Za-z0-9]*(?:[-.][A-Za-z0-9]+)*", name) if any(c.isdigit() for c in t)}
+
+    en_names = re.findall(r"<td><b>([^<]+)</b></td>", en_tables[1])
+    js_tokens = [tokens(n) for n in js_names]
+    for name in en_names:
+        want = tokens(name)
+        if want and not any(want <= have for have in js_tokens):
+            check(False, f"英文本地清单里的 {name!r} 在中文卡片墙里找不到对应模型")
+
 if failures:
     for item in failures:
         print(f"FAIL: {item}")

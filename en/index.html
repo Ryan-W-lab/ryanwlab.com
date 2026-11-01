@@ -345,6 +345,38 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
         <table class="tbl">
           <thead><tr><th>Model</th><th>Vendor</th><th>Total / active</th><th>Context</th><th>Licence</th><th class="g">Local footprint (Q4 est.)</th></tr></thead>
           <tbody>
+            <tr><td><b>DeepSeek-V4-Pro</b></td><td>DeepSeek</td><td>1.6T / 49B</td><td>1,048,576</td><td class="g">MIT</td>
+              <td class="r">Q4 &asymp; 900 GB+ (:cloud only) &mdash; out of reach for one machine</td></tr>
+            <tr><td><b>Kimi K3</b></td><td>Moonshot</td><td>2.8T / 104B (16 of 896 experts)</td><td>1,048,576</td><td class="r">Proprietary (Kimi K3 License)</td>
+              <td class="r">Q4 &asymp; 1.6 TB (:cloud only)</td></tr>
+            <tr><td><b>Qwen3.8 (2.4T tier)</b></td><td>Alibaba &middot; Qwen</td><td>2.4T / 95B (10 of 512 experts)</td><td>262,144 &rarr; 1,010,000</td><td class="r">Proprietary (Qwen3.8-Max License)</td>
+              <td class="r">Q4 &asymp; 1.4 TB &mdash; the locally usable one is the Apache-2.0 27B tier</td></tr>
+            <tr><td><b>Kimi K2.5 / K2.6 / K2.7-Code</b></td><td>Moonshot</td><td>1T / 32B</td><td>262,144</td><td class="g">Modified MIT</td>
+              <td class="r">Q4 &asymp; 560 GB+, needs a cluster</td></tr>
+            <tr><td><b>Muse-Spark-Open</b></td><td>Meta</td><td>816B / 42B</td><td>not published</td><td class="r">Proprietary (check terms)</td>
+              <td class="r">Q4 &asymp; 450 GB (:cloud only)</td></tr>
+            <tr><td><b>GLM-5 / 5.1 / 5.2 / 5.3</b></td><td>Z.ai</td><td>744B&ndash;754B / 40B (not published from 5.1)</td><td>202,752 &rarr; 1,048,576</td><td class="g">MIT (proprietary from 5.3)</td>
+              <td class="r">Q4 &asymp; 420 GB &mdash; but the 5.x Flash exit is in the local list below</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warn"><span class="head">Why these are not in the local list below</span>
+        One line divides the two blocks: <b>the local list stays inside four 80 GB-class cards (about 320 GB after Q4)</b>;
+        past that it is datacenter territory. To get comparable capability locally, either take the low-activation or
+        Flash sibling of the same family (GLM-5.3-Flash, MiniMax M3.1-Flash, DeepSeek-V4.1-Flash &mdash; all in the list below),
+        or lean on community quantizations with CPU offload, or call the vendor API.</div>
+
+      <h3 class="lvl-sub">Models you can actually run locally (by VRAM) <span class="lvl core">CORE</span></h3>
+      <p class="en-note">VRAM figures are estimates after quantization. They shift with engine, context length and KV-cache settings &mdash; always trust your own <code>ollama ps</code> / <code>nvidia-smi</code>. Verify licences and parameter counts against the publisher's repository, Ollama or Hugging Face. <b>Model details on this page were verified on 2026-11-01</b>; re-check the publisher repository before commercial use.</p>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead>
+            <tr>
+              <th>Model</th><th>Publisher</th><th>Type</th><th>Licence</th>
+              <th>Available sizes</th><th class="g">Rough VRAM after quant</th>
+            </tr>
+          </thead>
+          <tbody>
             <tr>
               <td><b>Qwen3.6 / Qwen3.8 (27B tier)</b></td><td>Alibaba &middot; Qwen</td><td>General &middot; chat &middot; code</td><td>Apache-2.0</td>
               <td>27b dense &middot; 35b-A3B (+ coding / MTP variants)</td>
@@ -444,106 +476,6 @@ Example: Qwen3-14B running Q4_K (≈ ~0.61 bytes per weight)
               <td><b>MedGemma 1.5 / MiniCPM-V 4.6</b></td><td>Google Health &middot; OpenBMB</td><td>Vision &middot; edge</td><td>Check (Gemma terms) &middot; Apache-2.0</td>
               <td>medgemma1.5:4b (3.3 GB) &middot; minicpm-v4.6 (1.6 GB)</td>
               <td class="g">3.3 GB / 1.6 GB &mdash; pure edge, medical-domain or tiny multimodal</td>
-            </tr>
-            <tr>
-              <td><b>DeepSeek-R1 (distills, still in service)</b></td><td>DeepSeek</td><td>Reasoning</td><td>MIT</td>
-              <td>1.5b &middot; 7b &middot; 8b &middot; 14b &middot; 32b &middot; 70b</td>
-              <td class="g">7B quant &asymp; 6&ndash;9 GB &middot; 32B &asymp; 20 GB+ &middot; no new R1 weights in the last year</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <div class="callout warn"><span class="head">Why these are not in the local list below</span>
-        One line divides the two blocks: <b>the local list stays inside four 80 GB-class cards (about 320 GB after Q4)</b>;
-        past that it is datacenter territory. To get comparable capability locally, either take the low-activation or
-        Flash sibling of the same family (GLM-5.3-Flash, MiniMax M3.1-Flash, DeepSeek-V4.1-Flash &mdash; all in the list below),
-        or lean on community quantizations with CPU offload, or call the vendor API.</div>
-
-      <h3 class="lvl-sub">Models you can actually run locally (by VRAM) <span class="lvl core">CORE</span></h3>
-      <p class="en-note">VRAM figures are estimates after quantization. They shift with engine, context length and KV-cache settings &mdash; always trust your own <code>ollama ps</code> / <code>nvidia-smi</code>. Verify licences and parameter counts against the publisher's repository, Ollama or Hugging Face. <b>Model details on this page were verified on 2026-11-01</b>; re-check the publisher repository before commercial use.</p>
-      <div class="tbl-scroll">
-        <table class="tbl">
-          <thead>
-            <tr>
-              <th>Model</th><th>Publisher</th><th>Type</th><th>Licence</th>
-              <th>Available sizes</th><th class="g">Rough VRAM after quant</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td><b>Qwen3.6 / Qwen3.8 (27B tier)</b></td><td>Alibaba &middot; Qwen</td><td>General &middot; chat &middot; code</td><td>Apache-2.0</td>
-              <td>27b dense &middot; 35b-A3B (+ coding / MTP variants)</td>
-              <td class="g">27B Q4 &asymp; 18&ndash;19 GB, fits one 24 GB card &middot; 35B-A3B &asymp; 23 GB (3B active, tiny KV cache)</td>
-            </tr>
-            <tr>
-              <td><b>Qwen3.5 family</b></td><td>Alibaba &middot; Qwen</td><td>General &middot; chat &middot; vision &middot; edge</td><td>Apache-2.0</td>
-              <td>0.8b &middot; 2b &middot; 4b &middot; 9b &middot; 27b &middot; 35b-A3B &middot; 122b-A10B &middot; 397b-A17B</td>
-              <td class="g">0.8B &asymp; 1.2 GB up to 122b-A10B &asymp; 81 GB (multi-GPU) &middot; native multimodal</td>
-            </tr>
-            <tr>
-              <td><b>Qwen3-VL / Qwen3-Omni</b></td><td>Alibaba &middot; Qwen</td><td>Vision &middot; multimodal</td><td>Apache-2.0 (VL) &middot; check (Omni)</td>
-              <td>VL: 2b &middot; 4b &middot; 8b &middot; 30b-A3B &middot; 32b &middot; 235b-A22B | Omni: 30b-A3B</td>
-              <td class="g">VL 8B &asymp; 6.2 GB, 32B &asymp; 21 GB &middot; Omni Q4 &asymp; 21&ndash;23 GB, community GGUF only</td>
-            </tr>
-            <tr>
-              <td><b>Qwen3-Next-80B-A3B / Coder-Next</b></td><td>Alibaba &middot; Qwen</td><td>Code &middot; general</td><td>Apache-2.0</td>
-              <td>qwen3-next:80b &middot; qwen3-coder-next:80b</td>
-              <td class="g">Q4 &asymp; 50&ndash;52 GB &middot; 80B total but only 3B active</td>
-            </tr>
-            <tr>
-              <td><b>Gemma 4</b></td><td>Google DeepMind</td><td>General &middot; vision &middot; edge</td><td>Apache-2.0</td>
-              <td>e2b &middot; e4b &middot; 12b &middot; 26b-A4B &middot; 31b</td>
-              <td class="g">E2B &asymp; 4.6 GB &middot; E4B &asymp; 6.6 GB &middot; 12B &asymp; 8 GB &middot; 26b-A4B &asymp; 18 GB &middot; 31B &asymp; 20 GB</td>
-            </tr>
-            <tr>
-              <td><b>Muse-Glimmer-30B</b></td><td>Meta</td><td>General &middot; vision</td><td>Apache-2.0</td>
-              <td>30b (incl. ~1.8B vision encoder)</td>
-              <td class="g">Q4 &asymp; 18 GB &middot; first Apache-2.0 native-multimodal release from Meta</td>
-            </tr>
-            <tr>
-              <td><b>GLM-5.3-Flash / GLM-4.7-Flash</b></td><td>Z.ai</td><td>General &middot; chat &middot; code</td><td>MIT</td>
-              <td>GLM-4.7-Flash: 30b-A3B | GLM-5.3-Flash: 320b-A18b</td>
-              <td class="g">4.7-Flash Q4 &asymp; 19 GB, single card &middot; 5.3-Flash is :cloud only</td>
-            </tr>
-            <tr>
-              <td><b>DeepSeek-V4.1-Flash / V4</b></td><td>DeepSeek</td><td>General &middot; reasoning</td><td>MIT</td>
-              <td>V4-Pro: 1.6T-A49B | V4-Flash: 284b-A13b | V4.1-Flash: 552b-A8~16b</td>
-              <td class="a">V4-Flash Q4 &asymp; 160&ndash;170 GB &middot; V4-Pro &asymp; 900 GB+ &mdash; 1M context, but Ollama ships :cloud only</td>
-            </tr>
-            <tr>
-              <td><b>MiniMax-M2.7 / M3</b></td><td>MiniMax</td><td>General &middot; code</td><td>Non-commercial (M2.7) &middot; Community (M3)</td>
-              <td>M2.x: 229b-A10b | M3: 428b-A23b</td>
-              <td class="r">M2.7 Q4 &asymp; 130 GB &middot; licence tightened three times in a year &mdash; read before use</td>
-            </tr>
-            <tr>
-              <td><b>Kimi K3 / K2.5</b></td><td>Moonshot</td><td>General &middot; code &middot; vision</td><td>Proprietary (K3) &middot; Modified MIT (K2.5)</td>
-              <td>K2.5: 1T-A32b | K3: 2.8T-A104b</td>
-              <td class="a">K2.5 Q4 &asymp; 560 GB+ &middot; K3 is the first open 3T-class model, but proprietary and :cloud only</td>
-            </tr>
-            <tr>
-              <td><b>gpt-oss-20b / 120b</b></td><td>OpenAI</td><td>Reasoning &middot; code</td><td>Apache-2.0</td>
-              <td>20b (3.6B active) &middot; 120b (5.1B active)</td>
-              <td class="g">20B Q4 &asymp; 14 GB &middot; 120B &asymp; 65 GB &middot; still OpenAI&rsquo;s only open-weight line</td>
-            </tr>
-            <tr>
-              <td><b>Nemotron 3.5 Bolt</b></td><td>NVIDIA</td><td>General &middot; code</td><td>Check (NVIDIA Open Model License)</td>
-              <td>74b-A9b-24GB &middot; 30b-A3b (Lightning) &middot; E4B-4GB</td>
-              <td class="g">Bolt&rsquo;s 24 GB tier is built for a single 24 GB card, official GGUF included</td>
-            </tr>
-            <tr>
-              <td><b>Mistral Medium 3.5</b></td><td>Mistral AI</td><td>General &middot; code</td><td>Modified MIT</td>
-              <td>128b dense</td>
-              <td class="a">Q4 &asymp; 80 GB &middot; a rare dense 128B open-weight flagship with 256K context</td>
-            </tr>
-            <tr>
-              <td><b>granite4.2</b></td><td>IBM</td><td>General &middot; chat</td><td>Apache-2.0</td>
-              <td>3b &middot; 8b &middot; 30b</td>
-              <td class="g">3B &asymp; 2.2 GB &middot; 8B &asymp; 5.3 GB &middot; 30B &asymp; 18 GB</td>
-            </tr>
-            <tr>
-              <td><b>LFM3-1.7B</b></td><td>Liquid AI</td><td>Edge &middot; chat</td><td>LFM Open License v1.0</td>
-              <td>1.7b</td>
-              <td class="g">Q4 &asymp; 1.1 GB &mdash; and still 256K context</td>
             </tr>
             <tr>
               <td><b>DeepSeek-R1 (distills, still in service)</b></td><td>DeepSeek</td><td>Reasoning</td><td>MIT</td>

@@ -351,10 +351,10 @@ ollama run qwen3:1.7b</pre></div>
         <span class="tag">§04 // ARMORY</span>
         <h2 class="title">模型武器库：能本地跑的，和跑不动但该知道的</h2>
         <div class="line"></div>
-        <p class="lead">分六块看：<span class="hl">前沿超大模型</span>（开放权重但单机跑不动，看趋势）·
+        <p class="lead">分七块看：<span class="hl">前沿超大模型</span>（开放权重但单机跑不动，看趋势）·
         <b>闭源旗舰</b>（只能走 API，看行业上限）·
         <b>本地可部署清单</b>（LLM，从 1GB 端侧到 4 张 80GB 卡，含大量 Flash 与低激活中大模型）·
-        <b>嵌入与重排</b> · <b>语音</b> · <b>视频与 3D</b>。
+        <b>嵌入与重排</b> · <b>文档与 OCR</b> · <b>语音</b> · <b>视频与 3D</b>。
         显存均按量化后估算；追求精度请直接看官方仓库与许可。</p>
       </div>
 
@@ -375,6 +375,22 @@ ollama run qwen3:1.7b</pre></div>
               <td class="r">Q4 约 560GB+，需多卡集群</td></tr>
             <tr><td><b>Muse-Spark-Open</b></td><td>Meta</td><td>816B / 42B</td><td>未公开</td><td class="r">专有（条款需核验）</td>
               <td class="r">Q4 约 450GB（仅 :cloud）</td></tr>
+            <tr><td><b>Nemotron 3 Ultra</b></td><td>NVIDIA</td><td>550B / 55B</td><td>1,048,576</td><td class="g">OpenMDW-1.1（宽松）</td>
+              <td class="r">Q4 约 302GB，仅 :cloud</td></tr>
+            <tr><td><b>Inkling</b></td><td>Thinking Machines</td><td>975B / 41B（256 专家取 6）</td><td>未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">Q4 约 524GB —— 前沿规模里少见的宽松许可</td></tr>
+            <tr><td><b>K-EXAONE 2.0</b></td><td>LG AI Research</td><td>749B / 37B（256 专家取 8）</td><td>262,144</td><td class="g">Apache-2.0</td>
+              <td class="r">Q4 约 412GB</td></tr>
+            <tr><td><b>Trinity Large Thinking</b></td><td>Arcee AI</td><td>398.6B / 13B</td><td>524,288</td><td class="g">OpenMDW-1.1</td>
+              <td class="r">Q4 约 219GB</td></tr>
+            <tr><td><b>Solar Open 2</b></td><td>Upstage</td><td>250.3B / 15B</td><td>1,048,576</td><td class="r">Upstage Solar 许可</td>
+              <td class="r">Q4 约 138GB</td></tr>
+            <tr><td><b>Mistral Large 3</b></td><td>Mistral AI</td><td>675B / 41B</td><td>未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">Q4 约 371GB</td></tr>
+            <tr><td><b>Command A+</b></td><td>Cohere</td><td>218.8B / 25B</td><td>131,072</td><td class="g">Apache-2.0</td>
+              <td class="r">Q4 约 120GB；Cohere 首个真正 OSI 许可的模型</td></tr>
+            <tr><td><b>Nemotron 3 Super</b></td><td>NVIDIA</td><td>120B / 12B（512 专家取 22）</td><td>1,048,576</td><td class="r">NVIDIA 开放模型许可</td>
+              <td class="r">Q4 约 66GB，需 80GB 卡</td></tr>
             <tr><td><b>Hy4-preview</b></td><td>腾讯 · 混元</td><td>770B / 49B（+10B MTP）</td><td>1,048,576</td><td class="g">Apache-2.0</td>
               <td class="r">Q4 约 467GB（需 8×80GB 级）</td></tr>
             <tr><td><b>Ring 2.6-1T（蚂蚁）</b></td><td>蚂蚁 · 环</td><td>1,025B / —</td><td>128K → 256K</td><td class="g">MIT</td>
@@ -491,13 +507,58 @@ ollama run qwen3:1.7b</pre></div>
               <td class="g">有</td><td>dense + sparse + ColBERT 三合一，仍是最好用的本地多语混合检索底座</td></tr>
             <tr><td><b>gte-modernbert-base</b></td><td>阿里</td><td>149M</td><td>8K</td><td>768</td><td class="g">Apache-2.0</td>
               <td class="r">无</td><td>极轻量；配 gte-reranker-modernbert-base 同尺寸</td></tr>
+            <tr><td><b>Nemotron 3.5 Embed 1B / 8B · Rerank 8B</b></td><td>NVIDIA</td><td>1.55B / 8.38B</td><td>32,768</td><td class="g">OpenMDW-1.1</td>
+              <td class="r">无</td><td>NVIDIA 第一套原生多模态检索栈（文本+图像）</td></tr>
             <tr><td><b>EmbeddingGemma 2</b></td><td>Google</td><td>270M / 440M / 570M / 740M</td><td>—</td><td>—</td><td class="g">Apache-2.0</td>
               <td class="g">有</td><td>Google 新一代嵌入模型</td></tr>
           </tbody>
         </table>
       </div>
 
-      <h3 class="lvl-sub">本地可部署 · 语音（ASR 转写 / TTS 合成）<span class="lvl pro">PRO</span></h3>
+            <h3 class="lvl-sub">本地可部署 · 文档与 OCR<span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">这一块是 2026 年开源界最卷的方向：3B 以内的模型在文档解析上已经追平甚至超过多模态大模型，
+      而且大多只有 1–5GB。</p>
+      <div class="tbl-scroll">
+        <table class="tbl" id="tbl-ocr">
+          <thead><tr><th>模型</th><th>厂商</th><th>参数</th><th>上下文</th><th>许可</th><th class="g">Ollama</th><th>说明</th></tr></thead>
+          <tbody>
+            <tr><td><b>PaddleOCR-VL / -1.5 / -1.6</b></td><td>百度 Paddle</td><td>厂商未公开</td><td>厂商未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>社区最 Popular 的小体量文档解析 VLM 系列</td></tr>
+            <tr><td><b>Unlimited-OCR / -2</b></td><td>百度</td><td>3.34B</td><td>131,072</td><td class="g">MIT</td>
+              <td class="r">无</td><td>MIT 的多页文档解析；-2 改用 SR-SWA 做无界多页切分</td></tr>
+            <tr><td><b>Qianfan-OCR</b></td><td>百度</td><td>4.74B</td><td>32,768</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>官方 ggml-org 有 GGUF</td></tr>
+            <tr><td><b>MiniCPM-OCR 1.0 / Jev</b></td><td>OpenBMB</td><td>1.30B</td><td>262,144</td><td class="g">Apache-2.0</td>
+              <td class="g">有</td><td>官方称在 Real5-OmniDocBench 与 OCRBench v2 上 SOTA；Jev 做结果校验</td></tr>
+            <tr><td><b>GLM-OCR</b></td><td>智谱 Z.ai</td><td>1.33B</td><td>厂商未公开</td><td class="g">MIT</td>
+              <td class="g">有</td><td>CogViT 编码器 + 0.5B 解码器，专攻复杂版面</td></tr>
+            <tr><td><b>DeepSeek-OCR / -2</b></td><td>DeepSeek</td><td>3.39B</td><td>厂商未公开</td><td class="g">MIT → Apache-2.0</td>
+              <td class="g">有</td><td>深度 OCR 专精，3.4B 即可结构化识别</td></tr>
+            <tr><td><b>HunyuanOCR</b></td><td>腾讯</td><td>1.12B</td><td>131,072</td><td class="r">腾讯混元社区许可</td>
+              <td class="r">无</td><td>文档解析 + 定位 + 信息抽取 + 文图互译</td></tr>
+            <tr><td><b>Xiaomi-OCR-0</b></td><td>小米研究院</td><td>0.87B</td><td>厂商未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>官方称 OCR-VQA 上超过 Qwen3.5-2B</td></tr>
+            <tr><td><b>ArmorOCR</b></td><td>蚂蚁</td><td>厂商未公开</td><td>厂商未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>安全 + OCR 混合模型，官方 GGUF Q4 约 5GB</td></tr>
+            <tr><td><b>Falcon-OCR</b></td><td>TII</td><td>0.27B</td><td>厂商未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>270M 的 OCR VLM，比 0.9B 级竞品还小 3 倍</td></tr>
+            <tr><td><b>Granite Vision 4.1 4B</b></td><td>IBM</td><td>4.00B</td><td>厂商未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>4B 做文档图表与关键值抽取；官方 GGUF</td></tr>
+            <tr><td><b>North Micro Vision</b></td><td>Cohere</td><td>2.48B</td><td>厂商未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>2.4B 的原生分辨率 VLM，输出定位坐标</td></tr>
+            <tr><td><b>Falcon-OCR</b></td><td>TII</td><td>0.27B</td><td>厂商未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>270M 的 OCR VLM，比 0.9B 级竞品还小 3 倍</td></tr>
+            <tr><td><b>Granite Vision 4.1 4B</b></td><td>IBM</td><td>4.00B</td><td>厂商未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>4B 做文档图表与关键值抽取；官方 GGUF</td></tr>
+            <tr><td><b>North Micro Vision</b></td><td>Cohere</td><td>2.48B</td><td>厂商未公开</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>2.4B 的原生分辨率 VLM，输出定位坐标</td></tr>
+            <tr><td><b>ERNIE-Image / -Turbo</b></td><td>百度</td><td>8.03B</td><td>—</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>文生图；社区有 GGUF，单卡可跑</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+<h3 class="lvl-sub">本地可部署 · 语音（ASR 转写 / TTS 合成）<span class="lvl pro">PRO</span></h3>
       <p class="lead" style="margin-top:10px">这两个方向最近变化最大：中文方言与小模型 ASR 已经追平甚至超过老牌方案，
       语音合成则从「克隆音色」走向「可控情感」。<b>同样基本都没有 Ollama 标签</b>。</p>
       <div class="tbl-scroll">
@@ -530,6 +591,14 @@ ollama run qwen3:1.7b</pre></div>
               <td class="r">无</td><td>流式转写，官方默认上下文 131K（约 3 小时）</td></tr>
             <tr><td><b>Voxtral-4B-TTS</b></td><td>Mistral</td><td>~4B</td><td>文 → 语音</td><td class="r">CC-BY-NC-4.0</td>
               <td class="r">无</td><td>24kHz 输出，WAV/PCM/FLAC/MP3/AAC/Opus；<b>非商用</b></td></tr>
+            <tr><td><b>Nemotron 3.5 Transcribe 30B-A4B</b></td><td>NVIDIA</td><td>34B / 激活 4.3B</td><td>音 → 文（40 语种，含说话人分离）</td><td class="g">OpenMDW-1.1</td>
+              <td class="r">无</td><td>离线转写 40 种语言，单条音频最长 1 小时</td></tr>
+            <tr><td><b>hibiki-zero-3b（Kyutai）</b></td><td>Kyutai</td><td>3B</td><td>同声传译</td><td class="r">需核验</td>
+              <td class="r">无</td><td>法/西/葡/德 → 英的实时语音翻译，带音色迁移</td></tr>
+            <tr><td><b>pocket-tts（Kyutai）</b></td><td>Kyutai</td><td>厂商未公开</td><td>文 → 语音</td><td class="g">CC-BY-4.0</td>
+              <td class="r">无</td><td>极小的端侧 TTS</td></tr>
+            <tr><td><b>Breeze-ASR-26（联发科）</b></td><td>MediaTek Research</td><td>1.54B</td><td>音 → 文</td><td class="g">Apache-2.0</td>
+              <td class="r">无</td><td>联发科的端侧 ASR，Apache-2.0</td></tr>
             <tr><td><b>Step-Audio-R1</b></td><td>阶跃星辰</td><td>33.5B</td><td>音 → 文 + 推理</td><td class="g">Apache-2.0</td>
               <td class="r">无</td><td>语音场景的推理强化版</td></tr>
           </tbody>
@@ -558,6 +627,28 @@ ollama run qwen3:1.7b</pre></div>
           </tbody>
         </table>
       </div>
+
+      <div class="callout warn"><span class="head">这些名字查无此模型（别被搜索结果骗了）</span>
+        <b>Qwen3.9 / Qwen3.10</b>（Qwen 文本线止于 3.8）· <b>ERNIE 5.x 开放权重</b>（ERNIE 5.x 只有 API）·
+        <b>华为盘古 2026 开放权重</b>（该组织最新还是 2024-09 的 pangu-CodeCLM）· <b>Hunyuan-Vision</b>（视觉线是 HunyuanOCR 与 WeVisOne/WeVisDoc）·
+        <b>Step-VG</b>（阶跃的图像线是 Step1X-Edit 与 NextStep-1.1）· <b>Seed1.5-VL / Seed 1.8 / Seed 2.0 的权重</b>（只有代码仓库，没有权重）·
+        <b>豆包开放权重</b> · <b>GLM-5V / GLM-4.7V</b>（视觉线止于 GLM-4.6V）· <b>Qwen3-VL-Omni / Qwen3.8-VL</b>（Qwen3.8-27B 本身就是 VLM）·
+        <b>Qwen3-Coder-2 / -3</b> · <b>DeepSeek-Coder 新版本</b>（2024-06 之后再无）· <b>MiniMax-VL 新版</b> ·
+        <b>Kimi-VL 新版</b> · <b>昆仑天工新 LLM</b>（Skywork 窗口内只发了图像/视频/3D）·
+        <b>Phi-5</b>（微软通用模型是 Fara1.5 / Mage-VL / FrogNano）· <b>OLMoE 2</b>（Ai2 的 MoE 研究线叫 EMO）·
+        <b>Nemotron Eagle</b>（EAGLE 是社区投机解码技术，不是模型）· <b>Reka Core</b>（Reka 的线是 reka-edge-2603）·
+        <b>新 Tulu 3</b>（Ai2 的 Tulu 停在 2024-11）· <b>新 Falcon 3.x</b>（2026 只有 1.58-bit 重发布版）·
+        <b>Databricks 开放权重 LLM</b>（该组织 0 个模型）· <b>AMD / 高通原创模型</b>（两家只发他人模型的量化移植）·
+        <b>Tinker</b>（只发 GGUF 量化，非训练方）。
+        最后提醒两条：<b>Apertus 属于 Swiss AI，不是 Cohere</b>；
+        <b>SmolLM3（2025-07）、SmolVLM2、gpt-oss 基础版（2025-08）都在这一年之外</b>，
+        它们的 <code>instruct</code> / <code>think</code> / <code>safeguard</code> 衍生版才是窗口内发布。 · <b>Phi-5</b>（微软通用模型是 Fara1.5 / Mage-VL / FrogNano）· <b>OLMoE 2</b>（Ai2 的 MoE 研究线叫 EMO）·
+        <b>Nemotron Eagle</b>（EAGLE 是社区投机解码技术，不是模型）· <b>Reka Core</b>（Reka 的线是 reka-edge-2603）·
+        <b>新 Tulu 3</b>（Ai2 的 Tulu 停在 2024-11）· <b>新 Falcon 3.x</b>（2026 只有 1.58-bit 重发布版）·
+        <b>Databricks 开放权重 LLM</b>（该组织 0 个模型）· <b>AMD / 高通原创模型</b>（两家只发他人模型的量化移植）·
+        <b>Tinker</b>（只发 GGUF 量化，非训练方）。最后提醒两条：<b>Apertus 属于 Swiss AI，不是 Cohere</b>；
+        <b>SmolLM3（2025-07）、SmolVLM2、gpt-oss 基础版（2025-08）都在这一年之外</b>，
+        它们的 <code>instruct</code> / <code>think</code> / <code>safeguard</code> 衍生版才是窗口内发布。</div>
 
 <div class="callout warn"><span class="head">免责声明（重要）</span>
         上方「显存门槛」为 <b>量化后粗略估算</b>，会因量化方法、上下文长度、KV-Cache 优化与引擎不同而浮动。

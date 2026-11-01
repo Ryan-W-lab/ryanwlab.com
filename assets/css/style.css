@@ -332,11 +332,15 @@ table.tbl{border-collapse:collapse;width:100%;min-width:760px;font-size:.86rem;}
 .mcard .org{color:var(--txt-dim);font-size:.68rem;letter-spacing:1px;text-transform:uppercase;}
 .mcard .vr{font-family:var(--mono);color:var(--cyan);font-size:.92rem;font-weight:700;white-space:nowrap;}
 .mcard .rt{font-size:.82rem;color:var(--txt-mut);min-height:76px;flex:1;}
-.mcard .spec{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0 12px;}
+.mcard .spec{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin:8px 0 12px;}
 .mcard .vc{border-top:1px dashed var(--line);padding-top:10px;color:var(--txt-dim);
   font-size:.74rem;line-height:1.7;}
 .mcard .vc b{color:var(--txt);font-weight:600;}
-.mcards{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
+.mcard .tier{font-size:.64rem;padding:2px 8px;border-radius:4px;border:1px solid;font-weight:700;margin-left:auto;white-space:nowrap;}
+.mcard .tier.t1{color:var(--green);border-color:rgba(51,255,140,.45);}
+.mcard .tier.t2{color:var(--amber);border-color:rgba(255,180,84,.45);}
+.mcard .tier.t3{color:var(--txt-dim);border-color:var(--line-bright);}
+.mcards{display:grid;gap:18px;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));}
 .mcard.hide{display:none;}
 
 /* 页脚 ================================================= */

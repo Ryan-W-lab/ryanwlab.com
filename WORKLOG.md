@@ -185,7 +185,36 @@ Cloudflare 账号**（`ryan_w_lab@outlook.com`，Account ID `ed010bdbe3fc9f49c48
 
 ---
 
-## 九、遗留事项
+## 九、版面复检：改数不等于好看（同日第二次自查）
+
+第一次自查靠截图，结论是「已修好」。但用户仍然问「为什么开头字没顶满就换行」——
+说明截图看着像好了，实际没量。
+
+改用量尺寸：给无头 Chrome 注入脚本，读 `getBoundingClientRect()`。结果：
+
+| 项 | 实测 | 结论 |
+|---|---|---|
+| `.lead` 宽 | 960px，容器内容宽 1052px | 仍短 92px，上次只做了对齐没做宽度 |
+| 英文 `#tbl-local` | 表 1103px，容器 1052px | 桌面端要横向滚 51px，最右列看不见 |
+| 厂商列 | 单行 | ✓ 上次的 nowrap 有效 |
+
+修完再量，三个宽度（1500/1280/1024）下全部 0 溢出。
+
+**踩坑记录**：先用 `table-layout:fixed` + 百分比列宽，确实能塞进容器，但
+「Released」被掰成「Releas / ed」、「Apache-2.0」被掰成「Apache- / 2.0」。
+**能塞下 ≠ 好看**。改用自动布局 + 表头换行 + 收窄内边距，文字保持完整。
+
+另一个坑：`@media` 写在基础规则前面会被后面的 `table.tbl{...}` 覆盖，
+断点必须放在文件末尾或提高选择器优先级。
+
+**新增 `scripts/check_layout.sh`**：把「导语满宽 / 表格不溢出 / 厂商列不折行」
+变成可执行断言。验证方式是把 CSS 故意改坏再跑，确认它报的正是原始症状
+（`阿里 · 通义` 折行、导语 900/1052）。CI 的 ubuntu runner 没有 Chrome，
+所以这个脚本只在本地跑。
+
+---
+
+## 十、遗留事项
 
 | 项 | 优先级 | 状态 |
 |---|---|---|
@@ -198,7 +227,7 @@ Cloudflare 账号**（`ryan_w_lab@outlook.com`，Account ID `ed010bdbe3fc9f49c48
 
 ---
 
-## 十、验证清单（每次改动都跑）
+## 十一、验证清单（每次改动都跑）
 
 ```sh
 python3 scripts/check_site.py          # 链接、锚点、示例源码一致
@@ -207,7 +236,8 @@ node --check assets/js/main.js         # 模型墙数据语法
 node --test tests/messages.test.mjs    # 后端限额/冷却/幂等回归（8 项）
 python3 scripts/audit_models.py        # 模型目录内容审计（字段/占位符/列数/来源）
 git diff --check                       # 空白与行尾
-scripts/shot-section.sh models /tmp/out.png   # 排版自检（可选）
+scripts/check_layout.sh                # 版面断言：导语满宽/表格不溢出/厂商列不折行（需 Chrome）
+scripts/shot-section.sh models /tmp/out.png   # 截图自查（可选）
 ```
 
 线上核对：`https://ryanwlab.com/` 与 `https://ryanwlab.com/en/` 应同时出现新提示、

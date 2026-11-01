@@ -141,6 +141,7 @@ nav.links a.active{color:var(--green);background:rgba(51,255,140,.12);box-shadow
 .lang-switch a:hover{color:#fff;border-color:var(--green);}
 .lang-switch a.cur{color:var(--green);border-color:rgba(51,255,140,.55);background:rgba(51,255,140,.08);}
 
+
 @media(max-width:900px){
   nav.links{display:none;}
   .nav-toggle{display:inline-block;}
@@ -172,7 +173,9 @@ h1.title,h2.title{font-family:var(--sans);font-weight:700;line-height:1.15;lette
 h2.title{font-size:clamp(1.6rem,3.6vw,2.5rem);margin:20px 0 8px;
   background:linear-gradient(90deg,#eafcff,var(--cyan) 45%,var(--green));
   -webkit-background-clip:text;background-clip:text;color:transparent;}
-.lead{color:var(--txt-mut);font-size:clamp(.95rem,1.5vw,1.06rem);max-width:960px;
+/* 每章导语与正文同宽 —— 之前卡在 960px，比下面的表格窄 92px，
+   第一行看似「没顶满就换行」。宽度交给容器，靠 justify 让行尾对齐。 */
+.lead{color:var(--txt-mut);font-size:clamp(.95rem,1.5vw,1.06rem);max-width:100%;
   text-align:justify;text-justify:inter-ideograph;}
 .sect-head{margin-bottom:34px;}
 .sect-head .line{width:64px;height:2px;background:linear-gradient(90deg,var(--green),transparent);margin-top:16px;}
@@ -261,9 +264,12 @@ h2.title{font-size:clamp(1.6rem,3.6vw,2.5rem);margin:20px 0 8px;
   background:var(--panel);box-shadow:0 20px 50px rgba(0,0,0,.3);}
 table.tbl{border-collapse:collapse;width:100%;min-width:760px;font-size:.86rem;}
 .tbl th{background:linear-gradient(180deg,#0d1522,#0a111c);color:var(--green);
-  text-align:left;font-weight:600;letter-spacing:.4px;white-space:nowrap;}
+  text-align:left;font-weight:600;letter-spacing:.4px;}
 .tbl th,.tbl td{padding:12px 16px;border-bottom:1px solid var(--line);}
 .tbl td{color:var(--txt-mut);}
+/* 型号名（如 whisper-large-v3-turbo、Facebook/MobileMoE-L）不含空格，
+   会把表格最小宽度撑出容器，导致桌面端也要横向滚动。允许必要时断词。 */
+.tbl td,.tbl th{overflow-wrap:break-word;}
 .tbl tr:hover td{background:rgba(51,255,140,.035);color:var(--txt);}
 .tbl td b,.tbl td strong{color:#fff;}
 .tbl td.g{color:var(--green);}
@@ -353,8 +359,13 @@ pre,code{text-align:left;text-justify:auto;}
 #tbl-embed td:nth-child(2),
 #tbl-ocr td:nth-child(2),
 #tbl-audio td:nth-child(2),
-#tbl-video td:nth-child(2),
-#tbl-local td:nth-child(2){white-space:nowrap;}
+#tbl-video td:nth-child(2){white-space:nowrap;}
+
+/* 英文本地清单表：8 列自然宽度约 1457px，容器只有 1052px，会把「本地档位」
+   整列推出屏幕。让表头和厂商列允许换行、表内允许断长词，先看能压到多窄。 */
+#tbl-local th,#tbl-local td{padding-left:11px;padding-right:11px;}
+#tbl-local td:nth-child(2){white-space:normal;}
+#tbl-local{table-layout:auto;}
 
 /* 页脚 ================================================= */
 footer{margin-top:70px;border-top:1px solid var(--line);}
@@ -612,3 +623,12 @@ button:focus-visible, a:focus-visible, summary:focus-visible { outline:2px solid
 #message-status[data-state="success"] { color:var(--green); }
 @media (max-width:600px) { #message-form .message-meta { flex-wrap:wrap; } }
 #messages { padding-top:64px; padding-bottom:64px; }
+
+/* 中小屏：表格字与内边距同步收窄，避免桌面端也要横向滚动。
+   放在文件末尾，确保压过前面的 #tbl-local 相关规则。 */
+@media(max-width:1100px){
+  table.tbl{font-size:.8rem;}
+  table.tbl th,table.tbl td{padding:10px 10px;}
+  /* 这张 8 列表比其他表宽，再挤一点，让 1024 的笔记本也一屏看全 */
+  #tbl-local th,#tbl-local td{padding-left:7px;padding-right:7px;}
+}

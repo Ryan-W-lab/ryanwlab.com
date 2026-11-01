@@ -330,10 +330,11 @@ ollama run qwen3:1.7b</pre></div>
           <thead><tr><th>你的显存（大致）</th><th>甜点区模型（Q4 量化后）</th><th>说明</th></tr></thead>
           <tbody>
             <tr><td>&lt; 6GB（核显/旧卡）</td><td><b>0.8B–4B</b>：qwen3.5:0.8b/2b/4b、lfm3:1.7b（1.1GB 却有 256K 上下文）、granite4.2:3b、gemma4:e2b</td><td>纯 CPU 也行，图一乐 / 端侧</td></tr>
-            <tr><td class="g">8–12GB（2060/3060/RX6xxx）</td><td class="g"><b>4B–12B</b>：qwen3.5:9b（6.6GB）、qwen3-vl:8b、gemma4:e4b（带音频输入）、gemma4:12b</td><td class="g">入门甜点。很能打了</td></tr>
-            <tr><td class="g">16–24GB（4060Ti-16/4070Ti/4080/4090）</td><td class="g"><b>27B 档</b>：qwen3.6:27b（18–19GB）、qwen3.8:27b、gemma4:26b-a4b（18GB）、muse-glimmer:30b（18GB）</td><td class="g">先核算权重、KV 缓存与运行开销</td></tr>
-            <tr><td class="a">24–48GB（按实际可用显存核算）</td><td class="a"><b>qwen3.5:35b-a3b（激活仅 3B）、nemotron-3.5-bolt-74b-a9b（NVIDIA 官方为 24GB 卡量身定制）</b></td><td class="a">工作站分水岭；启 Agent/RAG</td></tr>
-            <tr><td class="r">≥ 2×24GB 或多卡大显存</td><td class="r"><b>80B 级超稀疏 MoE</b>：qwen3-next:80b（Q4≈50GB）、qwen3-coder-next:80b、gpt-oss:120b（65GB）</td><td class="r">多卡支持、分片与速度取决于推理引擎</td></tr>
+            <tr><td class="g">8–12GB（2060/3060/RX6xxx）</td><td class="g"><b>4B–12B</b>：qwen3.5:9b（6.6GB）、qwen3-vl:8b、gemma4:e4b（带音频输入）、gemma4:12b、granite4.2:8b</td><td class="g">入门甜点。很能打了</td></tr>
+            <tr><td class="g">16–24GB（4060Ti-16/4070Ti/4080/4090）</td><td class="g"><b>27B 档</b>：qwen3.6:27b（18–19GB）、qwen3.8:27b、qwen3.5:27b、gemma4:26b-a4b（18GB）、gemma4:31b、muse-glimmer:30b、nemotron-3.5-bolt-74b-a9b</td><td class="g">先核算权重、KV 缓存与运行开销</td></tr>
+            <tr><td class="a">24–48GB（按实际可用显存核算）</td><td class="a"><b>qwen3.5:35b-a3b（激活仅 3B）、gpt-oss:20b、granite4.2:30b、qwen3-vl:32b</b></td><td class="a">工作站分水岭；启 Agent/RAG</td></tr>
+            <tr><td class="a">48–96GB（单张专业卡 / 双卡）</td><td class="a"><b>80B 级超稀疏 MoE 与 128B 稠密</b>：qwen3-next:80b（Q4≈50GB）、qwen3-coder-next:80b、gpt-oss:120b（65GB）、mistral-medium-3.5:128b（80GB）、qwen3.5:122b-a10b（81GB）</td><td class="a">大内存 + CPU offload 也能凑</td></tr>
+            <tr><td class="r">96GB+ 或多卡服务器（4×80GB 级）</td><td class="r"><b>低激活大模型</b>：minimax-m2.7（130GB）、deepseek-v4-flash（160GB）、glm-5.3-flash（180GB）、minimax-m3（240GB）、deepseek-v4.1-flash（310GB）、deepseek-v3.2（375GB）</td><td class="r">需自建 vLLM / llama.cpp 服务；Ollama 多数只有 :cloud 标签</td></tr>
           </tbody>
         </table>
       </div>
@@ -348,12 +349,41 @@ ollama run qwen3:1.7b</pre></div>
     <div class="wrap reveal-seed">
       <div class="sect-head">
         <span class="tag">§04 // ARMORY</span>
-        <h2 class="title">模型武器库：近一年可本地部署的开源强模型</h2>
+        <h2 class="title">模型武器库：能本地跑的，和跑不动但该知道的</h2>
         <div class="line"></div>
-        <p class="lead">只挑「<span class="hl">个人 PC / 小型工作站</span> 跑得动、且血统开放、口碑能打」的。
+        <p class="lead">分两块看：上面是 <span class="hl">前沿超大模型</span>（能力上限，单机跑不动，本地党用同家的低激活/Flash 版或 API 平替）；
+        下面是 <b>本地可部署清单</b> —— 从 1GB 端侧到 4 张 80GB 专业卡都算，含大量 Flash 与低激活中大模型。
         显存均按量化后估算；追求精度请直接看官方仓库与许可。</p>
       </div>
 
+      <h3 class="lvl-sub">前沿超大模型追踪（本地跑不动，看趋势用）<span class="lvl pro">PRO</span></h3>
+      <p class="lead" style="margin-top:10px">2025 年底至今，旗舰把总参推到 <b>千亿到万亿</b>、上下文推到 <b>1M</b>。
+      它们代表能力上限，但量化后仍要数百 GB 起步 —— <b>把它们当趋势看，别当本地清单看</b>。</p>
+      <div class="tbl-scroll">
+        <table class="tbl">
+          <thead><tr><th>模型</th><th>厂商</th><th>总参 / 激活</th><th>上下文</th><th>许可</th><th class="g">本地门槛（Q4 估算）</th></tr></thead>
+          <tbody>
+            <tr><td><b>DeepSeek-V4-Pro</b></td><td>DeepSeek</td><td>1.6T / 49B</td><td>1,048,576</td><td>MIT</td>
+              <td class="r">Q4 约 900GB+（仅 :cloud），单机无望</td></tr>
+            <tr><td><b>Kimi K3</b></td><td>月之暗面</td><td>2.8T / 104B（896 专家取 16）</td><td>1,048,576</td><td class="r">Kimi K3 License（专有）</td>
+              <td class="r">Q4 约 1.6TB（仅 :cloud）</td></tr>
+            <tr><td><b>Qwen3.8（2.4T 版）</b></td><td>阿里 · 通义</td><td>2.4T / 95B（512 专家取 10）</td><td>262,144 → 1,010,000</td><td class="r">Qwen3.8-Max License（专有）</td>
+              <td class="r">Q4 约 1.4TB；本地实际可用的是 27B Apache-2.0 档</td></tr>
+            <tr><td><b>Kimi K2.5 / K2.6 / K2.7-Code</b></td><td>月之暗面</td><td>1T / 32B</td><td>262,144</td><td class="g">Modified MIT</td>
+              <td class="r">Q4 约 560GB+，需多卡集群</td></tr>
+            <tr><td><b>Muse-Spark-Open</b></td><td>Meta</td><td>816B / 42B</td><td>未公开</td><td class="r">专有（条款需核验）</td>
+              <td class="r">Q4 约 450GB（仅 :cloud）</td></tr>
+            <tr><td><b>GLM-5 / 5.1 / 5.2 / 5.3</b></td><td>智谱 Z.ai</td><td>744B–754B / 40B（5.1 起未公开）</td><td>202,752 → 1,048,576</td><td class="g">MIT（5.3 起专有）</td>
+              <td class="r">Q4 约 420GB；5.x 有 Flash 出口见下表</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div class="callout warn"><span class="head">为什么它们不在下面那块「本地可部署」里</span>
+        分界线就一条：<b>本地清单 = 4 张 80GB 级专业卡以内（Q4 约 320GB 以内）</b>；
+        再往上就是数据中心量级，进不了这一档。想在本地拿到同等能力，路径是：① 找同家的低激活 / Flash 版（GLM-5.3-Flash、MiniMax M3.1-Flash、DeepSeek-V4.1-Flash，见下表）；
+        ② 用社区量化 + CPU offload 硬扛；③ 或者直接用厂商 API。</div>
+
+      <h3 class="lvl-sub">本地可部署清单（按显存从小到大）<span class="lvl core">CORE</span></h3>
       <div class="filterrow" role="group" aria-label="按用途筛选模型">
         <button class="fbtn on" data-filter="all">★ 全部</button>
         <button class="fbtn" data-filter="full">全能</button>

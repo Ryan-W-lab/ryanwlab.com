@@ -13,8 +13,17 @@
 
 - §03 硬件表：甜点区模型全部换成当前可跑的（`qwen3.5:0.8b`…`qwen3-next:80b`、`gemma4:*`、
   `muse-glimmer:30b`、`nemotron-3.5-bolt-74b-a9b` 等），并标注 Ollama 标签写法。
-- §04 模型墙（中文，JS 渲染）与 §04 模型表（英文，静态表格）替换为同一批 16 个模型，
-  每条附官方来源链接；显存标注为「量化后估算」。
+- §04 重构成两块：**「前沿超大模型追踪」**（本地跑不动、看趋势用：DeepSeek-V4-Pro 1.6T、
+  Kimi K3 2.8T、Qwen3.8 2.4T、Kimi K2.5 1T、Muse-Spark 816B、GLM-5.x 约 753B）
+  在上，**「本地可部署清单」**在下（中英各 21 个模型，每条附官方来源链接）。
+- 本地清单按显存从 1GB 端侧一路排到 4 张 80GB 级服务器，并明确写入分界线：
+  **本地清单 = Q4 约 320GB 以内**，再往上归入前沿板块。
+- 补齐此前被漏掉的 **Flash 与低激活中大模型**：GLM-4.7-Flash（30B-A3B，19GB）、
+  GLM-5.3-Flash（320B-A18B）、MiniMax M3 / M3.1-Flash（428B-A23B）、
+  DeepSeek-V4.1-Flash（552B-A8~16B）、DeepSeek-V4-Flash（284B-A13B）、
+  Qwen3.8-Flash-Next（125B-A6B）、Mistral Medium 3.5（128B 稠密）、DeepSeek-V3.2、
+  Nemotron 3.5 Bolt、granite4.2 / Nemotron Nano、MedGemma 1.5 / MiniCPM-V 4.6。
+- §03 硬件表从 5 档扩到 6 档，新增「48–96GB 单/双专业卡」与「96GB+ 多卡服务器」两档。
 - §04 免责声明加上**核对日期**，首次部署建议改用当前模型。
 - §13 厂商表、时间线、11 处「现役视角」段落更新到 2026-11。
 
